@@ -1,0 +1,143 @@
+"use client";
+
+import React from 'react';
+
+const cards = [
+  {
+    color: '#0284c7',
+    borderColor: '#FF6B6B',
+    title: 'FASTING',
+    description: 'Fast for 8-12 hours before blood tests. Only water is allowed during fasting period.',
+    icon: (
+      <svg viewBox="0 0 164 164" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="82" cy="82" r="60" fill="#f0f9ff" stroke="#0284c7" strokeWidth="2"/>
+        <line x1="62" y1="55" x2="62" y2="65" stroke="#0284c7" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="67" y1="55" x2="67" y2="65" stroke="#0284c7" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M62 65 Q65 70 67 65" fill="none" stroke="#0284c7" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="64" y1="68" x2="64" y2="110" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round"/>
+        <line x1="74" y1="55" x2="74" y2="110" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M74 55 Q82 65 74 78" fill="#0284c7" stroke="#0284c7" strokeWidth="1"/>
+        <circle cx="94" cy="83" r="18" fill="white" stroke="#FF6B6B" strokeWidth="2"/>
+        <circle cx="94" cy="83" r="2" fill="#FF6B6B"/>
+        <line x1="94" y1="83" x2="94" y2="72" stroke="#FF6B6B" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="94" y1="83" x2="103" y2="83" stroke="#FF6B6B" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="91" y1="79" x2="91" y2="87" stroke="#FF6B6B" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="97" y1="79" x2="97" y2="87" stroke="#FF6B6B" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    )
+  },
+  {
+    color: '#0284c7',
+    borderColor: '#FF6B6B',
+    title: 'HYDRATION',
+    description: 'Drink plenty of water before your test to make blood draw easier.',
+    icon: (
+      <svg viewBox="0 0 164 164" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="82" cy="82" r="60" fill="#f0f9ff" stroke="#0284c7" strokeWidth="2"/>
+        <path d="M82 45 C82 45 62 70 62 85 C62 98 71 108 82 108 C93 108 102 98 102 85 C102 70 82 45 82 45 Z" fill="#0284c7" opacity="0.85"/>
+        <path d="M70 90 Q82 85 94 90" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.6"/>
+        <text x="82" y="92" fontFamily="sans-serif" fontSize="14" fontWeight="700" fill="white" textAnchor="middle">H₂O</text>
+        <path d="M55 60 C55 60 52 65 52 68 C52 70 54 72 55 72 C56 72 58 70 58 68 C58 65 55 60 55 60 Z" fill="#FF6B6B" opacity="0.85"/>
+        <path d="M110 62 C110 62 107 67 107 70 C107 71.8 108.8 73 110 73 C111.2 73 113 71.8 113 70 C113 67 110 62 110 62 Z" fill="#FF6B6B" opacity="0.85"/>
+        <path d="M65 48 C65 48 63 51 63 53 C63 54.8 64.8 56 66 56 C67.2 56 69 54.8 69 53 C69 51 65 48 65 48 Z" fill="#FF6B6B" opacity="0.7"/>
+      </svg>
+    )
+  },
+  {
+    color: '#0284c7',
+    borderColor: '#FF6B6B',
+    title: 'NO ALCOHOL',
+    description: 'Refrain from alcohol consumption 24 hours before your health checkup.',
+    icon: (
+      <svg viewBox="0 0 164 164" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="82" cy="82" r="60" fill="#f0f9ff" stroke="#0284c7" strokeWidth="2"/>
+        <path d="M68 55 L96 55 L88 82 Q88 92 82 92 Q76 92 76 82 Z" fill="#0284c7" opacity="0.15" stroke="#0284c7" strokeWidth="2"/>
+        <path d="M70 68 L94 68 L88 82 Q88 90 82 90 Q76 90 76 82 Z" fill="#0284c7" opacity="0.3"/>
+        <line x1="82" y1="92" x2="82" y2="108" stroke="#0284c7" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="72" y1="108" x2="92" y2="108" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round"/>
+        <circle cx="82" cy="82" r="40" fill="none" stroke="#FF6B6B" strokeWidth="4"/>
+        <line x1="58" y1="58" x2="106" y2="106" stroke="#FF6B6B" strokeWidth="4" strokeLinecap="round"/>
+      </svg>
+    )
+  }
+];
+
+const StepCard = ({ color, borderColor, title, description, icon: Icon }) => (
+  <div style={{
+    background: '#fff',
+    borderRadius: 8,
+    flex: 1,
+    minHeight: 160,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '16px',
+    borderTop: `8px solid ${borderColor}`,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+  }}>
+    <div style={{ width: 100, height: 100 }}>
+      {Icon}
+    </div>
+    <div style={{
+      fontFamily: "'Raleway', sans-serif",
+      fontWeight: 700,
+      fontSize: 12,
+      letterSpacing: '2px',
+      textTransform: 'uppercase',
+      color: '#555',
+      marginBottom: 4,
+    }}>
+      {title}
+    </div>
+    <div style={{
+      fontSize: 10,
+      fontWeight: 400,
+      color: '#666',
+      lineHeight: 1.4,
+      textAlign: 'center',
+    }}>
+      {description}
+    </div>
+  </div>
+);
+
+export default function HealthTips() {
+  return (
+    <section className="py-10 sm:py-12 lg:py-14 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-10">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 mb-2">
+            Pre-Checkup Tips
+          </h2>
+          <p className="text-sm text-slate-600 max-w-xl mx-auto">
+            Follow these guidelines before your health checkup for accurate and reliable results.
+          </p>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 40,
+          width: '100%',
+          maxWidth: 800,
+          margin: '0 auto',
+          alignItems: 'stretch',
+          justifyContent: 'center',
+          flexWrap: 'wrap'
+        }}>
+          {cards.map((card) => (
+            <StepCard 
+              key={card.title}
+              color={card.color}
+              borderColor={card.borderColor}
+              title={card.title}
+              description={card.description}
+              icon={card.icon}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
