@@ -13,31 +13,30 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
       
-      <main className="pt-[80px] lg:pt-[88px]">
-        {/* Hero Section - Banner image */}
-        <section className="relative w-full mt-7">
+      <main className="pt-[72px] lg:pt-[88px]">
+        {/* Hero Section - Image for all screens */}
+        <section className="relative  w-full h-[18vh] sm:h-[180px]">
           <img 
             src="/images/about-poster.png" 
             alt="Cutis Path Lab About Us"
-            className="w-full h-auto block"
-            style={{ maxHeight: '500px', objectFit: 'cover' }}
+            className="w-full h-full sm:object-cover object-fill"
           />
         </section>
 
         {/* About Us Section */}
-        <section className="py-12 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-6 lg:py-12 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="bg-slate-50 rounded-lg shadow-sm overflow-hidden">
-              <div className="relative px-8 py-8">
+              <div className="relative px-4 lg:px-8 py-4 lg:py-8">
                 <div className="absolute left-0 right-0 top-1/2 border-t-4 border-[#FF6B6B] z-0"></div>
-                <div className="relative z-10 inline-block bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-                  <h2 className="text-lg md:text-xl font-bold text-white">
+                <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
+                  <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                     About Us
                   </h2>
                 </div>
               </div>
-              <div className="px-8 pb-8">
-                <p className="text-slate-600 text-sm leading-relaxed">
+              <div className="px-4 lg:px-8 pb-4 lg:pb-8">
+                <p className="text-slate-600 text-xs lg:text-sm leading-relaxed">
                   LifeLine Laboratory is a premier diagnostic center dedicated to providing accurate, reliable, and timely medical testing services. With over 15 years of excellence in pathology and diagnostics, we have served over 500,000 patients with commitment to quality and care. Our state-of-the-art facilities are equipped with advanced technology and staffed by a team of highly skilled professionals, including pathologists, lab technicians, and support staff. We are committed to maintaining the highest standards of quality and accuracy in all our tests.
                 </p>
               </div>
@@ -46,11 +45,11 @@ export default function AboutPage() {
         </section>
 
         {/* Our Mission Section */}
-        <section className="py-12 lg:py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-6 lg:py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="overflow-hidden">
-              <div className="px-8 pb-8">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="px-4 lg:px-8 pb-4 lg:pb-8">
+                <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
                   {/* Left Side - Image */}
                   <div className="relative order-2 md:order-1">
                     <img 
@@ -62,15 +61,15 @@ export default function AboutPage() {
 
                   {/* Right Side - Content with Header */}
                   <div className="order-1 md:order-2">
-                    <div className="relative px-4 py-3 text-right">
+                    <div className="relative px-3 lg:px-4 py-2 lg:py-3 text-right">
                       <div className="absolute left-0 right-0 top-1/2 border-t-4 border-[#FF6B6B]"></div>
-                      <div className="relative z-10 inline-block bg-sky-600 px-6 py-2 rounded-tr-xl rounded-bl-xl">
-                        <h2 className="text-lg md:text-xl font-bold text-white">
+                      <div className="relative z-10 inline-block bg-sky-600 px-4 lg:px-6 py-1.5 lg:py-2 rounded-tr-xl rounded-bl-xl">
+                        <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                           Our Mission
                         </h2>
                       </div>
                     </div>
-                    <p className="text-slate-600 leading-relaxed mt-6">
+                    <p className="text-slate-600 text-xs lg:text-sm leading-relaxed mt-3 lg:mt-6">
                       To provide accurate, reliable, and timely diagnostic services that empower healthcare providers and patients to make informed decisions about health and wellness. We are committed to delivering exceptional patient care through advanced technology and compassionate service.
                     </p>
                   </div>
@@ -81,22 +80,22 @@ export default function AboutPage() {
         </section>
 
         {/* Our Vision Section */}
-        <section className="py-12 lg:py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-6 lg:py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="overflow-hidden">
-              <div className="px-8 pb-8">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="px-4 lg:px-8 pb-4 lg:pb-8">
+                <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
                   {/* Left Side - Content with Header */}
                   <div>
-                    <div className="relative px-4 py-2">
+                    <div className="relative px-3 lg:px-4 py-1.5 lg:py-2">
                       <div className="absolute left-0 right-0 top-1/2 border-t-4 border-[#FF6B6B] z-0"></div>
-                      <div className="relative z-10 inline-block bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-                        <h2 className="text-lg md:text-xl font-bold text-white">
+                      <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
+                        <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                           Our Vision
                         </h2>
                       </div>
                     </div>
-                    <p className="text-slate-600 leading-relaxed mt-4">
+                    <p className="text-slate-600 text-xs lg:text-sm leading-relaxed mt-2 lg:mt-4">
                       To be the leading diagnostic laboratory in the region, recognized for excellence in quality, innovation, and patient-centric care. We strive to make advanced diagnostic services accessible to everyone while maintaining the highest standards of accuracy and reliability.
                     </p>
                   </div>
@@ -116,32 +115,32 @@ export default function AboutPage() {
         </section>
 
         {/* Our Achievements Section */}
-        <section className="py-12 lg:py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-6 lg:py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="bg-white rounded-lg overflow-hidden">
-              <div className="relative px-8 py-8">
+              <div className="relative px-4 lg:px-8 py-4 lg:py-8">
                 <div className="absolute left-0 right-0 top-1/2 border-t-4 border-[#FF6B6B] z-0"></div>
-                <div className="relative z-10 inline-block bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-                  <h2 className="text-lg md:text-xl font-bold text-white">
+                <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
+                  <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                     Our Achievements
                   </h2>
                 </div>
               </div>
-              <div className="px-8 pb-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="px-4 lg:px-8 pb-4 lg:pb-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-6">
                   {[
                     { number: "15+", label: "Years of Excellence" },
                     { number: "500K+", label: "Tests Performed" },
                     { number: "50+", label: "Expert Professionals" },
                     { number: "99.9%", label: "Accuracy Rate" },
                   ].map((stat, index) => (
-                    <div key={index} className="text-center p-4">
-                      <div className="text-3xl md:text-4xl font-bold text-sky-600 mb-2">{stat.number}</div>
-                      <div className="text-sm text-slate-600">{stat.label}</div>
+                    <div key={index} className="text-center p-2 lg:p-4">
+                      <div className="text-xl lg:text-3xl md:text-4xl font-bold text-sky-600 mb-1 lg:mb-2">{stat.number}</div>
+                      <div className="text-[10px] lg:text-sm text-slate-600">{stat.label}</div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-8 grid md:grid-cols-3 gap-6">
+                <div className="mt-8 hidden lg:grid lg:grid-cols-3 gap-6">
                   {[
                     { 
                       title: "NABL Accredited", 

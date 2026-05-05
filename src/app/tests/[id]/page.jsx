@@ -205,15 +205,15 @@ export default function TestDetailPage() {
                       <p className="text-slate-600 mb-4">
                         This comprehensive test includes <span className="font-semibold text-sky-600">{test.parameters}</span> different parameters to provide a complete assessment.
                       </p>
-                      <ul className="space-y-2">
+                      <ul className="space-y-2 px-4 md:px-0">
                         {[...Array(Math.min(test.parameters, 8))].map((_, i) => (
-                          <li key={i} className="flex items-center gap-3 text-slate-700">
-                            <span className="w-2 h-2 rounded-full bg-sky-500"></span>
+                          <li key={i} className="flex items-center gap-3 text-slate-700 min-h-[44px]">
+                            <span className="w-2 h-2 rounded-full bg-sky-500 flex-shrink-0 mt-1"></span>
                             Parameter {i + 1}
                           </li>
                         ))}
                         {test.parameters > 8 && (
-                          <li className="text-slate-600 font-medium">
+                          <li className="text-slate-600 font-medium min-h-[44px]">
                             + {test.parameters - 8} more parameters
                           </li>
                         )}
@@ -256,15 +256,15 @@ export default function TestDetailPage() {
                         </div>
                         <div>
                           <h4 className="font-semibold text-slate-900 mb-2">What to Bring</h4>
-                          <ul className="space-y-2 text-slate-700">
-                            <li className="flex items-center gap-2">
-                              <span className="text-sky-600">✓</span> Valid government-issued ID
+                          <ul className="space-y-2 text-slate-700 px-4 md:px-0">
+                            <li className="flex items-center gap-2 min-h-[44px]">
+                              <span className="text-sky-600 flex-shrink-0">✓</span> Valid government-issued ID
                             </li>
-                            <li className="flex items-center gap-2">
-                              <span className="text-sky-600">✓</span> Health insurance card (if applicable)
+                            <li className="flex items-center gap-2 min-h-[44px]">
+                              <span className="text-sky-600 flex-shrink-0">✓</span> Health insurance card (if applicable)
                             </li>
-                            <li className="flex items-center gap-2">
-                              <span className="text-sky-600">✓</span> Any relevant medical records
+                            <li className="flex items-center gap-2 min-h-[44px]">
+                              <span className="text-sky-600 flex-shrink-0">✓</span> Any relevant medical records
                             </li>
                           </ul>
                         </div>

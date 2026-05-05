@@ -21,7 +21,7 @@ export default function TestByDiseaseCategories() {
   const scrollRef = useRef(null);
 
   return (
-    <section className="py-8 sm:py-10 lg:py-12 bg-slate-100 relative shadow-lg shadow-slate-200/50">
+    <section className="py-8 sm:py-10 lg:py-12 bg-slate-50 relative shadow-lg shadow-slate-200/50">
       <div className="absolute top-0 left-0">
         <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
           <h2 className="text-lg md:text-xl font-bold text-white">
@@ -117,3 +117,5 @@ export default function TestByDiseaseCategories() {
     </section>
   );
 }
+
+

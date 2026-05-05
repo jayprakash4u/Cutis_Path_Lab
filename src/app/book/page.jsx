@@ -152,16 +152,19 @@ export default function BookPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-20 lg:pt-24 pb-16 bg-white">
+      <main className="pt-16 lg:pt-24 pb-12 lg:pb-16 bg-white">
         
-        {/* Hero Section */}
-        <section className="relative py-12 lg:py-16 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1920')] bg-cover bg-center opacity-10"></div>
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+        {/* Hero Section - Gradient for mobile, image for bigger */}
+        <section className="relative py-6 lg:py-12">
+          <div className="sm:hidden absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400"></div>
+          <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400">
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1920')] bg-cover bg-center opacity-10"></div>
+          </div>
+          <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-xl lg:text-4xl font-bold text-white mb-2 lg:mb-4">
               {CONTENT.HERO.TITLE} <span className="text-sky-100">{CONTENT.HERO.SUBTITLE}</span>
             </h1>
-            <p className="text-lg text-white/90 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm lg:text-lg text-white/90 max-w-lg mx-auto">
               {CONTENT.HERO.TAGLINE}
             </p>
           </div>
@@ -169,12 +172,12 @@ export default function BookPage() {
 
         {/* Progress Steps - Sticky */}
         <div className="bg-white border-b border-slate-100 sticky top-16 lg:top-20 z-30">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-2 lg:py-4">
             <div className="flex items-center justify-between">
               {STEPS.map((step, index) => (
                 <div key={step.number} className="flex items-center">
-                  <div className={`flex items-center gap-2 ${currentStep >= step.number ? 'text-sky-600' : 'text-slate-400'}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                  <div className={`flex items-center gap-1 lg:gap-2 ${currentStep >= step.number ? 'text-sky-600' : 'text-slate-400'}`}>
+                    <div className={`w-6 lg:w-8 h-6 lg:h-8 rounded-full flex items-center justify-center text-xs lg:text-sm font-semibold ${
                       currentStep > step.number 
                         ? 'bg-sky-600 text-white' 
                         : currentStep === step.number 
@@ -182,15 +185,15 @@ export default function BookPage() {
                           : 'bg-slate-100 text-slate-400'
                     }`}>
                       {currentStep > step.number ? (
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-3 lg:w-4 h-3 lg:h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       ) : step.number}
                     </div>
-                    <span className="hidden sm:inline text-sm font-medium">{step.title}</span>
+                    <span className="hidden sm:inline text-xs lg:text-sm font-medium">{step.title}</span>
                   </div>
                   {index < STEPS.length - 1 && (
-                    <div className={`w-8 sm:w-16 h-0.5 mx-2 ${currentStep > step.number ? 'bg-sky-600' : 'bg-slate-200'}`}></div>
+                    <div className={`w-4 lg:w-8 sm:w-12 h-0.5 mx-1 lg:mx-2 ${currentStep > step.number ? 'bg-sky-600' : 'bg-slate-200'}`}></div>
                   )}
                 </div>
               ))}
@@ -198,26 +201,26 @@ export default function BookPage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-          <div className="grid lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 lg:py-12">
+          <div className="grid lg:grid-cols-3 gap-4 lg:gap-8">
             {/* Main Content Area */}
             <div className="lg:col-span-2 space-y-6">
               
               {/* Step 1: Select Tests */}
-              {currentStep === 1 && (
+{currentStep === 1 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-4 py-2 rounded-tr-xl">
-                    <h2 className="text-xl font-bold text-white">{CONTENT.STEP_TITLES[1].heading}</h2>
+                  <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                    <h2 className="text-sm lg:text-xl font-bold text-white">{CONTENT.STEP_TITLES[1].heading}</h2>
                   </div>
                   
-                  <div className="p-6 lg:p-8">
+                  <div className="p-4 lg:p-8">
                     {/* Category Filter */}
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <div className="flex flex-wrap gap-1 lg:gap-2 mb-3 lg:mb-6">
                       {CATEGORIES.map((category) => (
                         <button
                           key={category.id}
                           onClick={() => setActiveCategory(category.id)}
-                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                          className={`px-2 lg:px-4 py-1 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-all duration-200 ${
                             activeCategory === category.id
                               ? "bg-sky-600 text-white"
                               : "bg-slate-100 text-slate-600 hover:bg-sky-50 hover:text-sky-600"
@@ -227,7 +230,7 @@ export default function BookPage() {
                         </button>
                       ))}
                     </div>
-                  
+                   
                     {/* Filtered Tests */}
                     {(() => {
                       const filteredTests = activeCategory === "all" 
@@ -236,36 +239,29 @@ export default function BookPage() {
                       
                       return (
                         <>
-                          <div className="mb-4">
-                            <p className="text-sm text-slate-500">
-                              Showing <span className="font-semibold text-sky-600">{filteredTests.length}</span> {filteredTests.length === 1 ? 'test' : 'tests'}
+                          <div className="mb-2 lg:mb-4">
+                            <p className="text-xs lg:text-sm text-slate-500">
+                              <span className="font-semibold text-sky-600">{filteredTests.length}</span> tests
                             </p>
                           </div>
-                          <div className="max-h-96 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                            <div className="grid sm:grid-cols-2 gap-4">
+                          <div className="max-h-64 lg:max-h-96 overflow-y-auto pr-1 lg:pr-2 space-y-2 lg:space-y-3 custom-scrollbar">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
                               {filteredTests.map((test) => (
                                 <button
                                   key={test.id}
                                   onClick={() => toggleTest(test)}
-                                  className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 ${
+                                  className={`flex items-center justify-between p-2 lg:p-4 rounded-lg lg:rounded-xl border transition-all duration-200 ${
                                     selectedTests.find((t) => t.id === test.id)
                                       ? "border-sky-500 bg-sky-50 shadow-sm"
                                       : "border-slate-200 hover:border-sky-300 hover:shadow-sm"
                                   }`}
                                 >
                                   <div className="text-left">
-                                    <p className="font-semibold text-slate-900">{test.name}</p>
-                                    <p className="text-xs text-slate-500">{test.category}</p>
+                                    <p className="text-xs lg:text-sm font-semibold text-slate-900">{test.name}</p>
+                                    <p className="text-[10px] lg:text-xs text-slate-500">{test.category}</p>
                                   </div>
                                   <div className="text-right">
-                                    <p className="font-bold text-sky-600">₹{test.price}</p>
-                                    {selectedTests.find((t) => t.id === test.id) && (
-                                      <div className="w-5 h-5 bg-[#FF6B6B] rounded-full flex items-center justify-center mt-1 ml-auto">
-                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                      </div>
-                                    )}
+                                    <p className="text-xs lg:text-sm font-bold text-sky-600">₹{test.price}</p>
                                   </div>
                                 </button>
                               ))}
@@ -274,20 +270,20 @@ export default function BookPage() {
                         </>
                       );
                     })()}
-                  
+                   
                     {/* Selection Summary */}
                     {selectedTests.length > 0 && (
-                      <div className="mt-6 p-4 bg-sky-50 rounded-xl flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <svg className="w-5 h-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="mt-3 lg:mt-6 p-2 lg:p-4 bg-sky-50 rounded-lg lg:rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-1 lg:gap-2">
+                          <svg className="w-4 lg:w-5 h-4 lg:h-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                           </svg>
-                          <span className="text-sm text-sky-700">
+                          <span className="text-xs lg:text-sm text-sky-700">
                             {selectedTests.length} test{selectedTests.length > 1 ? 's' : ''} selected
                           </span>
                         </div>
                         {selectedTests.length > CONTENT.DISCOUNT.THRESHOLD && (
-                          <span className="text-sm font-medium text-sky-600">
+                          <span className="text-xs lg:text-sm font-medium text-sky-600">
                             🎉 {CONTENT.DISCOUNT.MESSAGE}
                           </span>
                         )}
@@ -300,78 +296,68 @@ export default function BookPage() {
               {/* Step 2: Personal Information */}
               {currentStep === 2 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-4 py-2 rounded-tr-xl">
-                    <h2 className="text-xl font-bold text-white">{CONTENT.STEP_TITLES[2].heading}</h2>
+                  <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                    <h2 className="text-sm lg:text-xl font-bold text-white">{CONTENT.STEP_TITLES[2].heading}</h2>
                   </div>
                   
-                  <div className="p-6 lg:p-8">
-                    <form className="space-y-5">
-                      <div className="grid sm:grid-cols-2 gap-5">
+                  <div className="p-4 lg:p-8">
+                    <form className="space-y-3 lg:space-y-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">First Name *</label>
+                          <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">First Name *</label>
                           <input
                             type="text"
                             required
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
                             placeholder="John"
                             value={formData.firstName}
                             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">Last Name *</label>
+                          <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Last Name *</label>
                           <input
                             type="text"
                             required
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
                             placeholder="Doe"
                             value={formData.lastName}
                             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                           />
                         </div>
                       </div>
-                      <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">Email Address *</label>
+                          <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Email *</label>
                           <input
                             type="email"
                             required
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none"
-                            placeholder="john@example.com"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                            placeholder="email@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number *</label>
+                          <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Phone *</label>
                           <input
                             type="tel"
                             required
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none"
-                            placeholder="+1 234 567 890"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                            placeholder="+977 98xxxxxxxx"
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Home Address (for sample collection)</label>
+                        <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Address</label>
                         <textarea
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none resize-none"
-                          rows={3}
-                          placeholder="Enter your complete address for home sample collection"
+                          className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none resize-none text-sm"
+                          rows={2}
+                          placeholder="Home address"
                           value={formData.address}
                           onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                        ></textarea>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Additional Notes (Optional)</label>
-                        <textarea
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none resize-none"
-                          rows={2}
-                          placeholder="Any special requirements or instructions"
-                          value={formData.notes}
-                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                         ></textarea>
                       </div>
                     </form>
@@ -493,11 +479,11 @@ export default function BookPage() {
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 {currentStep > 1 ? (
                   <button
                     onClick={() => setCurrentStep(currentStep - 1)}
-                    className="px-6 py-3 border border-slate-200 text-slate-600 font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                    className="px-3 lg:px-6 py-2 lg:py-3 border border-slate-200 text-slate-600 text-xs lg:font-medium rounded-lg lg:rounded-xl hover:bg-slate-50 transition-colors"
                   >
                     ← Back
                   </button>
@@ -508,7 +494,7 @@ export default function BookPage() {
                   <button
                     onClick={() => setCurrentStep(currentStep + 1)}
                     disabled={!canProceed(currentStep, formData, selectedTests)}
-                    className={`px-6 py-3 bg-[#FF6B6B] text-white font-medium rounded-xl transition-colors ${
+                    className={`px-4 lg:px-6 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors ${
                       canProceed(currentStep, formData, selectedTests) 
                         ? 'hover:opacity-90' 
                         : 'opacity-50 cursor-not-allowed'
@@ -519,9 +505,9 @@ export default function BookPage() {
                 ) : (
                   <button
                     onClick={handleSubmit}
-                    className="px-8 py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:opacity-90 transition-all"
+                    className="px-4 lg:px-8 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all"
                   >
-                    Confirm Booking
+                    Confirm
                   </button>
                 )}
               </div>
@@ -530,76 +516,75 @@ export default function BookPage() {
             {/* Right Column - Booking Summary */}
             <div className="lg:col-span-1">
               <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100 sticky top-48">
-                <div className="bg-sky-600 w-full px-4 py-2 rounded-tr-xl">
-                  <h2 className="text-lg font-bold text-white">Booking Summary</h2>
+                <div className="bg-sky-600 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                  <h2 className="text-sm lg:text-lg font-bold text-white">Summary</h2>
                 </div>
                 
-                <div className="p-6">
+                <div className="p-3 lg:p-6">
                   {selectedTests.length === 0 ? (
                     /* Empty state */
-                    <div className="text-center py-8">
-                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="text-center py-4 lg:py-8">
+                      <div className="w-10 lg:w-16 h-10 lg:h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-2 lg:mb-4">
+                        <svg className="w-5 lg:w-8 h-5 lg:h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                       </div>
-                      <p className="text-slate-500">No tests selected</p>
-                      <p className="text-xs text-slate-400 mt-1">Select tests to see pricing</p>
+                      <p className="text-xs lg:text-sm text-slate-500">No tests selected</p>
+                      <p className="text-[10px] lg:text-xs text-slate-400 mt-1">Select tests to see pricing</p>
                     </div>
                   ) : (
                     <>
                       {/* Selected Tests List */}
-                      <div className="space-y-3 mb-6 max-h-48 overflow-y-auto">
+                      <div className="space-y-2 lg:space-y-3 mb-3 lg:mb-6 max-h-32 lg:max-h-48 overflow-y-auto">
                         {selectedTests.map((test) => (
-                          <div key={test.id} className="flex justify-between items-center py-2 border-b border-slate-100">
+                          <div key={test.id} className="flex justify-between items-center py-1 lg:py-2 border-b border-slate-100">
                             <div>
-                              <p className="text-sm font-medium text-slate-900">{test.name}</p>
-                              <p className="text-xs text-slate-500">{test.category}</p>
+                              <p className="text-xs lg:text-sm font-medium text-slate-900">{test.name}</p>
                             </div>
-                            <span className="font-semibold text-slate-900">₹{test.price}</span>
+                            <span className="text-xs lg:text-sm font-semibold text-slate-900">₹{test.price}</span>
                           </div>
                         ))}
                       </div>
                       
                       {/* Price Summary */}
-                      <div className="space-y-2 border-t border-slate-200 pt-4 mb-4">
-                        <div className="flex justify-between text-sm">
+                      <div className="space-y-1 lg:space-y-2 border-t border-slate-200 pt-2 lg:pt-4 mb-2 lg:mb-4">
+                        <div className="flex justify-between text-xs lg:text-sm">
                           <span className="text-slate-600">Subtotal</span>
                           <span className="text-slate-900">₹{totalPrice}</span>
                         </div>
                         {discount > 0 && (
-                          <div className="flex justify-between text-sm">
-                            <span className="text-green-600">Bulk Discount ({CONTENT.DISCOUNT.PERCENTAGE}%)</span>
+                          <div className="flex justify-between text-xs lg:text-sm">
+                            <span className="text-green-600">Discount</span>
                             <span className="text-green-600">-₹{discount}</span>
                           </div>
                         )}
                       </div>
                       
                       {/* Total */}
-                      <div className="border-t border-slate-200 pt-4 mb-6">
+                      <div className="border-t border-slate-200 pt-2 lg:pt-4 mb-3 lg:mb-6">
                         <div className="flex justify-between items-center">
-                          <span className="text-lg font-semibold text-slate-900">Total</span>
+                          <span className="text-sm lg:text-lg font-semibold text-slate-900">Total</span>
                           <div className="text-right">
-                            <span className="text-2xl font-bold text-sky-600">₹{finalPrice}</span>
+                            <span className="text-lg lg:text-2xl font-bold text-sky-600">₹{finalPrice}</span>
                             {discount > 0 && (
-                              <p className="text-xs text-green-600">You saved ₹{discount}</p>
+                              <p className="text-[10px] lg:text-xs text-green-600">Saved ₹{discount}</p>
                             )}
                           </div>
                         </div>
                       </div>
                       
                       {/* Home Collection Badge */}
-                      <div className="p-3 bg-[#FF6B6B] rounded-xl mb-4">
-                        <div className="flex items-center gap-2 text-sm text-white">
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="p-2 lg:p-3 bg-[#FF6B6B] rounded-lg lg:rounded-xl mb-2 lg:mb-4">
+                        <div className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm text-white">
+                          <svg className="w-3 lg:w-4 h-3 lg:h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
-                          <span>{CONTENT.HOME_COLLECTION.TITLE}</span>
+                          <span className="text-[10px] lg:text-sm">{CONTENT.HOME_COLLECTION.TITLE}</span>
                         </div>
                       </div>
                       
-                      <p className="text-xs text-slate-500 text-center">
-                        Results will be sent to your email within 24 hours
+                      <p className="text-[10px] lg:text-xs text-slate-500 text-center">
+                        Results in 24 hours
                       </p>
                     </>
                   )}

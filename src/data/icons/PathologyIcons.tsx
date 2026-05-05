@@ -2,12 +2,17 @@
 
 import React from "react";
 
+interface IconProps {
+  className?: string;
+  size?: number;
+}
+
 const primary = "#0284C7"
 const primaryLight = "#7DD3FC"
 const accent = "#FF6B6B"
 const accentLight = "#FFA8A8"
 
-export const BloodTestsIcon = ({ className, size = 48 }) => (
+export const BloodTestsIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="bloodDrop" x1="24" y1="8" x2="24" y2="42" gradientUnits="userSpaceOnUse">
@@ -27,7 +32,7 @@ export const BloodTestsIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const UrineTestsIcon = ({ className, size = 48 }) => (
+export const UrineTestsIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="urineGrad" x1="24" y1="20" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -52,7 +57,7 @@ export const UrineTestsIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const StoolTestsIcon = ({ className, size = 48 }) => (
+export const StoolTestsIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="containerGrad" x1="24" y1="12" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -68,7 +73,7 @@ export const StoolTestsIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const ClinicalBiochemistryIcon = ({ className, size = 48 }) => (
+export const ClinicalBiochemistryIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="flaskLiquid" x1="24" y1="24" x2="24" y2="42" gradientUnits="userSpaceOnUse">
@@ -96,7 +101,7 @@ export const ClinicalBiochemistryIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const MicrobiologyTestsIcon = ({ className, size = 48 }) => (
+export const MicrobiologyTestsIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="virusGrad" x1="24" y1="12" x2="24" y2="36" gradientUnits="userSpaceOnUse">
@@ -124,7 +129,7 @@ export const MicrobiologyTestsIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const HistopathologyIcon = ({ className, size = 48 }) => (
+export const HistopathologyIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="microGrad" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
@@ -143,7 +148,7 @@ export const HistopathologyIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const CytologyIcon = ({ className, size = 48 }) => (
+export const CytologyIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="cellGrad" x1="24" y1="8" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -161,7 +166,7 @@ export const CytologyIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const HormoneTestingIcon = ({ className, size = 48 }) => (
+export const HormoneTestingIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="hormoneGrad" x1="24" y1="8" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -186,7 +191,7 @@ export const HormoneTestingIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const DiabetesTestingIcon = ({ className, size = 48 }) => (
+export const DiabetesTestingIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="meterGrad" x1="24" y1="6" x2="24" y2="42" gradientUnits="userSpaceOnUse">
@@ -202,7 +207,7 @@ export const DiabetesTestingIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const ThyroidTestingIcon = ({ className, size = 48 }) => (
+export const ThyroidTestingIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="thyroidGrad" x1="24" y1="10" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -218,7 +223,7 @@ export const ThyroidTestingIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const LipidProfileIcon = ({ className, size = 48 }) => (
+export const LipidProfileIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="lipidGrad" x1="24" y1="8" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -239,7 +244,7 @@ export const LipidProfileIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const LiverFunctionIcon = ({ className, size = 48 }) => (
+export const LiverFunctionIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="liverGrad" x1="24" y1="8" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -260,7 +265,7 @@ export const LiverFunctionIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const KidneyFunctionIcon = ({ className, size = 48 }) => (
+export const KidneyFunctionIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="kidneyGrad" x1="24" y1="6" x2="24" y2="42" gradientUnits="userSpaceOnUse">
@@ -287,7 +292,7 @@ export const KidneyFunctionIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const VitaminTestsIcon = ({ className, size = 48 }) => (
+export const VitaminTestsIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="pillGrad1" x1="16" y1="8" x2="16" y2="40" gradientUnits="userSpaceOnUse">
@@ -309,7 +314,7 @@ export const VitaminTestsIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const AllergyTestingIcon = ({ className, size = 48 }) => (
+export const AllergyTestingIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="allergyGrad" x1="24" y1="8" x2="24" y2="40" gradientUnits="userSpaceOnUse">
@@ -333,7 +338,7 @@ export const AllergyTestingIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const CancerMarkerIcon = ({ className, size = 48 }) => (
+export const CancerMarkerIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="ribbonGrad" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
@@ -358,7 +363,7 @@ export const CancerMarkerIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const GeneticTestingIcon = ({ className, size = 48 }) => (
+export const GeneticTestingIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="dnaGrad1" x1="16" y1="4" x2="16" y2="44" gradientUnits="userSpaceOnUse">
@@ -396,7 +401,7 @@ export const GeneticTestingIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const PreventiveHealthIcon = ({ className, size = 48 }) => (
+export const PreventiveHealthIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="shieldGrad" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
@@ -422,7 +427,7 @@ export const PreventiveHealthIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const FullBodyCheckupIcon = ({ className, size = 48 }) => (
+export const FullBodyCheckupIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="bodyGrad" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
@@ -455,7 +460,7 @@ export const FullBodyCheckupIcon = ({ className, size = 48 }) => (
   </svg>
 )
 
-export const HomeSampleCollectionIcon = ({ className, size = 48 }) => (
+export const HomeSampleCollectionIcon = ({ className, size = 48 }: IconProps) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className}>
     <defs>
       <linearGradient id="houseGrad" x1="24" y1="6" x2="24" y2="42" gradientUnits="userSpaceOnUse">

@@ -291,9 +291,9 @@ export default function PackageDetailPage() {
                     </div>
                     <h3 className="text-xl font-bold text-slate-900">Test Prerequisites</h3>
                   </div>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 px-4 md:px-0">
                     {pkg.prerequisites.map((prereq, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
+                      <li key={idx} className="flex items-start gap-3 min-h-[44px]">
                         <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">✓</span>
                         <span className="text-slate-700">{prereq}</span>
                       </li>

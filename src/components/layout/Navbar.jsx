@@ -47,81 +47,81 @@ export default function Navbar() {
       navbarPosition === 'bottom' ? 'bottom-0' : 'top-0'
     }`}>
 
-      {/* TOP BAR */}
-      <div className="bg-sky-600 text-white py-1.5 border-b border-sky-700">
-        <div className="w-full px-6">
-          <div className="flex items-center justify-between flex-wrap gap-4 text-sm font-medium">
+{/* TOP BAR - Full for big screens, simplified for mobile */}
+      <div className="bg-sky-600 text-white py-1.5 sm:py-1.5 border-b border-sky-700">
+        <div className="w-full px-3 sm:px-6">
+          <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm font-medium">
 
-            {/* Left Info */}
-            <div className="flex items-center flex-wrap gap-6">
+            {/* Left Info - Full on lg, simplified on mobile */}
+            <div className="flex items-center flex-wrap gap-2 sm:gap-4 lg:gap-6">
               <span className="font-semibold tracking-wide flex items-center gap-1.5">
                 <BuildingIcon size={16} className="text-white" />
-                Cutis Lab Path
+                <span className="hidden sm:inline">Cutis Lab Path</span>
+                <span className="sm:hidden">Cutis Lab</span>
               </span>
 
-              <span className="opacity-80">|</span>
+              <span className="hidden lg:inline opacity-80">|</span>
 
-              <span className="flex items-center gap-1.5">
+              <span className="hidden lg:flex items-center gap-1.5">
                 <LocationIcon size={16} className="text-white" />
                 Kathmandu, Bagmati, Nepal
               </span>
 
-              <span className="opacity-80">|</span>
+              <span className="hidden lg:inline opacity-80">|</span>
 
-              <span className="flex items-center gap-1.5">
+              <span className="hidden lg:flex items-center gap-1.5">
                 <PhoneIcon size={16} className="text-white" />
                 Ph No - +977-9825849435
               </span>
 
-              <span className="opacity-80">|</span>
+              <span className="hidden lg:inline opacity-80">|</span>
 
-              <span className="flex items-center gap-1.5">
+              <span className="hidden lg:flex items-center gap-1.5">
                 <EmailIcon size={16} className="text-white" />
                 Email - cutislabpath@gmail.com
               </span>
             </div>
 
-            {/* Social Icons */}
-            <div className="flex items-center gap-4 mr-8">
-
-              {/* Facebook */}
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <FacebookIcon size={20} />
+            {/* Phone for mobile only */}
+            <div className="lg:hidden flex items-center gap-2">
+              <a href="tel:+977-9825849435" className="flex items-center gap-1">
+                <PhoneIcon size={14} className="text-white" />
+                <span>+977-9825849435</span>
               </a>
-
-              {/* Instagram */}
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <InstagramIcon size={20} />
-              </a>
-
-              {/* Twitter */}
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <TwitterIcon size={20} />
-              </a>
-
-              {/* WhatsApp */}
-              <a href="https://wa.me/9779825849435" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <WhatsAppIcon size={20} />
-              </a>
-
             </div>
-          </div>
+
+            {/* Social Icons - Shown on sm+ */}
+            <div className="hidden sm:flex items-center gap-3">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+                <FacebookIcon size={18} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+                <InstagramIcon size={18} />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+                <TwitterIcon size={18} />
+              </a>
+              <a href="https://wa.me/9779825849435" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+                <WhatsAppIcon size={18} />
+              </a>
+            </div>
+</div>
         </div>
       </div>
 
       {/* MAIN NAVBAR */}
       <nav className="bg-white border-b border-sky-300 shadow-lg relative">
         <div className="w-full px-6">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16 sm:h-20">
 
             {/* Logo */}
             <Link href="/" className="flex items-center">
               <Image
                 src="/images/cutis.png"
                 alt="CUTIS Lab"
-                width={160}
-                height={60}
-                style={{ width: 'auto', height: 'auto' }}
+                width={120}
+                height={45}
+                className="w-24 sm:w-32 h-auto"
                 priority
               />
             </Link>
@@ -175,26 +175,47 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="lg:hidden text-2xl"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              ☰
-            </button>
+            {/* Mobile Right Section - Search + Menu */}
+            <div className="lg:hidden flex items-center gap-2">
+              {/* Search Box for Mobile */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-32 px-3 py-1.5 text-xs text-slate-800 border border-slate-200 rounded-lg focus:border-sky-500 focus:outline-none"
+                />
+              </div>
+              {/* Menu Button */}
+              <button
+                className="lg:hidden p-2 bg-sky-600 text-white rounded-lg"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isOpen && (
           <div className="lg:hidden bg-white border-t">
-            <div className="px-6 py-4 space-y-3">
+            <div className="px-4 py-3 space-y-3">
+              {/* Search Box in Mobile Menu */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search tests & packages..."
+                  className="w-full px-4 py-2 text-sm text-slate-800 border border-slate-200 rounded-lg focus:border-sky-500 focus:outline-none"
+                />
+              </div>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block text-slate-700"
+                  className="block text-slate-700 text-sm py-1.5"
                 >
                   {link.label}
                 </Link>
@@ -203,36 +224,109 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* HANGING OFFER BADGE - LEFT SIDE */}
-        <div className="absolute left-6 lg:left-12 top-full z-40">
-          {/* Strings/Ropes */}
-          <div className="flex justify-center gap-4 mb-[-6px]">
-            <div className="w-[1.5px] h-6 bg-gradient-to-b from-slate-400 to-slate-300 rounded-full shadow-sm"></div>
-            <div className="w-[1.5px] h-6 bg-gradient-to-b from-slate-400 to-slate-300 rounded-full shadow-sm"></div>
-          </div>
-          
-          {/* Badge */}
-          <div className="offer-badge animate-swing hover:scale-110 transition-transform duration-300 cursor-pointer">
-            <div className="relative">
-              {/* Outer Ring */}
-              <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 shadow-xl flex items-center justify-center border-3 border-white">
-                {/* Inner Circle */}
-                <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center shadow-inner">
-                  {/* Content */}
-                  <div className="text-center text-white">
-                    <div className="text-[8px] lg:text-[9px] font-bold tracking-wider">10%</div>
-                    <div className="text-[6px] lg:text-[7px] font-extrabold tracking-widest mt-0.5">OFFER</div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Shine Effect */}
-              <div className="absolute top-1.5 left-2 w-3 h-3 bg-white/30 rounded-full blur-sm"></div>
+        </nav>
+
+      {/* BOTTOM NAVIGATION - Fixed at bottom on small screens & tablet */}
+      <nav className="xl:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
+        <div className="flex items-center justify-around h-16 px-1">
+          {/* Home */}
+          <Link
+            href="/"
+            className={`group flex flex-col items-center justify-center py-2 px-2 min-w-[60px] transition-all duration-200 ${
+              pathname === "/" ? "text-sky-600" : "text-slate-400 hover:text-sky-500"
+            }`}
+          >
+            <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+              pathname === "/" ? "bg-sky-50" : "group-hover:bg-sky-50"
+            }`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
             </div>
-          </div>
+            <span className="text-[10px] mt-1 font-medium">Home</span>
+          </Link>
+
+          {/* Services */}
+          <Link
+            href="/services"
+            className={`group flex flex-col items-center justify-center py-2 px-2 min-w-[60px] transition-all duration-200 ${
+              pathname === "/services" ? "text-sky-600" : "text-slate-400 hover:text-sky-500"
+            }`}
+          >
+            <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+              pathname === "/services" ? "bg-sky-50" : "group-hover:bg-sky-50"
+            }`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+            </div>
+            <span className="text-[10px] mt-1 font-medium">Services</span>
+          </Link>
+
+          {/* Book Test - Center prominent floating button */}
+          <Link
+            href="/book"
+            className="group flex flex-col items-center justify-center -mt-5"
+          >
+            <div className="relative">
+              <div className="absolute -inset-2 bg-sky-100 rounded-full opacity-50 group-hover:opacity-70 transition-opacity"></div>
+              <div className="relative w-14 h-14 rounded-full bg-gradient-to-b from-sky-500 to-sky-600 shadow-lg flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+            </div>
+            <span className="text-[10px] mt-1.5 font-semibold text-sky-600">Book Now</span>
+          </Link>
+
+          {/* Tests */}
+          <Link
+            href="/tests"
+            className={`group flex flex-col items-center justify-center py-2 px-2 min-w-[60px] transition-all duration-200 ${
+              pathname === "/tests" ? "text-sky-600" : "text-slate-400 hover:text-sky-500"
+            }`}
+          >
+            <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+              pathname === "/tests" ? "bg-sky-50" : "group-hover:bg-sky-50"
+            }`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              </svg>
+            </div>
+            <span className="text-[10px] mt-1 font-medium">Tests</span>
+          </Link>
+
+          {/* Packages */}
+          <Link
+            href="/packages"
+            className={`group flex flex-col items-center justify-center py-2 px-2 min-w-[60px] transition-all duration-200 ${
+              pathname === "/packages" ? "text-sky-600" : "text-slate-400 hover:text-sky-500"
+            }`}
+          >
+            <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+              pathname === "/packages" ? "bg-sky-50" : "group-hover:bg-sky-50"
+            }`}>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <span className="text-[10px] mt-1 font-medium">Packages</span>
+          </Link>
         </div>
       </nav>
+
+      {/* Floating Support Button - Small screen only */}
+      <a
+        href="https://wa.me/9779861848382"
+        className="lg:hidden fixed bottom-20 right-4 z-40"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div className="w-11 h-11 bg-[#FF6B6B] rounded-full flex items-center justify-center shadow-lg hover:opacity-90 transition-opacity">
+          <WhatsAppIcon size={24} className="text-white" />
+        </div>
+      </a>
     </div>
   )
-  );
+);
 }

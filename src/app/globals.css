@@ -40,6 +40,17 @@ body {
   .btn-primary {
     @apply px-4 py-2 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-600 transition-colors;
   }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* True seamless infinite marquee - content wraps around continuously */
@@ -117,7 +128,7 @@ body {
 /* Custom Scrollbar Styling */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgb(14, 165, 233) rgb(241, 245, 249);
+  scrollbar-color: rgb(100, 116, 139) rgb(241, 245, 249);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -130,12 +141,27 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgb(14, 165, 233);
+  background: rgb(100, 116, 139);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgb(2, 132, 199);
+  background: rgb(71, 85, 105);
+}
+
+/* Mobile scrollbar - darker color */
+@media (max-width: 640px) {
+  .custom-scrollbar {
+    scrollbar-color: rgb(71, 85, 105) rgb(226, 232, 240);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgb(226, 232, 240);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(71, 85, 105);
+  }
 }
 
 /* Hide scrollbar for disease categories */

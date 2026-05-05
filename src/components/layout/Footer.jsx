@@ -68,14 +68,14 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="bg-slate-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8">
           {/* Brand */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center">
+          <div className="sm:col-span-1 md:col-span-2 lg:col-span-2">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-sky-600 flex items-center justify-center">
                 <svg
-                  className="w-5 h-5 text-white"
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-white"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -85,22 +85,21 @@ export default function Footer() {
                 </svg>
               </div>
               <div>
-                <p className="font-bold text-white">Cutis Path Lab</p>
-                <p className="text-xs text-sky-400">Laboratory</p>
+                <p className="font-bold text-white text-sm sm:text-base">Cutis Path Lab</p>
+                <p className="text-[10px] sm:text-xs text-sky-400">Laboratory</p>
               </div>
             </Link>
-            <p className="text-slate-400 mb-6 max-w-xs">
-              Modern pathology laboratory management system for streamlined
-              operations and better patient care.
+            <p className="text-slate-400 text-[10px] sm:text-xs mb-4 sm:mb-6 max-w-xs">
+              Modern pathology laboratory management system for streamlined operations and better patient care.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-sky-400 hover:bg-slate-700 transition-all"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:text-sky-400 hover:bg-slate-700 transition-all"
                   aria-label={social.name}
                 >
                   {social.icon}
@@ -109,15 +108,15 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links */}
+          {/* Links - Stack on mobile */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Product</h4>
-            <ul className="space-y-3">
+            <h4 className="text-white font-semibold mb-2 sm:mb-4 text-xs sm:text-sm">Product</h4>
+            <ul className="space-y-1 sm:space-y-3">
               {footerLinks.product.map((link, i) => (
-                <li key={i}>
+                <li key={i} className="min-h-[36px] sm:min-h-[44px]">
                   <Link
                     href={link.href}
-                    className="text-slate-400 hover:text-sky-400 transition-colors"
+                    className="text-slate-400 hover:text-sky-400 transition-colors text-[10px] sm:text-xs"
                   >
                     {link.label}
                   </Link>
@@ -127,13 +126,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold mb-4">Company</h4>
-            <ul className="space-y-3">
+            <h4 className="text-white font-semibold mb-2 sm:mb-4 text-xs sm:text-sm">Company</h4>
+            <ul className="space-y-1 sm:space-y-3">
               {footerLinks.company.map((link, i) => (
-                <li key={i}>
+                <li key={i} className="min-h-[36px] sm:min-h-[44px]">
                   <Link
                     href={link.href}
-                    className="text-slate-400 hover:text-sky-400 transition-colors"
+                    className="text-slate-400 hover:text-sky-400 transition-colors text-[10px] sm:text-xs"
                   >
                     {link.label}
                   </Link>
@@ -143,13 +142,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold mb-4">Support</h4>
-            <ul className="space-y-3">
+            <h4 className="text-white font-semibold mb-2 sm:mb-4 text-xs sm:text-sm">Support</h4>
+            <ul className="space-y-1 sm:space-y-3">
               {footerLinks.support.map((link, i) => (
-                <li key={i}>
+                <li key={i} className="min-h-[36px] sm:min-h-[44px]">
                   <Link
                     href={link.href}
-                    className="text-slate-400 hover:text-sky-400 transition-colors"
+                    className="text-slate-400 hover:text-sky-400 transition-colors text-[10px] sm:text-xs"
                   >
                     {link.label}
                   </Link>
@@ -160,11 +159,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">
+        <div className="mt-6 sm:mt-8 md:mt-12 pt-4 sm:pt-6 md:pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-2 sm:gap-4">
+          <p className="text-slate-500 text-[10px] sm:text-sm">
             © 2026 Cutis Path Lab. All rights reserved.
           </p>
-          <p className="text-slate-500 text-sm">Made with ❤️ in Nepal</p>
+          <p className="text-slate-500 text-[10px] sm:text-sm">Made with ❤️ in Nepal</p>
         </div>
       </div>
     </footer>

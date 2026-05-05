@@ -65,13 +65,12 @@ export default function ServicesPage() {
       <Navbar />
       
       <main className="pt-[80px] lg:pt-[88px]">
-        {/* Hero Section - Banner image */}
-        <section className="relative w-full mt-7">
+        {/* Hero Section - Image for all screens */}
+        <section className="relative w-full h-[18vh] sm:h-[180px]">
           <img 
             src="/images/services-poster.png" 
             alt="Cutis Path Lab Services"
-            className="w-full h-auto block"
-            style={{ maxHeight: '500px', objectFit: 'cover' }}
+            className="w-full h-full sm:object-cover object-fill"
           />
         </section>
 
