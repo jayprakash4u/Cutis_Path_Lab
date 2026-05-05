@@ -21,7 +21,7 @@ import {
   PreventiveHealthIcon,
   FullBodyCheckupIcon,
   HomeSampleCollectionIcon,
-} from "@/data/icons/PathologyIcons";
+} from "@/data/icons/PathologyIcons.jsx";
 
 const serviceList = [
   { name: "Blood Tests", description: "Complete blood count analysis", IconComponent: BloodTestsIcon },
