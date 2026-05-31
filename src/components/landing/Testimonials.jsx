@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 const reviews = [
   { id: 1, name: "Ramesh Kumar", role: "Patient", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", rating: 5, content: "Excellent service! The staff was very professional and the test results were delivered on time. Highly recommend Cutis Path Lab for all diagnostic needs." },
@@ -14,30 +14,84 @@ const reviews = [
 export default function Reviews() {
   const scrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const cardsPerView = 2;
-  const totalDots = Math.ceil(reviews.length / cardsPerView);
+  const [cardsPerView, setCardsPerView] = useState(2);
+  const scrollAmountRef = useRef(0);
+  const prevCardsRef = useRef(2);
+  const GAP = 12; // matches gap-3  (3 × 4px)
+
+  /**
+   * Recalculate how many cards fit in the visible area.
+   * Called on mount, after every scroll (to catch when scrolling finishes),
+   * and when the window is resized.
+   *
+   * cardW   = border-box width of one card element  (offsetWidth includes padding+border)
+   * cards   = floor(containerInner / (cardW + gap)), clamped to ≥ 1
+   * scroll  = cardW * cards + gap*(cards-1)  – pixels to advance by one full "page"
+   * totalDots = ceil(totalReviews / cards); used for the dot indicator
+   */
+  const recalc = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const containerInner = container.offsetWidth;
+    if (containerInner === 0) return;
+
+    const firstCard = container.querySelector('[class*="flex-shrink-0"]');
+    if (!firstCard) return;
+
+    const cardW = firstCard.offsetWidth;       // border-box px
+    const totalSlot = cardW + GAP;
+    const cards = Math.max(1, Math.floor(containerInner / totalSlot));
+
+    if (cards !== prevCardsRef.current) {
+      prevCardsRef.current = cards;
+      // cardW × N + gap × (N − 1)  – scroll just past the visible cards
+      scrollAmountRef.current = cardW * cards + GAP * (cards - 1);
+      setCardsPerView(cards);
+    }
+  }, []);
+
+  useEffect(() => { recalc(); }, [recalc]);
+  useEffect(() => {
+    const onResize = () => recalc();
+    window.addEventListener("resize", onResize);
+    // ResizeObserver to catch flexbox / font-size changes too
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => recalc());
+      if (scrollRef.current) ro.observe(scrollRef.current);
+    }
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (ro) ro.disconnect();
+    };
+  }, [recalc]);
 
   const handleScroll = () => {
-    if (scrollRef.current) {
-      const scrollLeft = scrollRef.current.scrollLeft;
-      const cardWidth = scrollRef.current.offsetWidth;
-      const newIndex = Math.round(scrollLeft / cardWidth);
-      setActiveIndex(newIndex);
-    }
+    if (!scrollRef.current) return;
+    const unit = scrollAmountRef.current / cardsPerView;
+    const newIndex = Math.round(scrollRef.current.scrollLeft / unit);
+    setActiveIndex(Math.max(0, Math.min(newIndex, reviews.length - cardsPerView)));
   };
 
+  // totalDots must reactively depend on cardsPerView
+  const totalDots = Math.ceil(reviews.length / cardsPerView);
+
   const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -400 : 400;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    if (!scrollRef.current) return;
+    const amount = scrollAmountRef.current;
+    scrollRef.current.scrollBy({
+      left: direction === "left" ? -amount : amount,
+      behavior: "smooth",
+    });
   };
 
   const scrollToDot = (index) => {
-    if (scrollRef.current) {
-      const cardWidth = scrollRef.current.offsetWidth;
-      scrollRef.current.scrollTo({ left: index * cardWidth, behavior: "smooth" });
-    }
+    if (!scrollRef.current) return;
+    const unit = scrollAmountRef.current / cardsPerView;
+    scrollRef.current.scrollTo({
+      left: index * unit,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -49,16 +103,17 @@ export default function Reviews() {
       </div>
 
       <div className="max-w-5xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-3 sm:mb-4 md:mb-6">
-          <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1">
-            What Our Patients Say
-          </h2>
-          <p className="text-[10px] sm:text-xs text-slate-600 max-w-xl mx-auto">Trusted by thousands of satisfied patients</p>
-        </div>
+         {/* Section Header */}
+         <div className="relative">
+           <div className="absolute top-0 left-0">
+             <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
+               <h2 className="text-lg md:text-xl font-bold text-white">What Our Patients Say</h2>
+             </div>
+           </div>
+         </div>
 
         {/* Scroll Container with Navigation */}
-        <div className="relative">
+        <div className="relative pt-12">
           {/* Left Arrow - hidden on mobile */}
           <button
             onClick={() => scroll("left")}
@@ -98,7 +153,7 @@ export default function Reviews() {
 
                 {/* Content */}
                 <p className="text-[10px] sm:text-xs md:text-sm text-slate-600 mb-2 sm:mb-3 md:mb-4 leading-tight sm:leading-relaxed group-hover:text-slate-700 transition-colors">
-                  "{review.content}"
+                  &ldquo;{review.content}&rdquo;
                 </p>
 
                 {/* Author */}
@@ -106,7 +161,7 @@ export default function Reviews() {
                   <img
                     src={review.image}
                     alt={review.name}
-                    className="w-8 h-8 sm:w-10 sm:w-12 rounded-full object-cover border border-[#FF6B6B]"
+                    className="w-8 h-8 sm:w-10 sm:h-12 rounded-full object-cover border border-[#FF6B6B]"
                   />
                   <div>
                     <h4 className="font-semibold text-[10px] sm:text-xs md:text-sm text-slate-900 truncate">{review.name}</h4>

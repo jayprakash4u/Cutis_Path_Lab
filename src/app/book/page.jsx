@@ -9,6 +9,7 @@
 
 // ========== REACT HOOKS ==========
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 // ========== LAYOUT COMPONENTS ==========
 import Navbar from "@/components/layout/Navbar";
@@ -98,16 +99,42 @@ const canProceed = (step, formData, selectedTests) => {
 
 // ========== MAIN COMPONENT ==========
 
+import { Suspense } from "react";
+
 export default function BookPage() {
-  // Step tracking (1-4)
-  const [currentStep, setCurrentStep] = useState(1);
-  
-  // Selected tests array
-  const [selectedTests, setSelectedTests] = useState([]);
-  
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookPageContent />
+    </Suspense>
+  );
+}
+
+function BookPageContent() {
+  const searchParams = useSearchParams();
+
+  // ── Step + pre-selected tests from URL ───────────────────────────
+  const [currentStep, setCurrentStep] = useState(() => {
+    const raw = searchParams.get("testIds");          // e.g. "T007" or "T001,T002"
+    if (!raw) return 1;                                // no search → step 1
+    const ids = raw.split(",").map((s) => s.trim()).filter(Boolean);
+    if (ids.length === 0) return 1;
+    // If at least one ID matches a real test, jump to step 2
+    const anyMatch = ids.some((id) => tests.find((t) => t.id === id));
+    return anyMatch ? 2 : 1;
+  });
+
+  const [selectedTests, setSelectedTests] = useState(() => {
+    const raw = searchParams.get("testIds");
+    if (!raw) return [];
+    const ids = raw.split(",").map((s) => s.trim()).filter(Boolean);
+    return ids
+      .map((id) => tests.find((t) => t.id === id))
+      .filter(Boolean);
+  });
+
   // Category filter
   const [activeCategory, setActiveCategory] = useState("all");
-  
+
   // Form data state
   const [formData, setFormData] = useState({
     firstName: "",
@@ -119,6 +146,30 @@ export default function BookPage() {
     address: "",
     notes: "",
   });
+
+  /**
+   * Inline style tag — scoped to this page so browser date-picker
+   * pseudo-elements (:calendar-picker, :calendar-picker-indicator, etc.)
+   * render with correct contrast on Chrome / Edge / Safari.
+   */
+  const datePickerStyles = `
+    input[type="date"] {
+      color-scheme: light;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      filter: invert(0.25) sepia(0.3) saturate(3) hue-rotate(200deg);
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+      filter: invert(0.1) sepia(0.4) saturate(5) hue-rotate(190deg);
+    }
+    input[type="date"]::-webkit-datetime-edit-text,
+    input[type="date"]::-webkit-datetime-edit-month-field,
+    input[type="date"]::-webkit-datetime-edit-day-field,
+    input[type="date"]::-webkit-datetime-edit-year-field {
+      color: #1e293b;
+    }
+  `;
 
   /**
    * Toggle test selection - adds if not present, removes if present
@@ -151,6 +202,7 @@ export default function BookPage() {
   // ========== RENDER ==========
   return (
     <>
+      <style>{datePickerStyles}</style>
       <Navbar />
       <main className="pt-16 lg:pt-24 pb-12 lg:pb-16 bg-white">
         
@@ -380,7 +432,7 @@ export default function BookPage() {
                           type="date"
                           required
                           min={new Date().toISOString().split('T')[0]}
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none"
+                          style={{ colorScheme: 'light' }}
                           value={formData.date}
                           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                         />

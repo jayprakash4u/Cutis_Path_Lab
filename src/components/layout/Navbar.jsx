@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BuildingIcon, LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon } from "./NavIcons";
+import { tests } from "@/data/staticData";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -19,7 +20,116 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [navbarPosition, setNavbarPosition] = useState('top');
   const pathname = usePathname();
+  const router = useRouter();
 
+  // ── Search state ─────────────────────────────────────────────────
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchActiveIdx, setSearchActiveIdx] = useState(-1);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const searchRef = useRef(null);
+
+  // Combined dataset: tests (from staticData) + packages (inline, matching packages/page.jsx)
+  const searchItems = useMemo(() => {
+    const PACKAGES = [
+      { id: 1, name: "Complete Blood Count", description: "Comprehensive blood analysis including RBC, WBC, platelets, hemoglobin, and hematocrit.", type: "package" },
+      { id: 2, name: "Liver Function Test", description: "Tests for liver health including enzymes, bilirubin, and protein levels.", type: "package" },
+      { id: 3, name: "Kidney Function Test", description: "Evaluates kidney performance through blood urea and creatinine tests.", type: "package" },
+      { id: 4, name: "Thyroid Profile", description: "Complete thyroid function assessment including T3, T4, and TSH.", type: "package" },
+      { id: 5, name: "Blood Sugar Fasting", description: "Fasting blood glucose test for diabetes screening and management.", type: "package" },
+      { id: 6, name: "Lipid Profile", description: "Cholesterol and triglyceride assessment for heart health.", type: "package" },
+      { id: 7, name: "Hemoglobin A1C", description: "Long-term blood sugar monitoring for diabetes management.", type: "package" },
+      { id: 8, name: "Vitamin D3", description: "Test for Vitamin D deficiency and bone health assessment.", type: "package" },
+      { id: 9, name: "Iron Studies", description: "Comprehensive iron deficiency and anemia workup.", type: "package" },
+      { id: 10, name: "Dengue NS1 Antigen", description: "Early detection test for dengue fever infection.", type: "package" },
+      { id: 11, name: "Urine Analysis", description: "Complete urine examination for kidney and urinary tract health.", type: "package" },
+      { id: 12, name: "ECG", description: "Electrocardiogram for heart rhythm and function assessment.", type: "package" },
+      { id: 13, name: "Vitamin B12", description: "Test for Vitamin B12 deficiency and neurological health.", type: "package" },
+      { id: 14, name: "HbA1c & Glucose", description: "Combined test for diabetes diagnosis and monitoring.", type: "package" },
+      { id: 15, name: "Uric Acid", description: "Test for gout and kidney stone risk assessment.", type: "package" },
+      { id: 16, name: "ESR", description: "Erythrocyte sedimentation rate for inflammation detection.", type: "package" },
+      { id: 17, name: "Malaria Antigen", description: "Rapid test for malaria parasite detection.", type: "package" },
+      { id: 18, name: "Pregnancy Test", description: "Beta HCG test for pregnancy confirmation.", type: "package" },
+      { id: 19, name: "Semen Analysis", description: "Complete semen examination for fertility assessment.", type: "package" },
+      { id: 20, name: "Stool Routine", description: "Complete stool examination for digestive health.", type: "package" },
+      { id: 21, name: "Blood Group & Rh", description: "ABO blood group and Rh factor determination.", type: "package" },
+      { id: 22, name: "Coagulation Profile", description: "Blood clotting function assessment.", type: "package" },
+      { id: 23, name: "Serum Electrolytes", description: "Electrolyte balance assessment for hydration status.", type: "package" },
+      { id: 24, name: "Amylase & Lipase", description: "Pancreatic enzyme test for pancreatitis diagnosis.", type: "package" },
+      { id: 25, name: "Prostate Specific Antigen", description: "PSA test for prostate health screening.", type: "package" },
+    ];
+
+    const testsNormalized = tests.map((t) => ({
+      id: t.id,
+      name: t.name,
+      description: t.description,
+      type: "test",
+    }));
+
+    return [...PACKAGES, ...testsNormalized];
+  }, []);
+
+  const highlightedLabel = (text, query) => {
+    if (!query.trim()) return text;
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return (
+      <>
+        {text.slice(0, idx)}
+        <span className="text-[#FF6B6B] font-semibold">{text.slice(idx, idx + query.length)}</span>
+        {text.slice(idx + query.length)}
+      </>
+    );
+  };
+
+  const handleSearchChange = useCallback(
+    (e) => {
+      const q = e.target.value;
+      setSearchQuery(q);
+      if (q.trim().length > 0) {
+        const lowerQ = q.toLowerCase();
+        const filtered = searchItems.filter(
+          (item) =>
+            item.name.toLowerCase().includes(lowerQ) ||
+            (item.description ?? "").toLowerCase().includes(lowerQ)
+        );
+        setSearchResults(filtered.slice(0, 8));
+        setSearchActiveIdx(-1);
+        setShowSearchDropdown(true);
+      } else {
+        setSearchResults([]);
+        setShowSearchDropdown(false);
+      }
+    },
+    [searchItems]
+  );
+
+  const navigateToResult = useCallback(
+    (item) => {
+      setShowSearchDropdown(false);
+      setSearchQuery("");
+      setIsOpen(false);
+      if (item.type === "test") {
+        router.push(`/book?testIds=${encodeURIComponent(item.id)}`);
+      } else {
+        router.push(`/book-package/${item.id}`);
+      }
+    },
+    [router]
+  );
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSearchDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Scroll handler
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -146,19 +256,101 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Right Section - Search and Buttons */}
-            <div className="hidden lg:flex items-center gap-4">
-              {/* Search Box */}
-              <div className="relative flex items-center">
-                <input
-                  type="text"
-                  placeholder="Search tests & packages"
-                  className="w-64 px-4 py-2 pr-12 text-black border border-sky-300 rounded-lg bg-white focus:border-sky-300 focus:outline-none"
-                />
-                <div className="absolute right-0 top-0 bottom-0 w-9 bg-[#FF6B6B] rounded-lg flex items-center justify-center">
-                  <SearchIcon size={16} className="text-white" />
+             {/* Right Section - Search and Buttons */}
+             <div className="hidden lg:flex items-center gap-4">
+                {/* Search Box */}
+                <div className="relative flex items-center" ref={searchRef}>
+                  <input
+                    type="text"
+                    placeholder="Search tests & packages"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") {
+                        setShowSearchDropdown(false);
+                        setSearchActiveIdx(-1);
+                      } else if (e.key === "ArrowDown") {
+                        e.preventDefault();
+                        setSearchActiveIdx((prev) =>
+                          prev < searchResults.length - 1 ? prev + 1 : prev
+                        );
+                      } else if (e.key === "ArrowUp") {
+                        e.preventDefault();
+                        setSearchActiveIdx((prev) =>
+                          prev > 0 ? prev - 1 : prev
+                        );
+                      } else if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (searchResults[searchActiveIdx]) {
+                          navigateToResult(searchResults[searchActiveIdx]);
+                        } else if (searchResults.length > 0) {
+                          navigateToResult(searchResults[0]);
+                        }
+                      }
+                    }}
+                    className="w-64 px-4 py-2 pr-12 text-black border border-sky-300 rounded-lg bg-white focus:border-sky-300 focus:outline-none"
+                  />
+                  <div className="absolute right-0 top-0 bottom-0 w-9 bg-[#FF6B6B] rounded-lg flex items-center justify-center pointer-events-none">
+                    <SearchIcon size={16} className="text-white" />
+                  </div>
+
+                  {/* Search Results Dropdown */}
+                  {showSearchDropdown && searchResults.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-sky-200 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
+                      {searchResults.map((item, idx) => (
+                        <button
+                          key={item.id + item.type}
+                          type="button"
+                          onClick={() => navigateToResult(item)}
+                          className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors ${
+                            idx === searchActiveIdx
+                              ? "bg-sky-50"
+                              : "hover:bg-slate-50"
+                          }`}
+                        >
+                          <span
+                            className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                              item.type === "test"
+                                ? "bg-sky-100 text-sky-700"
+                                : "bg-[#FF6B6B]/15 text-[#FF6B6B]"
+                            }`}
+                          >
+                            {item.type === "test" ? "T" : "P"}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-slate-800 truncate">
+                              {highlightedLabel(item.name, searchQuery)}
+                            </p>
+                            <p className="text-xs text-slate-400 truncate">
+                              {item.type === "test" ? "Individual Test" : "Package"} · {item.description}
+                            </p>
+                          </div>
+                          <span
+                            className={`flex-shrink-0 text-[10px] font-bold uppercase tracking-wider ${
+                              item.type === "test"
+                                ? "text-sky-600"
+                                : "text-[#FF6B6B]"
+                            }`}
+                          >
+                            {item.type === "test" ? "Book" : "Book"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* No-results hint */}
+                  {showSearchDropdown &&
+                    searchQuery.trim().length > 0 &&
+                    searchResults.length === 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-sky-200 rounded-xl shadow-xl z-50 px-4 py-6 text-center">
+                        <p className="text-sm text-slate-500">
+                          No results found for<span className="font-semibold text-slate-700">&nbsp;&quot;{searchQuery}&quot;</span>
+                        </p>
+                      </div>
+                    )}
                 </div>
-              </div>
 
               <Link
                 href="/book"
@@ -169,7 +361,7 @@ export default function Navbar() {
 
               <Link
                 href="/download-report"
-                className="px-4 py-2 border-2 border-sky-600 text-sky-600 rounded-lg text-base font-semibold hover:bg-sky-50 transition"
+                className="px-5 py-2 bg-transparent border-b-2 border-b-[#FF6B6B] rounded-lg text-base font-semibold text-[#FF6B6B] hover:bg-red-50 transition"
               >
                 Report
               </Link>

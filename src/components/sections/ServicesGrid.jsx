@@ -50,19 +50,16 @@ export default function ServicesGrid() {
   return (
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="bg-slate-50 rounded-lg shadow-sm overflow-hidden">
-          <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-            <div className="absolute left-0 right-0 top-1/2 border-t-4 border-[#FF6B6B] z-0"></div>
-            <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
-              <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
-                Our Services
-              </h2>
+        {/* Section Header */}
+        <div className="relative mb-8 md:mb-10">
+          <div className="absolute top-0 left-0">
+            <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
+              <h2 className="text-lg md:text-xl font-bold text-white">Our Services</h2>
             </div>
           </div>
-          
-          <div className="px-4 lg:px-8 pb-4 lg:pb-8">
-            <p className="text-slate-600 text-xs lg:text-sm leading-relaxed">
-              We offer comprehensive pathology and diagnostic services including blood tests, urine tests, histopathology, genetic testing, and more. Our state-of-the-art laboratory ensures accurate results with quick turnaround time. With advanced technology and experienced professionals, we provide reliable diagnostics for all your healthcare needs. From routine checkups to specialized testing, our services cover a wide range of medical diagnostics to ensure you receive the best care possible.
+          <div className="pt-12">
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-2xl">
+              We offer comprehensive pathology and diagnostic services including blood tests, urine tests, histopathology, genetic testing, and more.
             </p>
           </div>
         </div>
@@ -82,7 +79,9 @@ export default function ServicesGrid() {
                   {service.name}
                 </h3>
                 <p className="text-[9px] md:text-sm text-slate-500 text-center mb-2 md:mb-4">{service.description}</p>
-                <button className="px-3 md:px-5 py-1 md:py-2.5 text-[9px] md:text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 transition-all duration-300">
+                <button 
+                  className="px-3 md:px-5 py-1 md:py-2.5 text-[9px] md:text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 transition-all duration-300"
+                >
                   Know More <span className="text-[#FF6B6B] ml-1">{'>>'}</span>
                 </button>
               </div>

@@ -53,10 +53,16 @@ export default function Stats() {
   return (
     <section className="py-4 sm:py-6 lg:py-10 bg-slate-100 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="text-center mb-3 sm:mb-6">
-          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-slate-900 mb-1">
-            Why to Choose Cutis Path Lab
-          </h2>
+        {/* Section Header */}
+        <div className="relative mb-3 sm:mb-6">
+          <div className="absolute top-0 left-0">
+            <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
+              <h2 className="text-lg md:text-xl font-bold text-white">Why Choose Us</h2>
+            </div>
+          </div>
+          <div className="pt-12">
+            <h2 className="text-lg md:text-2xl font-bold text-slate-900">Why to Choose Cutis Path Lab</h2>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">

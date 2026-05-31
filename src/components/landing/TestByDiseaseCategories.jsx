@@ -78,12 +78,13 @@ export default function TestByDiseaseCategories() {
                 flexShrink: 0,
                 zIndex: 1,
                 overflow: "hidden",
+                position: "relative",
               }}>
                 <Image
                   src={cat.image}
                   alt={cat.label}
-                  width={64}
-                  height={64}
+                  fill
+                  sizes="70px"
                   style={{ objectFit: "cover" }}
                 />
               </div>

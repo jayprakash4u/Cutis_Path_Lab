@@ -147,16 +147,19 @@ export default function TestsInOffers() {
   };
 
   return (
-    <section className="py-4 sm:py-6 lg:py-8 bg-white">
+    <section className="py-4 sm:py-6 lg:py-8 bg-white relative">
       <div className="max-w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-3">
-          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-slate-900">
-            Flat 25-33% OFF On Lab Tests
-          </h2>
-          <p className="text-slate-600 text-[10px] sm:text-xs mt-0.5 font-medium">
-            🔥 Free home collection
-          </p>
+        {/* Section Header */}
+        <div className="relative mb-3 sm:mb-4 md:mb-6">
+          <div className="top-0 absolute">
+            <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
+              <h2 className="text-lg md:text-xl font-bold text-white">Special Offers</h2>
+            </div>
+          </div>
+          <div className="pt-12">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">Flat 25-33% OFF On Lab Tests</h2>
+            <p className="mt-1 text-[10px] sm:text-xs text-slate-500">Free home collection</p>
+          </div>
         </div>
 
         {/* Scroll Container with Navigation */}
