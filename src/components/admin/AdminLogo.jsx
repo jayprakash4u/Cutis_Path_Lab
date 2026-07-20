@@ -26,7 +26,7 @@ export default function AdminLogo({
       alt="Cutis Path Lab"
       width={s.width}
       height={s.height}
-      className={`${s.className} object-contain object-left`}
+      className={`${s.className} object-contain ${href === null ? "object-left" : "object-center"}`}
       priority={priority}
     />
   );

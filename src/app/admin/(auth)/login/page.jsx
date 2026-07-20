@@ -4,7 +4,25 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminLogin } from "@/lib/adminClient";
 import AdminLogo from "@/components/admin/AdminLogo";
-import { ErrorBox, Field, inputClass } from "@/components/admin/ui";
+import { ErrorBox } from "@/components/admin/ui";
+
+const LAB_HERO_IMAGE = "/images/home/abouthomepage/pathlab1.jpg";
+
+function LockIcon() {
+  return (
+    <svg
+      className="h-3.5 w-3.5 shrink-0 opacity-90"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden
+    >
+      <rect x="5" y="11" width="14" height="10" rx="2" />
+      <path d="M8 11V8a4 4 0 1 1 8 0v3" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -28,86 +46,83 @@ export default function AdminLoginPage() {
   };
 
   return (
-      <div className="min-h-screen grid lg:grid-cols-2">
-        <section className="relative hidden lg:flex flex-col justify-between p-10 xl:p-14 overflow-hidden bg-gradient-to-br from-sky-700 via-sky-600 to-sky-500 text-white">
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage:
-                "url(https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1400&h=1800&fit=crop)",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-sky-950/70 via-sky-800/35 to-sky-700/20" />
+    <div className="admin-login-page grid lg:grid-cols-2">
+      {/* Left — lab hero */}
+      <section className="admin-login-hero" aria-hidden={false}>
+        <div
+          className="admin-login-hero__bg"
+          style={{ backgroundImage: `url(${LAB_HERO_IMAGE})` }}
+        />
+        <div className="admin-login-hero__overlay" />
 
-          <div className="relative z-10">
-            <div className="inline-flex items-center rounded-2xl bg-white px-4 py-3 mb-10 shadow-sm">
-              <AdminLogo href={null} size="lg" priority />
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-100 mb-4">
-              Laboratory operations
-            </p>
-            <h1 className="admin-display text-4xl xl:text-5xl leading-[1.1] max-w-md">
-              Staff workspace for bookings and catalog
-            </h1>
-            <p className="mt-5 text-sky-50/90 text-base leading-relaxed max-w-sm">
-              Confirm appointments, update offers, and keep tests current — same brand as the
-              public site.
+        <div className="admin-login-hero__logo-wrap">
+          <AdminLogo href={null} size="lg" priority />
+        </div>
+
+        <div className="admin-login-hero__content">
+          <p className="admin-login-hero__eyebrow">Laboratory operations</p>
+          <h1 className="admin-login-hero__title">
+            Staff workspace for bookings and catalog
+          </h1>
+          <p className="admin-login-hero__desc">
+            Confirm appointments, update offers, and keep tests current — same brand as the
+            public site.
+          </p>
+        </div>
+
+        <p className="admin-login-hero__footer">
+          <LockIcon />
+          Staff access only · Secure session
+        </p>
+      </section>
+
+      {/* Right — sign-in card */}
+      <section className="admin-login-form-wrap">
+        <form onSubmit={handleSubmit} className="admin-login-card admin-animate">
+          <div className="admin-login-card__logo">
+            <AdminLogo href="/" size="lg" priority className="justify-center [&_img]:object-center" />
+          </div>
+
+          <div className="mb-7">
+            <p className="admin-login-card__eyebrow">Admin sign in</p>
+            <h2 className="admin-login-card__title">Welcome back</h2>
+            <p className="admin-login-card__subtitle">
+              Use your admin credentials to open the operations desk.
             </p>
           </div>
 
-          <p className="relative z-10 text-xs text-sky-100/80 tracking-wide">
-            Staff access only · Secure session
-          </p>
-        </section>
+          <ErrorBox message={error} />
 
-        <section className="flex items-center justify-center px-4 py-12 sm:px-8">
-          <form
-            onSubmit={handleSubmit}
-            className="admin-panel admin-animate w-full max-w-md p-7 sm:p-9"
-          >
-            <div className="mb-8">
-              <div className="mb-5">
-                <AdminLogo href="/" size="lg" priority />
-              </div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-700 mb-2">
-                Admin sign in
-              </p>
-              <h2 className="admin-display text-3xl text-slate-900 mb-2">Welcome back</h2>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Use your admin credentials to open the operations desk.
-              </p>
-            </div>
+          <div className="space-y-4">
+            <label className="admin-login-field">
+              <span className="admin-login-field__label">Username</span>
+              <input
+                className="admin-login-input"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+                required
+              />
+            </label>
 
-            <ErrorBox message={error} />
+            <label className="admin-login-field">
+              <span className="admin-login-field__label">Password</span>
+              <input
+                type="password"
+                className="admin-login-input admin-login-input--password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+              />
+            </label>
 
-            <div className="space-y-4">
-              <Field label="Username">
-                <input
-                  className={inputClass}
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="username"
-                  required
-                />
-              </Field>
-              <Field label="Password">
-                <input
-                  type="password"
-                  className={inputClass}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                />
-              </Field>
-              <button type="submit" disabled={busy} className="admin-btn-primary w-full mt-2">
-                {busy ? "Signing in…" : "Enter admin"}
-              </button>
-            </div>
-          </form>
-        </section>
-      </div>
+            <button type="submit" disabled={busy} className="admin-login-submit">
+              {busy ? "Signing in…" : "Enter admin"}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
   );
 }

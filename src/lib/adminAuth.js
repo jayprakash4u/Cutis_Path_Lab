@@ -126,5 +126,3 @@ export function requireAdmin(request) {
   }
   return null;
 }
-
-export { COOKIE as ADMIN_COOKIE_NAME };
