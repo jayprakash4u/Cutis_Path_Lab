@@ -8,15 +8,18 @@
  */
 
 // ========== REACT HOOKS ==========
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 // ========== LAYOUT COMPONENTS ==========
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-
-// ========== DATA ==========
-import { tests } from "@/data/staticData";
+import {
+  bookingDetailsSchema,
+  bookingScheduleSchema,
+  buildBookingPayloadFromWizard,
+} from "@/lib/validation/booking";
+import { mapBookingApiErrorsToWizard, parseOrErrors } from "@/lib/validation/common";
 
 // ========== CONSTANTS & CONFIGURATION ==========
 
@@ -83,23 +86,39 @@ const CONTENT = {
 
 // ========== HELPER FUNCTIONS ==========
 
-/**
- * Checks if user can proceed to next step based on validation
- * @param {number} step - Current step number
- * @param {object} formData - Form data object
- * @param {Array} selectedTests - Array of selected tests
- * @returns {boolean} - Whether user can proceed
- */
-const canProceed = (step, formData, selectedTests) => {
-  if (step === 1) return selectedTests.length > 0;
-  if (step === 2) return formData.firstName && formData.lastName && formData.email && formData.phone;
-  if (step === 3) return formData.date && formData.time;
-  return true;
-};
+function FieldError({ message }) {
+  if (!message) return null;
+  return (
+    <p className="mt-1.5 flex items-start gap-1.5 text-xs font-medium text-red-600" role="alert">
+      <svg className="mt-0.5 h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
+        <path
+          fillRule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 8.25a.875.875 0 100-1.75.875.875 0 000 1.75z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <span>{message}</span>
+    </p>
+  );
+}
+
+function scrollToFirstError(errors) {
+  const firstKey = Object.keys(errors || {})[0];
+  if (!firstKey) return;
+  const el =
+    document.querySelector(`[data-field="${firstKey}"]`) ||
+    document.getElementById(`field-${firstKey}`);
+  el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (el?.focus) {
+    try {
+      el.focus({ preventScroll: true });
+    } catch {
+      // ignore
+    }
+  }
+}
 
 // ========== MAIN COMPONENT ==========
-
-import { Suspense } from "react";
 
 export default function BookPage() {
   return (
@@ -111,29 +130,59 @@ export default function BookPage() {
 
 function BookPageContent() {
   const searchParams = useSearchParams();
+  const [tests, setTests] = useState([]);
+  const [testsLoading, setTestsLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState({ type: "", text: "" });
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadTests() {
+      try {
+        const res = await fetch("/api/tests");
+        const json = await res.json();
+        if (!cancelled && json.success && Array.isArray(json.data)) {
+          setTests(json.data);
+        }
+      } catch {
+        if (!cancelled) setTests([]);
+      } finally {
+        if (!cancelled) setTestsLoading(false);
+      }
+    }
+    loadTests();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // ── Step + pre-selected tests from URL ───────────────────────────
-  const [currentStep, setCurrentStep] = useState(() => {
-    const raw = searchParams.get("testIds");          // e.g. "T007" or "T001,T002"
-    if (!raw) return 1;                                // no search → step 1
-    const ids = raw.split(",").map((s) => s.trim()).filter(Boolean);
-    if (ids.length === 0) return 1;
-    // If at least one ID matches a real test, jump to step 2
-    const anyMatch = ids.some((id) => tests.find((t) => t.id === id));
-    return anyMatch ? 2 : 1;
-  });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedTests, setSelectedTests] = useState([]);
+  const [urlPreselected, setUrlPreselected] = useState(false);
 
-  const [selectedTests, setSelectedTests] = useState(() => {
+  useEffect(() => {
+    if (urlPreselected || tests.length === 0) return;
     const raw = searchParams.get("testIds");
-    if (!raw) return [];
+    if (!raw) {
+      setUrlPreselected(true);
+      return;
+    }
     const ids = raw.split(",").map((s) => s.trim()).filter(Boolean);
-    return ids
-      .map((id) => tests.find((t) => t.id === id))
+    const matched = ids
+      .map((id) => tests.find((t) => String(t.id) === String(id)))
       .filter(Boolean);
-  });
+    if (matched.length > 0) {
+      setSelectedTests(matched);
+      setCurrentStep(2);
+    }
+    setUrlPreselected(true);
+  }, [tests, searchParams, urlPreselected]);
 
   // Category filter
   const [activeCategory, setActiveCategory] = useState("all");
+  const [testSearch, setTestSearch] = useState("");
 
   // Form data state
   const [formData, setFormData] = useState({
@@ -146,6 +195,17 @@ function BookPageContent() {
     address: "",
     notes: "",
   });
+
+  const updateField = (key, value) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+    if (fieldErrors[key]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+  };
 
   /**
    * Inline style tag — scoped to this page so browser date-picker
@@ -180,6 +240,13 @@ function BookPageContent() {
         ? prev.filter((t) => t.id !== test.id)
         : [...prev, test]
     );
+    if (fieldErrors.tests) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next.tests;
+        return next;
+      });
+    }
   };
 
   /**
@@ -192,12 +259,137 @@ function BookPageContent() {
   const finalPrice = totalPrice - discount;
 
   /**
-   * Handle form submission
+   * Handle continue — show errors on the fields that need attention
    */
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Appointment booking feature coming soon!");
+  const handleContinue = () => {
+    setSubmitMessage({ type: "", text: "" });
+    if (currentStep === 1) {
+      if (selectedTests.length === 0) {
+        setFieldErrors({
+          tests: "Please select at least one test to continue",
+        });
+        scrollToFirstError({ tests: true });
+        return;
+      }
+      setFieldErrors({});
+      setCurrentStep(2);
+      return;
+    }
+    if (currentStep === 2) {
+      const parsed = parseOrErrors(bookingDetailsSchema, formData);
+      if (!parsed.ok) {
+        setFieldErrors(parsed.errors);
+        scrollToFirstError(parsed.errors);
+        return;
+      }
+      setFieldErrors({});
+      setCurrentStep(3);
+      return;
+    }
+    if (currentStep === 3) {
+      const parsed = parseOrErrors(bookingScheduleSchema, formData);
+      if (!parsed.ok) {
+        setFieldErrors(parsed.errors);
+        scrollToFirstError(parsed.errors);
+        return;
+      }
+      setFieldErrors({});
+      setCurrentStep(4);
+    }
   };
+
+  /**
+   * Handle form submission — frontend + backend Zod validation
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitMessage({ type: "", text: "" });
+    setFieldErrors({});
+
+    try {
+      if (selectedTests.length === 0) {
+        setCurrentStep(1);
+        setFieldErrors({ tests: "Please select at least one test before confirming" });
+        setSubmitting(false);
+        return;
+      }
+
+      let payload;
+      try {
+        payload = buildBookingPayloadFromWizard({ formData, selectedTests });
+      } catch {
+        const details = parseOrErrors(bookingDetailsSchema, formData);
+        const schedule = parseOrErrors(bookingScheduleSchema, formData);
+        const merged = { ...details.errors, ...schedule.errors };
+        setFieldErrors(merged);
+        if (!details.ok) setCurrentStep(2);
+        else if (!schedule.ok) setCurrentStep(3);
+        scrollToFirstError(merged);
+        setSubmitting(false);
+        return;
+      }
+
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        if (json.errors && Object.keys(json.errors).length) {
+          const mapped = mapBookingApiErrorsToWizard(json.errors);
+          setFieldErrors(mapped);
+          if (mapped.firstName || mapped.lastName || mapped.email || mapped.phone || mapped.address) {
+            setCurrentStep(2);
+          } else if (mapped.date || mapped.time) {
+            setCurrentStep(3);
+          }
+          scrollToFirstError(mapped);
+          setSubmitting(false);
+          return;
+        }
+        setSubmitMessage({
+          type: "error",
+          text: "We couldn’t save your booking right now. Please try again in a moment.",
+        });
+        setSubmitting(false);
+        return;
+      }
+
+      setSubmitMessage({
+        type: "success",
+        text: "Booking confirmed! We’ll contact you shortly.",
+      });
+      setSelectedTests([]);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        date: "",
+        time: "",
+        address: "",
+        notes: "",
+      });
+      setCurrentStep(1);
+    } catch {
+      setSubmitMessage({
+        type: "error",
+        text: "Something went wrong while saving your booking. Please try again.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const inputClass = (key) =>
+    `w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border bg-white text-slate-900 placeholder:text-slate-400 focus:ring-2 transition-colors outline-none text-sm ${
+      fieldErrors[key]
+        ? "border-red-500 bg-red-50/40 focus:border-red-500 focus:ring-red-100"
+        : "border-slate-200 focus:border-sky-500 focus:ring-sky-200"
+    }`;
 
   // ========== RENDER ==========
   return (
@@ -282,21 +474,99 @@ function BookPageContent() {
                         </button>
                       ))}
                     </div>
+
+                    {/* Test search */}
+                    <div className="relative mb-3 lg:mb-4">
+                      <svg
+                        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                      <input
+                        type="search"
+                        value={testSearch}
+                        onChange={(e) => setTestSearch(e.target.value)}
+                        placeholder="Search tests by name or category..."
+                        className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-sky-500 focus:ring-2 focus:ring-sky-200 lg:rounded-xl lg:py-2.5"
+                        aria-label="Search tests"
+                      />
+                      {testSearch && (
+                        <button
+                          type="button"
+                          onClick={() => setTestSearch("")}
+                          className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                          aria-label="Clear search"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                    
                     {/* Filtered Tests */}
                     {(() => {
-                      const filteredTests = activeCategory === "all" 
-                        ? tests 
-                        : tests.filter(test => test.category === activeCategory);
+                      if (testsLoading) {
+                        return (
+                          <p className="text-sm text-slate-500 py-6 text-center">
+                            Loading tests from database...
+                          </p>
+                        );
+                      }
+
+                      const searchQuery = testSearch.trim().toLowerCase();
+                      const filteredTests = tests
+                        .filter((test) =>
+                          activeCategory === "all" || test.category === activeCategory
+                        )
+                        .filter((test) => {
+                          if (!searchQuery) return true;
+                          const name = (test.name || "").toLowerCase();
+                          const category = (test.category || "").toLowerCase();
+                          return name.includes(searchQuery) || category.includes(searchQuery);
+                        });
                       
                       return (
                         <>
-                          <div className="mb-2 lg:mb-4">
+                          <div className="mb-2 lg:mb-4" data-field="tests" id="field-tests">
                             <p className="text-xs lg:text-sm text-slate-500">
-                              <span className="font-semibold text-sky-600">{filteredTests.length}</span> tests
+                              <span className="font-semibold text-sky-600">{filteredTests.length}</span>{" "}
+                              {filteredTests.length === 1 ? "test" : "tests"}
+                              {searchQuery ? " found" : ""}
                             </p>
+                            <FieldError message={fieldErrors.tests} />
                           </div>
-                          <div className="max-h-64 lg:max-h-96 overflow-y-auto pr-1 lg:pr-2 space-y-2 lg:space-y-3 custom-scrollbar">
+                          {filteredTests.length === 0 ? (
+                            <div className="rounded-xl border border-dashed border-slate-200 bg-white px-4 py-8 text-center">
+                              <p className="text-sm font-medium text-slate-700">No tests found</p>
+                              <p className="mt-1 text-xs text-slate-500">
+                                Try a different search term or category
+                              </p>
+                              {searchQuery && (
+                                <button
+                                  type="button"
+                                  onClick={() => setTestSearch("")}
+                                  className="mt-3 text-xs font-medium text-sky-600 hover:text-sky-700"
+                                >
+                                  Clear search
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                          <div
+                            className={`max-h-64 lg:max-h-96 overflow-y-auto pr-1 lg:pr-2 space-y-2 lg:space-y-3 custom-scrollbar rounded-xl ${
+                              fieldErrors.tests ? "ring-2 ring-red-400 ring-offset-2 p-1" : ""
+                            }`}
+                          >
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-4">
                               {filteredTests.map((test) => (
                                 <button
@@ -319,6 +589,7 @@ function BookPageContent() {
                               ))}
                             </div>
                           </div>
+                          )}
                         </>
                       );
                     })()}
@@ -355,62 +626,73 @@ function BookPageContent() {
                   <div className="p-4 lg:p-8">
                     <form className="space-y-3 lg:space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
-                        <div>
+                        <div data-field="firstName">
                           <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">First Name *</label>
                           <input
+                            id="field-firstName"
                             type="text"
-                            required
-                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                            aria-invalid={Boolean(fieldErrors.firstName)}
+                            className={inputClass("firstName")}
                             placeholder="John"
                             value={formData.firstName}
-                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                            onChange={(e) => updateField("firstName", e.target.value)}
                           />
+                          <FieldError message={fieldErrors.firstName} />
                         </div>
-                        <div>
+                        <div data-field="lastName">
                           <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Last Name *</label>
                           <input
+                            id="field-lastName"
                             type="text"
-                            required
-                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                            aria-invalid={Boolean(fieldErrors.lastName)}
+                            className={inputClass("lastName")}
                             placeholder="Doe"
                             value={formData.lastName}
-                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                            onChange={(e) => updateField("lastName", e.target.value)}
                           />
+                          <FieldError message={fieldErrors.lastName} />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
-                        <div>
+                        <div data-field="email">
                           <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Email *</label>
                           <input
+                            id="field-email"
                             type="email"
-                            required
-                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                            aria-invalid={Boolean(fieldErrors.email)}
+                            className={inputClass("email")}
                             placeholder="email@example.com"
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onChange={(e) => updateField("email", e.target.value)}
                           />
+                          <FieldError message={fieldErrors.email} />
                         </div>
-                        <div>
+                        <div data-field="phone">
                           <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Phone *</label>
                           <input
+                            id="field-phone"
                             type="tel"
-                            required
-                            className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                            aria-invalid={Boolean(fieldErrors.phone)}
+                            className={inputClass("phone")}
                             placeholder="+977 98xxxxxxxx"
                             value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            onChange={(e) => updateField("phone", e.target.value)}
                           />
+                          <FieldError message={fieldErrors.phone} />
                         </div>
                       </div>
-                      <div>
+                      <div data-field="address">
                         <label className="block text-xs lg:text-sm font-medium text-slate-700 mb-1 lg:mb-2">Address</label>
                         <textarea
-                          className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none resize-none text-sm"
+                          id="field-address"
+                          aria-invalid={Boolean(fieldErrors.address)}
+                          className={inputClass("address")}
                           rows={2}
                           placeholder="Home address"
                           value={formData.address}
-                          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                          onChange={(e) => updateField("address", e.target.value)}
                         ></textarea>
+                        <FieldError message={fieldErrors.address} />
                       </div>
                     </form>
                   </div>
@@ -426,25 +708,33 @@ function BookPageContent() {
                   
                   <div className="p-6 lg:p-8">
                     <div className="grid sm:grid-cols-2 gap-6">
-                      <div>
+                      <div data-field="date">
                         <label className="block text-sm font-medium text-slate-700 mb-2">Preferred Date *</label>
                         <input
+                          id="field-date"
                           type="date"
-                          required
                           min={new Date().toISOString().split('T')[0]}
                           style={{ colorScheme: 'light' }}
+                          aria-invalid={Boolean(fieldErrors.date)}
+                          className={inputClass("date")}
                           value={formData.date}
-                          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                          onChange={(e) => updateField("date", e.target.value)}
                         />
+                        <FieldError message={fieldErrors.date} />
                       </div>
-                      <div>
+                      <div data-field="time">
                         <label className="block text-sm font-medium text-slate-700 mb-2">Preferred Time *</label>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div
+                          id="field-time"
+                          className={`grid grid-cols-2 gap-2 rounded-xl p-1 ${
+                            fieldErrors.time ? "ring-2 ring-red-400 bg-red-50/50" : ""
+                          }`}
+                        >
                           {TIME_SLOTS.map((slot) => (
                             <button
                               key={slot}
                               type="button"
-                              onClick={() => setFormData({ ...formData, time: slot })}
+                              onClick={() => updateField("time", slot)}
                               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                                 formData.time === slot
                                   ? "bg-[#FF6B6B] text-white"
@@ -455,6 +745,7 @@ function BookPageContent() {
                             </button>
                           ))}
                         </div>
+                        <FieldError message={fieldErrors.time} />
                       </div>
                     </div>
                     
@@ -531,10 +822,25 @@ function BookPageContent() {
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-col gap-3">
+                {submitMessage.type === "success" && submitMessage.text && (
+                  <p className="text-sm font-medium text-green-600" role="status">
+                    {submitMessage.text}
+                  </p>
+                )}
+                {submitMessage.type === "error" && submitMessage.text && (
+                  <p className="text-sm font-medium text-red-600" role="alert">
+                    {submitMessage.text}
+                  </p>
+                )}
+                <div className="flex items-center justify-between gap-2">
                 {currentStep > 1 ? (
                   <button
-                    onClick={() => setCurrentStep(currentStep - 1)}
+                    type="button"
+                    onClick={() => {
+                      setFieldErrors({});
+                      setCurrentStep(currentStep - 1);
+                    }}
                     className="px-3 lg:px-6 py-2 lg:py-3 border border-slate-200 text-slate-600 text-xs lg:font-medium rounded-lg lg:rounded-xl hover:bg-slate-50 transition-colors"
                   >
                     ← Back
@@ -544,24 +850,22 @@ function BookPageContent() {
                 )}
                 {currentStep < 4 ? (
                   <button
-                    onClick={() => setCurrentStep(currentStep + 1)}
-                    disabled={!canProceed(currentStep, formData, selectedTests)}
-                    className={`px-4 lg:px-6 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors ${
-                      canProceed(currentStep, formData, selectedTests) 
-                        ? 'hover:opacity-90' 
-                        : 'opacity-50 cursor-not-allowed'
-                    }`}
+                    type="button"
+                    onClick={handleContinue}
+                    className="px-4 lg:px-6 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors hover:opacity-90"
                   >
                     Continue →
                   </button>
                 ) : (
                   <button
                     onClick={handleSubmit}
-                    className="px-4 lg:px-8 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all"
+                    disabled={submitting}
+                    className="px-4 lg:px-8 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Confirm
+                    {submitting ? "Saving..." : "Confirm Booking"}
                   </button>
                 )}
+                </div>
               </div>
             </div>
 

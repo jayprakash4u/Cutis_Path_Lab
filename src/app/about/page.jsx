@@ -3,6 +3,7 @@
 // ========== LAYOUT COMPONENTS ==========
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import PagePosterHero from "@/components/sections/PagePosterHero";
 
 
 // ========== MAIN COMPONENT ==========
@@ -14,14 +15,12 @@ export default function AboutPage() {
       <Navbar />
       
       <main className="pt-[72px] lg:pt-[88px]">
-        {/* Hero Section - Image for all screens */}
-        <section className="relative  w-full h-[18vh] sm:h-[180px]">
-          <img 
-            src="/images/about-poster.png" 
-            alt="Cutis Path Lab About Us"
-            className="w-full h-full sm:object-cover object-fill"
-          />
-        </section>
+        <PagePosterHero
+          src="/images/about-poster.png"
+          alt="Cutis Path Lab About Us"
+          width={6667}
+          height={579}
+        />
 
         {/* About Us Section */}
         <section className="py-6 lg:py-12 bg-gray-50">

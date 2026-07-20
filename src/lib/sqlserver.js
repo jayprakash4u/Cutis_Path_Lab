@@ -1,0 +1,158 @@
+import { execFile } from "child_process";
+import { promisify } from "util";
+import { randomUUID } from "crypto";
+import { readFile, unlink, writeFile } from "fs/promises";
+import { tmpdir } from "os";
+import path from "path";
+
+const execFileAsync = promisify(execFile);
+
+const DEFAULT_SERVER =
+  process.platform === "win32" ? "localhost\\SQLEXPRESS" : "localhost\\SQLEXPRESS";
+
+const SERVER = process.env.SQLSERVER_HOST || DEFAULT_SERVER;
+const DATABASE = process.env.SQLSERVER_DATABASE || "CutisPathLab";
+const LOGIN_TIMEOUT = Number(process.env.SQLSERVER_LOGIN_TIMEOUT || "60");
+const MAX_RETRIES = Number(process.env.SQLSERVER_MAX_RETRIES || "3");
+
+let sqlcmdChain = Promise.resolve();
+
+function enqueueSqlcmd(task) {
+  const run = sqlcmdChain.then(task, task);
+  sqlcmdChain = run.then(
+    () => {},
+    () => {},
+  );
+  return run;
+}
+
+async function runSqlcmd(args, options = {}) {
+  return execFileAsync(
+    "sqlcmd",
+    ["-S", SERVER, "-E", "-C", "-l", String(LOGIN_TIMEOUT), "-d", DATABASE, ...args],
+    {
+      maxBuffer: 10 * 1024 * 1024,
+      windowsHide: true,
+      ...options,
+    },
+  );
+}
+
+async function runSqlcmdWithRetry(args, options = {}) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt += 1) {
+    try {
+      return await runSqlcmd(args, options);
+    } catch (error) {
+      lastError = error;
+      if (attempt < MAX_RETRIES) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 1000));
+      }
+    }
+  }
+
+  const detail = [
+    lastError?.message,
+    lastError?.stderr?.trim(),
+    lastError?.stdout?.trim(),
+  ]
+    .filter(Boolean)
+    .join(" | ");
+
+  throw new Error(
+    detail ||
+      `sqlcmd failed after ${MAX_RETRIES} attempts (server: ${SERVER}, database: ${DATABASE})`,
+  );
+}
+
+/**
+ * Run a SQL batch against CutisPathLab using Windows Auth (sqlcmd).
+ * Pass a SELECT ... FOR JSON PATH query.
+ */
+export async function sqlJson(query) {
+  const outFile = path.join(tmpdir(), `cutis-json-${randomUUID()}.txt`);
+  const sqlFile = path.join(tmpdir(), `cutis-sql-${randomUUID()}.sql`);
+
+  const wrapped = `
+SET NOCOUNT ON;
+DECLARE @json NVARCHAR(MAX);
+SET @json = (${query});
+SELECT ISNULL(@json, N'[]');
+`;
+
+  try {
+    await writeFile(sqlFile, wrapped, "utf8");
+
+    await enqueueSqlcmd(() =>
+      runSqlcmdWithRetry(["-y", "0", "-i", sqlFile, "-o", outFile]),
+    );
+
+    const raw = await readFile(outFile, "utf8");
+    const text = raw
+      .replace(/\r/g, "")
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(
+        (l) =>
+          l &&
+          l !== "NULL" &&
+          !/^-+$/.test(l) &&
+          !/^:/i.test(l) &&
+          l.toLowerCase() !== "null",
+      )
+      .join("");
+
+    const jsonStart = text.indexOf("[");
+    const jsonObjStart = text.indexOf("{");
+    let start = -1;
+    if (jsonStart >= 0 && jsonObjStart >= 0) start = Math.min(jsonStart, jsonObjStart);
+    else start = Math.max(jsonStart, jsonObjStart);
+
+    const jsonText = start >= 0 ? text.slice(start) : text;
+    if (!jsonText) return [];
+
+    return JSON.parse(jsonText);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error(`Could not parse SQL JSON result: ${String(error.message)}`);
+    }
+
+    let outSnippet = "";
+    try {
+      const failedOut = await readFile(outFile, "utf8");
+      outSnippet = failedOut.trim().slice(0, 500);
+    } catch {
+      // ignore missing output file
+    }
+
+    if (outSnippet) {
+      throw new Error(`${error.message} | sqlcmd output: ${outSnippet}`);
+    }
+
+    throw error;
+  } finally {
+    await unlink(outFile).catch(() => {});
+    await unlink(sqlFile).catch(() => {});
+  }
+}
+
+/** Run a write query (INSERT/UPDATE). */
+export async function sqlExec(query) {
+  await enqueueSqlcmd(async () => {
+    const { stderr, stdout } = await runSqlcmdWithRetry(["-b", "-Q", query]);
+    const errText = (stderr || stdout || "").trim();
+    if (errText && /error|failed|violation/i.test(errText)) {
+      throw new Error(errText);
+    }
+  });
+}
+
+export function newId() {
+  return randomUUID();
+}
+
+export function escapeSql(value) {
+  if (value == null) return "NULL";
+  return `N'${String(value).replace(/'/g, "''")}'`;
+}

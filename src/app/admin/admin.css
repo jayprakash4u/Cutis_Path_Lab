@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap");
+
+/* Override public site dark body tokens while inside admin routes */
+body:has(.admin-app) {
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.admin-app {
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.admin-root {
+  --admin-sky: #0284c7;
+  --admin-sky-deep: #0369a1;
+  --admin-coral: #ff6b6b;
+  --admin-ink: #0f172a;
+  --admin-muted: #64748b;
+  --admin-line: #e2e8f0;
+  --admin-paper: rgba(255, 255, 255, 0.88);
+  --admin-font: "Manrope", "Segoe UI", sans-serif;
+  --admin-display: "Fraunces", Georgia, serif;
+  color: var(--admin-ink);
+  font-family: var(--admin-font);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(2, 132, 199, 0.14), transparent 55%),
+    radial-gradient(900px 420px at 100% 0%, rgba(255, 107, 107, 0.1), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #eef6fb 48%, #f8fafc 100%);
+  min-height: 100vh;
+}
+
+.admin-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+  z-index: 0;
+}
+
+.admin-root > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-display {
+  font-family: var(--admin-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+.admin-panel {
+  background: var(--admin-paper);
+  border: 1px solid var(--admin-line);
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  overflow: hidden;
+  position: relative;
+}
+
+.admin-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--admin-coral), var(--admin-sky));
+}
+
+.admin-input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid #dbe3ee;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-input:focus {
+  border-color: var(--admin-sky);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.admin-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.1rem;
+  border-radius: 12px;
+  background: var(--admin-sky);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 650;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.admin-btn-primary:hover {
+  background: var(--admin-sky-deep);
+}
+
+.admin-btn-primary:active {
+  transform: translateY(1px);
+}
+
+.admin-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-table th {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 650;
+  padding: 0.65rem 0.75rem 0.65rem 0;
+  border-bottom: 1px solid var(--admin-line);
+}
+
+.admin-table td {
+  padding: 0.9rem 0.75rem 0.9rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+  font-size: 0.9rem;
+}
+
+.admin-table tr:hover td {
+  background: rgba(2, 132, 199, 0.03);
+}
+
+@keyframes admin-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-animate {
+  animation: admin-fade-up 0.45s ease both;
+}

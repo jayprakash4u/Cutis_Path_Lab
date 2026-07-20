@@ -4,16 +4,34 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:init": "sqlcmd -S localhost\\SQLEXPRESS -E -C -d CutisPathLab -i scripts/init-db.sql",
+    "db:init-packages": "sqlcmd -S localhost\\SQLEXPRESS -E -C -d CutisPathLab -i scripts/init-packages.sql",
+    "db:init-home": "sqlcmd -S localhost\\SQLEXPRESS -E -C -d CutisPathLab -i scripts/init-home-content.sql",
+    "db:init-category-tests": "sqlcmd -S localhost\\SQLEXPRESS -E -C -d CutisPathLab -i scripts/init-category-tests.sql",
+    "db:init-booking-checks": "sqlcmd -S localhost\\SQLEXPRESS -E -C -d CutisPathLab -i scripts/init-booking-checks.sql",
+    "db:init-contact-checks": "sqlcmd -S localhost\\SQLEXPRESS -E -C -d CutisPathLab -i scripts/init-contact-checks.sql",
+    "db:seed-tests": "node scripts/seed-tests.mjs",
+    "db:seed-packages": "node scripts/seed-packages.mjs",
+    "db:seed-home": "node scripts/seed-home-content.mjs",
+    "db:seed-category-tests": "node scripts/seed-category-tests.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "gsap": "^3.15.0",
     "lucide-react": "^1.6.0",
+    "msnodesqlv8": "^5.2.1",
+    "mssql": "^12.7.0",
     "next": "^16.2.2",
+    "nodemailer": "^9.0.3",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -22,6 +40,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
     "postcss": "^8",
+    "prisma": "^6.19.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

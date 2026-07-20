@@ -8,14 +8,20 @@
  */
 
 // ========== REACT HOOKS ==========
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
 // ========== LAYOUT COMPONENTS ==========
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import PagePosterHero from "@/components/sections/PagePosterHero";
 
 // ========== UI COMPONENTS ==========
 import { InfoCard } from "@/components/ui";
+
+// ========== VALIDATION ==========
+import { parseOrErrors } from "@/lib/validation/common";
+import { contactFormSchema } from "@/lib/validation/contact";
 
 // ========== CONSTANTS & CONFIGURATION ==========
 
@@ -338,24 +344,161 @@ const CONTENT = {
 
 // ========== MAIN COMPONENT ==========
 
-export default function ContactPage() {
+function ContactPageContent() {
   // State for tab navigation and FAQ expansion
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("general");
   const [expandedFaq, setExpandedFaq] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    position: "",
+    message: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState({ type: "", text: "" });
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  useEffect(() => {
+    const service = searchParams.get("service")?.trim();
+    if (!service) return;
+    setActiveTab("support");
+    setFormData((prev) => {
+      if (prev.message.trim()) return prev;
+      return {
+        ...prev,
+        message: `I would like to book / enquire about ${service}. Please advise next steps.`,
+      };
+    });
+  }, [searchParams]);
+
+  const fieldClass = (key) =>
+    `w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl bg-white text-slate-900 placeholder:text-slate-400 transition-colors outline-none text-sm ${
+      fieldErrors[key]
+        ? "border border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-100"
+        : "border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+    }`;
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (status.text) setStatus({ type: "", text: "" });
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[e.target.name];
+        return next;
+      });
+    }
+  };
+
+  const focusFirstError = (errors) => {
+    const firstKey = Object.keys(errors)[0];
+    const el = firstKey
+      ? document.querySelector(`[name="${firstKey}"]`)
+      : null;
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    el?.focus?.({ preventScroll: true });
+  };
+
+  const mapApiErrors = (errors = {}) => {
+    const mapped = { ...errors };
+    if (errors.name) {
+      if (!mapped.firstName) mapped.firstName = "Please check your first name";
+      if (!mapped.lastName) mapped.lastName = "Please check your last name";
+      delete mapped.name;
+    }
+    return mapped;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setStatus({ type: "", text: "" });
+    setFieldErrors({});
+
+    try {
+      const formCheck = parseOrErrors(contactFormSchema, {
+        ...formData,
+        requirePosition: activeTab === "careers",
+      });
+      if (!formCheck.ok) {
+        setFieldErrors(formCheck.errors);
+        setStatus({
+          type: "error",
+          text: "Please check the highlighted fields.",
+        });
+        focusFirstError(formCheck.errors);
+        return;
+      }
+
+      const data = formCheck.data;
+      const name = `${data.firstName} ${data.lastName}`.trim();
+      const subjectParts = [
+        CONTENT.FORM_TITLES[activeTab] || activeTab,
+        data.position
+          ? CONTENT.POSITIONS.find((p) => p.value === data.position)?.label ||
+            data.position
+          : "",
+      ].filter(Boolean);
+
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email: data.email,
+          phone: data.phone,
+          subject: subjectParts.join(" - "),
+          message: data.message,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        if (json.errors) {
+          const mapped = mapApiErrors(json.errors);
+          setFieldErrors(mapped);
+          focusFirstError(mapped);
+        }
+        throw new Error(json.message || "Failed to send message");
+      }
+
+      setStatus({
+        type: "success",
+        text: "Message sent successfully! We will get back to you soon.",
+      });
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        position: "",
+        message: "",
+      });
+      setFieldErrors({});
+    } catch (err) {
+      setStatus({
+        type: "error",
+        text: err.message || "Could not send message. Please try again.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   // ========== RENDER ==========
   return (
     <>
       <Navbar />
       <main className="pt-16 lg:pt-24">
-        {/* Hero Section - Image for all screens */}
-        <section className="relative w-full h-[18vh] sm:h-[180px]">
-          <img
-            src="/images/6psd.png"
-            alt="Contact Us"
-            className="w-full h-full sm:object-cover object-cover"
-          />
-        </section>
+        <PagePosterHero
+          src="/images/6psd.png"
+          alt="Contact Us"
+          width={6667}
+          height={579}
+        />
 
         {/* Quick Contact Banner - from QUICK_CONTACTS */}
         <section className="py-4 lg:py-8 bg-white">
@@ -394,7 +537,11 @@ export default function ContactPage() {
                     {CONTENT.FORM_TITLES[activeTab]}
                   </h2>
                 </div>
-                <form className="space-y-3 lg:space-y-5 p-4 lg:p-10">
+                <form
+                  onSubmit={handleSubmit}
+                  noValidate
+                  className="space-y-3 lg:space-y-5 p-4 lg:p-10"
+                >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
                     <div>
                       <label
@@ -406,9 +553,18 @@ export default function ContactPage() {
                       <input
                         type="text"
                         id="firstName"
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.firstName)}
+                        className={fieldClass("firstName")}
                         placeholder="John"
                       />
+                      {fieldErrors.firstName && (
+                        <p className="mt-1 text-xs font-medium text-red-600" role="alert">
+                          {fieldErrors.firstName}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label
@@ -420,9 +576,18 @@ export default function ContactPage() {
                       <input
                         type="text"
                         id="lastName"
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.lastName)}
+                        className={fieldClass("lastName")}
                         placeholder="Doe"
                       />
+                      {fieldErrors.lastName && (
+                        <p className="mt-1 text-xs font-medium text-red-600" role="alert">
+                          {fieldErrors.lastName}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -435,9 +600,18 @@ export default function ContactPage() {
                     <input
                       type="email"
                       id="email"
-                      className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      aria-invalid={Boolean(fieldErrors.email)}
+                      className={fieldClass("email")}
                       placeholder="john@example.com"
                     />
+                    {fieldErrors.email && (
+                      <p className="mt-1 text-xs font-medium text-red-600" role="alert">
+                        {fieldErrors.email}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -449,9 +623,18 @@ export default function ContactPage() {
                     <input
                       type="tel"
                       id="phone"
-                      className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      aria-invalid={Boolean(fieldErrors.phone)}
+                      className={fieldClass("phone")}
                       placeholder="+1 234 567 890"
                     />
+                    {fieldErrors.phone && (
+                      <p className="mt-1 text-xs font-medium text-red-600" role="alert">
+                        {fieldErrors.phone}
+                      </p>
+                    )}
                   </div>
 
                   {/* Position dropdown - shows only for careers tab */}
@@ -465,7 +648,11 @@ export default function ContactPage() {
                       </label>
                       <select
                         id="position"
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 text-black rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none text-sm"
+                        name="position"
+                        value={formData.position}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.position)}
+                        className={fieldClass("position")}
                       >
                         <option value="">Select</option>
                         {CONTENT.POSITIONS.map((pos) => (
@@ -474,6 +661,11 @@ export default function ContactPage() {
                           </option>
                         ))}
                       </select>
+                      {fieldErrors.position && (
+                        <p className="mt-1 text-xs font-medium text-red-600" role="alert">
+                          {fieldErrors.position}
+                        </p>
+                      )}
                     </div>
                   )}
 
@@ -486,16 +678,39 @@ export default function ContactPage() {
                     </label>
                     <textarea
                       id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      aria-invalid={Boolean(fieldErrors.message)}
                       rows={3}
-                      className="w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-colors outline-none resize-none text-sm"
+                      className={`${fieldClass("message")} resize-none`}
                       placeholder="How can we help you?"
                     ></textarea>
+                    {fieldErrors.message && (
+                      <p className="mt-1 text-xs font-medium text-red-600" role="alert">
+                        {fieldErrors.message}
+                      </p>
+                    )}
                   </div>
+
+                  {status.text && (
+                    <p
+                      className={`text-xs lg:text-sm ${
+                        status.type === "success"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {status.text}
+                    </p>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full py-2.5 lg:py-3.5 bg-sky-600 text-white text-xs lg:text-sm font-semibold rounded-lg lg:rounded-xl hover:bg-sky-700 transition-colors"
+                    disabled={submitting}
+                    className="w-full py-2.5 lg:py-3.5 bg-sky-600 text-white text-xs lg:text-sm font-semibold rounded-lg lg:rounded-xl hover:bg-sky-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Send Message
+                    {submitting ? "Sending..." : "Send Message"}
                   </button>
                 </form>
               </div>
@@ -1095,5 +1310,13 @@ export default function ContactPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <ContactPageContent />
+    </Suspense>
   );
 }

@@ -1188,7 +1188,6 @@ export const services = [
     description:
       "We offer advanced cytogenetic testing to analyze chromosomes and detect genetic abnormalities that may lead to inherited disorders, cancers, and other conditions.",
     icon: "dna",
-    image: "/images/services/Cytogenetics.jpg",
   },
   {
     id: 2,
@@ -1196,7 +1195,6 @@ export const services = [
     description:
       "Maternal screening tests are crucial for assessing the risk of chromosomal abnormalities and certain fetal conditions during pregnancy.",
     icon: "baby",
-    image: "/images/services/Maternal Screening.jpg",
   },
   {
     id: 3,
@@ -1204,7 +1202,6 @@ export const services = [
     description:
       "Molecular biology has revolutionized diagnostic medicine, enabling precise detection of genetic and infectious diseases.",
     icon: "testTube",
-    image: "/images/services/Molecular Biology.jpg",
   },
   {
     id: 4,
@@ -1212,7 +1209,6 @@ export const services = [
     description:
       "Molecular genetics is a branch of biology that studies genes at a molecular level, focusing on how genetic variations influence health and disease.",
     icon: "dna",
-    image: "/images/services/Molecular genetics.jpg",
   },
   {
     id: 5,
@@ -1220,7 +1216,6 @@ export const services = [
     description:
       "At LifeLine Lab, we offer advanced newborn screening to ensure early detection of serious yet treatable genetic, metabolic, and endocrine disorders.",
     icon: "baby",
-    image: "/images/services/Newborn Screening.jpg",
   },
   {
     id: 6,
@@ -1228,7 +1223,6 @@ export const services = [
     description:
       "Immunoflow Cytometry is a powerful diagnostic technique used to analyze blood and bone marrow samples at the cellular level.",
     icon: "microscope",
-    image: "/images/services/Immunoflowcytometry.jpg",
   },
   {
     id: 7,
@@ -1236,7 +1230,6 @@ export const services = [
     description:
       "We offer advanced Immunohistochemistry (IHC) testing with over 80 markers to provide precise and accurate diagnosis of various cancers and diseases.",
     icon: "ribbon",
-    image: "/images/services/Immunohistochemistry.j[g.jpg",
   },
   {
     id: 8,
@@ -1244,7 +1237,6 @@ export const services = [
     description:
       "We offer advanced Immunofluorescence (IF) testing used for diagnosing vesiculobullous (blistering) diseases of skin, kidney diseases and autoimmune diseases respectively.",
     icon: "search",
-    image: "/images/services/Immunofluorescence.jpg",
   },
   {
     id: 9,
@@ -1252,7 +1244,6 @@ export const services = [
     description:
       "Our routine pathology services encompass a wide range of diagnostic specialties by integrating cutting-edge technology and fully automated systems.",
     icon: "clipboard",
-    image: "/images/services/routine patholgogy.jpg",
   },
   {
     id: 10,
@@ -1260,7 +1251,6 @@ export const services = [
     description:
       "We utilize advanced microarray-based multiplex testing for the rapid and comprehensive detection of respiratory, gastrointestinal, and central nervous system (CNS) infections.",
     icon: "petriDish",
-    image: "/images/services/Microarray.jpg",
   },
   {
     id: 11,
@@ -1268,7 +1258,6 @@ export const services = [
     description:
       "Therapeutic Drug Monitoring (TDM) is an advanced service designed to optimize drug therapy, prevent toxicity, and ensure medication efficacy.",
     icon: "pill",
-    image: "/images/services/Therapeutic Drug Monitoring (TDM).jpg",
   },
   {
     id: 12,
@@ -1276,8 +1265,6 @@ export const services = [
     description:
       "Our histopathology services include examination of tissue samples under microscope to diagnose diseases including cancer, inflammatory conditions, and infections.",
     icon: "microscope",
-    image:
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=600&h=400&fit=crop",
   },
   {
     id: 13,
@@ -1285,7 +1272,6 @@ export const services = [
     description:
       "Cytopathology involves examining cells from various body sites to diagnose conditions including infections, inflammatory diseases, and cancers.",
     icon: "microscope",
-    image: "/images/services/Cytopathology.jpg",
   },
   {
     id: 14,
@@ -1293,7 +1279,6 @@ export const services = [
     description:
       "Our clinical microbiology services detect and identify pathogenic microorganisms causing infections and determine appropriate treatment options.",
     icon: "microbe",
-    image: "/images/services/Clinical Microbiology.jpg",
   },
   {
     id: 15,
@@ -1301,8 +1286,6 @@ export const services = [
     description:
       "Serology testing detects antibodies and antigens in blood to diagnose infections, autoimmune diseases, and immune deficiencies.",
     icon: "blood",
-    image:
-      "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&h=400&fit=crop",
   },
   {
     id: 16,
@@ -1310,8 +1293,6 @@ export const services = [
     description:
       "Coagulation testing evaluates blood clotting function to diagnose bleeding disorders, monitor anticoagulant therapy, and assess surgical risks.",
     icon: "heart",
-    image:
-      "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop",
   },
   {
     id: 17,
@@ -1319,8 +1300,6 @@ export const services = [
     description:
       "Flow cytometry is used for immunophenotyping, leukemia/lymphoma diagnosis, and CD4/CD8 cell counting for HIV management.",
     icon: "chart",
-    image:
-      "https://images.unsplash.com/photo-1581093450023-5a3995eb9c08?w=600&h=400&fit=crop",
   },
   {
     id: 18,
@@ -1328,8 +1307,6 @@ export const services = [
     description:
       "Clinical chemistry tests measure chemical substances in body fluids to evaluate organ function and detect metabolic disorders.",
     icon: "testTube",
-    image:
-      "https://images.unsplash.com/photo-1609825488888-3a766db0551a?w=600&h=400&fit=crop",
   },
   {
     id: 19,
@@ -1337,8 +1314,6 @@ export const services = [
     description:
       "Electrolyte testing measures sodium, potassium, chloride, and bicarbonate levels to assess kidney function, hydration status, and acid-base balance.",
     icon: "lightning",
-    image:
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400&fit=crop",
   },
   {
     id: 20,
@@ -1346,8 +1321,6 @@ export const services = [
     description:
       "Our drug screening services detect presence of illicit substances and prescription medications in urine, blood, or saliva samples.",
     icon: "testTube",
-    image:
-      "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=600&h=400&fit=crop",
   },
   {
     id: 21,
@@ -1355,8 +1328,6 @@ export const services = [
     description:
       "We offer comprehensive infertility testing for both men and women including hormone analysis, semen analysis, and ovulatory function tests.",
     icon: "baby",
-    image:
-      "https://images.unsplash.com/photo-1579165466991-467135ad3114?w=600&h=400&fit=crop",
   },
   {
     id: 22,
@@ -1364,8 +1335,6 @@ export const services = [
     description:
       "Tumor marker testing helps in early detection, diagnosis, and monitoring of various cancers including breast, prostate, liver, and colon cancers.",
     icon: "ribbon",
-    image:
-      "https://plus.unsplash.com/premium_photo-1663011406193-7beb9d225d31?w=600&h=400&fit=crop",
   },
   {
     id: 23,
@@ -1373,8 +1342,6 @@ export const services = [
     description:
       "Allergy tests identify specific allergens causing allergic reactions including food, environmental, and drug allergies.",
     icon: "allergy",
-    image:
-      "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&h=400&fit=crop",
   },
   {
     id: 24,
@@ -1382,8 +1349,6 @@ export const services = [
     description:
       "Bone marrow testing is used to diagnose blood disorders, leukemias, lymphomas, and assess bone marrow function.",
     icon: "stethoscope",
-    image:
-      "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&h=400&fit=crop",
   },
 ];
 

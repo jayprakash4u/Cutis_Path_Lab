@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/booking";
+import { parseOrErrors } from "@/lib/validation/common";
 
 export default function BookTest() {
   const [formData, setFormData] = useState({
@@ -11,15 +13,133 @@ export default function BookTest() {
     date: "",
     time: "",
   });
+  const [tests, setTests] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadTests() {
+      try {
+        const res = await fetch("/api/tests");
+        const json = await res.json();
+        if (!cancelled && json.success && Array.isArray(json.data)) {
+          setTests(json.data);
+        }
+      } catch {
+        // keep empty; form still works with manual notes
+      }
+    }
+    loadTests();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (message.text) setMessage({ type: "", text: "" });
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[e.target.name];
+        return next;
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const fieldClass = (key) =>
+    `w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 ${
+      fieldErrors[key]
+        ? "bg-red-50 border border-red-500 focus:border-red-500 focus:ring-red-100"
+        : "bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-sky-100"
+    }`;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Thank you! We will confirm your booking shortly.");
+    setSubmitting(true);
+    setMessage({ type: "", text: "" });
+    setFieldErrors({});
+
+    try {
+      const quick = parseOrErrors(bookingQuickSchema, formData);
+      if (!quick.ok) {
+        setFieldErrors(quick.errors);
+        const firstKey = Object.keys(quick.errors)[0];
+        const el = firstKey
+          ? document.querySelector(`[name="${firstKey}"]`)
+          : null;
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+        el?.focus?.({ preventScroll: true });
+        return;
+      }
+
+      const selected = tests.find((t) => String(t.id) === String(formData.test));
+      const payload = parseOrErrors(bookingCreateSchema, {
+        name: quick.data.name,
+        phone: quick.data.phone,
+        preferredDate: quick.data.date,
+        preferredTime: quick.data.time,
+        testId: selected?.id || null,
+        notes: selected
+          ? `Test: ${selected.name}`
+          : formData.test || "",
+      });
+      if (!payload.ok) {
+        const mapped = { ...payload.errors };
+        if (mapped.preferredDate) mapped.date = mapped.preferredDate;
+        if (mapped.preferredTime) mapped.time = mapped.preferredTime;
+        if (mapped.name) mapped.name = mapped.name;
+        setFieldErrors(mapped);
+        const firstKey = Object.keys(mapped)[0];
+        const el = firstKey
+          ? document.querySelector(`[name="${firstKey}"]`)
+          : null;
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+        el?.focus?.({ preventScroll: true });
+        return;
+      }
+
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload.data),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.success) {
+        if (json.errors && Object.keys(json.errors).length) {
+          const mapped = { ...json.errors };
+          if (mapped.preferredDate) mapped.date = mapped.preferredDate;
+          if (mapped.preferredTime) mapped.time = mapped.preferredTime;
+          setFieldErrors(mapped);
+          const firstKey = Object.keys(mapped)[0];
+          const el = firstKey
+            ? document.querySelector(`[name="${firstKey}"]`)
+            : null;
+          el?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+        setMessage({
+          type: "error",
+          text: "We couldn’t save your booking right now. Please try again.",
+        });
+        return;
+      }
+
+      setMessage({
+        type: "success",
+        text: "Booking saved! We’ll confirm your appointment shortly.",
+      });
+      setFormData({ name: "", phone: "", test: "", date: "", time: "" });
+    } catch {
+      setMessage({
+        type: "error",
+        text: "Something went wrong. Please try again.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -325,17 +445,20 @@ export default function BookTest() {
               </h3>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4" noValidate>
               <div>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  required
                   placeholder="Full Name"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
+                  aria-invalid={Boolean(fieldErrors.name)}
+                  className={fieldClass("name")}
                 />
+                {fieldErrors.name && (
+                  <p className="mt-1 text-xs font-medium text-red-600" role="alert">{fieldErrors.name}</p>
+                )}
               </div>
 
               <div>
@@ -344,10 +467,13 @@ export default function BookTest() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  required
                   placeholder="Phone Number"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
+                  aria-invalid={Boolean(fieldErrors.phone)}
+                  className={fieldClass("phone")}
                 />
+                {fieldErrors.phone && (
+                  <p className="mt-1 text-xs font-medium text-red-600" role="alert">{fieldErrors.phone}</p>
+                )}
               </div>
 
               <div>
@@ -355,19 +481,11 @@ export default function BookTest() {
                   name="test"
                   value={formData.test}
                   onChange={handleChange}
-                  required
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500 max-h-40 overflow-y-auto"
+                  className={fieldClass("test")}
                 >
                   <option value="">Select Test</option>
-                  {[
-                    { id: 1, name: "Complete Blood Count (CBC)", price: 350 },
-                    { id: 2, name: "Liver Function Test (LFT)", price: 800 },
-                    { id: 3, name: "Kidney Function Test (KFT)", price: 700 },
-                    { id: 4, name: "Thyroid Profile", price: 1200 },
-                    { id: 5, name: "Blood Sugar Fasting", price: 200 },
-                    { id: 6, name: "Lipid Profile", price: 600 },
-                  ].map((test) => (
-                    <option key={test.id} value={test.name}>
+                  {tests.map((test) => (
+                    <option key={test.id} value={test.id}>
                       {test.name} - Rs. {test.price}
                     </option>
                   ))}
@@ -375,34 +493,57 @@ export default function BookTest() {
               </div>
 
               <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  required
-                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
-                />
-                <select
-                  name="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  required
-                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-sky-500"
-                >
-                  <option value="">Time</option>
-                  <option value="morning">Morning</option>
-                  <option value="afternoon">Afternoon</option>
-                  <option value="evening">Evening</option>
-                </select>
+                <div>
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.date)}
+                    className={fieldClass("date")}
+                  />
+                  {fieldErrors.date && (
+                    <p className="mt-1 text-xs font-medium text-red-600" role="alert">{fieldErrors.date}</p>
+                  )}
+                </div>
+                <div>
+                  <select
+                    name="time"
+                    value={formData.time}
+                    onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.time)}
+                    className={fieldClass("time")}
+                  >
+                    <option value="">Time</option>
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                  </select>
+                  {fieldErrors.time && (
+                    <p className="mt-1 text-xs font-medium text-red-600" role="alert">{fieldErrors.time}</p>
+                  )}
+                </div>
               </div>
+
+              {message.type === "success" && message.text && (
+                <p className="text-xs sm:text-sm font-medium text-green-600" role="status">
+                  {message.text}
+                </p>
+              )}
+              {message.type === "error" && message.text && (
+                <p className="text-xs sm:text-sm font-medium text-red-600" role="alert">
+                  {message.text}
+                </p>
+              )}
 
               <div className="pt-1 sm:pt-2">
                 <button
                   type="submit"
-                  className="float-right px-4 sm:px-6 py-2 sm:py-2.5 bg-sky-600 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-sky-700"
+                  disabled={submitting}
+                  className="float-right px-4 sm:px-6 py-2 sm:py-2.5 bg-sky-600 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-sky-700 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Book Now <span className="text-white">&gt;</span>
+                  {submitting ? "Saving..." : "Book Now"}{" "}
+                  {!submitting && <span className="text-white">&gt;</span>}
                 </button>
               </div>
             </form>

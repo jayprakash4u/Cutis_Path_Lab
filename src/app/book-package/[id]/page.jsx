@@ -1,147 +1,159 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { tests } from "@/data/staticData";
+import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/booking";
+import { parseOrErrors } from "@/lib/validation/common";
 
-/**
- * Packages that are searchable from the navbar (must match the list in Navbar.jsx)
- */
-const PACKAGES = [
-  { id: 1, name: "Complete Blood Count", description: "Comprehensive blood analysis including RBC, WBC, platelets, hemoglobin, and hematocrit.", includes: ["RBC Count", "WBC Count", "Hemoglobin", "Platelets", "Hematocrit"], price: 350 },
-  { id: 2, name: "Liver Function Test", description: "Tests for liver health including enzymes, bilirubin, and protein levels.", includes: ["ALT", "AST", "Bilirubin", "Albumin", "Total Protein"], price: 800 },
-  { id: 3, name: "Kidney Function Test", description: "Evaluates kidney performance through blood urea and creatinine tests.", includes: ["Creatinine", "BUN", "Uric Acid", "Electrolytes", "eGFR"], price: 700 },
-  { id: 4, name: "Thyroid Profile", description: "Complete thyroid function assessment including T3, T4, and TSH.", includes: ["T3", "T4", "TSH", "Free T3", "Free T4"], price: 1200 },
-  { id: 5, name: "Blood Sugar Fasting", description: "Fasting blood glucose test for diabetes screening and management.", includes: ["Fasting Glucose", "PP Glucose", "HbA1c"], price: 200 },
-  { id: 6, name: "Lipid Profile", description: "Cholesterol and triglyceride assessment for heart health.", includes: ["Total Cholesterol", "HDL", "LDL", "Triglycerides"], price: 600 },
-  { id: 7, name: "Hemoglobin A1C", description: "Long-term blood sugar monitoring for diabetes management.", includes: ["HbA1c", "Average Blood Glucose"], price: 500 },
-  { id: 8, name: "Vitamin D3", description: "Test for Vitamin D deficiency and bone health assessment.", includes: ["Vitamin D3", "Vitamin D2", "Total Vitamin D"], price: 1500 },
-  { id: 9, name: "Iron Studies", description: "Comprehensive iron deficiency and anemia workup.", includes: ["Ferritin", "Iron", "TIBC", "Transferrin Saturation"], price: 900 },
-  { id: 10, name: "Dengue NS1 Antigen", description: "Early detection test for dengue fever infection.", includes: ["NS1 Antigen", "IgM Antibody", "IgG Antibody"], price: 800 },
-  { id: 11, name: "Urine Analysis", description: "Complete urine examination for kidney and urinary tract health.", includes: ["pH", "Protein", "Glucose", "Ketones", "Microscopy"], price: 250 },
-  { id: 12, name: "ECG", description: "Electrocardiogram for heart rhythm and function assessment.", includes: ["Heart Rhythm", "Heart Rate", "Cardiac Axis", "Abnormalities"], price: 400 },
-  { id: 13, name: "Vitamin B12", description: "Test for Vitamin B12 deficiency and neurological health.", includes: ["Vitamin B12", "Folate", "Homocysteine"], price: 1200 },
-  { id: 14, name: "HbA1c & Glucose", description: "Combined test for diabetes diagnosis and monitoring.", includes: ["HbA1c", "Fasting Glucose", "PP Glucose"], price: 650 },
-  { id: 15, name: "Uric Acid", description: "Test for gout and kidney stone risk assessment.", includes: ["Uric Acid", "Creatinine", "BUN"], price: 300 },
-  { id: 16, name: "ESR", description: "Erythrocyte sedimentation rate for inflammation detection.", includes: ["ESR", "CRP", "WBC Count"], price: 150 },
-  { id: 17, name: "Malaria Antigen", description: "Rapid test for malaria parasite detection.", includes: ["Malaria Antigen", "P. falciparum", "P. vivax"], price: 450 },
-  { id: 18, name: "Pregnancy Test", description: "Beta HCG test for pregnancy confirmation.", includes: ["Beta HCG", "Qualitative", "Quantitative"], price: 350 },
-  { id: 19, name: "Semen Analysis", description: "Complete semen examination for fertility assessment.", includes: ["Count", "Motility", "Morphology", "Volume"], price: 500 },
-  { id: 20, name: "Stool Routine", description: "Complete stool examination for digestive health.", includes: ["Color", "Consistency", "Microscopy", "Occult Blood"], price: 200 },
-  { id: 21, name: "Blood Group & Rh", description: "ABO blood group and Rh factor determination.", includes: ["ABO Group", "Rh Factor", "Antibody Screen"], price: 250 },
-  { id: 22, name: "Coagulation Profile", description: "Blood clotting function assessment.", includes: ["PT", "aPTT", "INR", "Fibrinogen"], price: 800 },
-  { id: 23, name: "Serum Electrolytes", description: "Electrolyte balance assessment for hydration status.", includes: ["Sodium", "Potassium", "Chloride", "Bicarbonate"], price: 400 },
-  { id: 24, name: "Amylase & Lipase", description: "Pancreatic enzyme test for pancreatitis diagnosis.", includes: ["Amylase", "Lipase", "Calcium"], price: 700 },
-  { id: 25, name: "Prostate Specific Antigen", description: "PSA test for prostate health screening.", includes: ["Total PSA", "Free PSA", "PSA Ratio"], price: 900 },
-];
-
-/**
- * Resolve package included test names to actual test objects from staticData.
- * Matches by exact name, then partial.
- */
-function resolvePackageTests(includedTestNames) {
-  const resolved = [];
-  const usedIds = new Set();
-  for (const name of includedTestNames) {
-    const lowerName = name.toLowerCase().trim();
-    // Exact match first
-    let match = tests.find(
-      (t) => t.name.toLowerCase().trim() === lowerName
-    );
-    // Partial match fallback
-    if (!match) {
-      match = tests.find((t) => t.name.toLowerCase().includes(lowerName));
-    }
-    if (match && !usedIds.has(match.id)) {
-      resolved.push(match);
-      usedIds.add(match.id);
-    }
+const datePickerStyles = `
+  input[type="date"] {
+    color-scheme: light;
   }
-  return resolved;
-}
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.25) sepia(0.3) saturate(3) hue-rotate(200deg);
+  }
+  input[type="date"]::-webkit-datetime-edit-text,
+  input[type="date"]::-webkit-datetime-edit-month-field,
+  input[type="date"]::-webkit-datetime-edit-day-field,
+  input[type="date"]::-webkit-datetime-edit-year-field {
+    color: #1e293b;
+  }
+`;
 
 export default function BookPackagePage() {
   const params = useParams();
   const router = useRouter();
-  const packageId = Number(params.id);
+  const packageId = String(params.id || "").trim();
 
-  /**
-   * Inline CSS so the browser's native date-picker popup (Chrome / Edge / Safari)
-   * uses light-mode text/calendar-icon colours that match the surrounding UI.
-   */
-  const datePickerStyles = `
-    input[type="date"] {
-      color-scheme: light;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      cursor: pointer;
-      filter: invert(0.25) sepia(0.3) saturate(3) hue-rotate(200deg);
-    }
-    input[type="date"]::-webkit-datetime-edit-text,
-    input[type="date"]::-webkit-datetime-edit-month-field,
-    input[type="date"]::-webkit-datetime-edit-day-field,
-    input[type="date"]::-webkit-datetime-edit-year-field {
-      color: #1e293b;
-    }
-  `;
+  const [pkg, setPkg] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    address: "",
     date: "",
     time: "",
-    address: "",
   });
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  const pkg = useMemo(
-    () => PACKAGES.find((p) => p.id === packageId),
-    [packageId]
-  );
+  useEffect(() => {
+    if (!packageId) return;
+    let cancelled = false;
 
-  const pkgTests = useMemo(
-    () => (pkg ? resolvePackageTests(pkg.includes) : []),
-    [pkg]
-  );
+    async function load() {
+      try {
+        setLoading(true);
+        setError("");
+        const res = await fetch(`/api/packages/${encodeURIComponent(packageId)}`);
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || "Package not found");
+        }
+        if (!cancelled) setPkg(json.data);
+      } catch (err) {
+        if (!cancelled) {
+          setPkg(null);
+          setError(err.message || "Failed to load package");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [packageId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle individual test booking → redirect to /book?testIds=T001 (single)
+  const pkgTests = pkg?.tests || [];
+  const includeItems = pkg?.includeItems || [];
+
   const handleBookSingle = (testId) => {
+    if (!testId) return;
     router.push(`/book?testIds=${encodeURIComponent(testId)}`);
   };
 
-  // Quick-book with phone number (shows confirmation)
-  const handleQuickBook = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.phone.trim()) {
-      alert("Please enter your phone number.");
+    if (!pkg) return;
+
+    const quick = parseOrErrors(bookingQuickSchema, formData);
+    if (!quick.ok) {
+      setFieldErrors(quick.errors);
+      alert(quick.message);
       return;
     }
-    if (pkgTests.length === 0) {
-      alert("This package has no tests available for booking.");
+
+    const payload = parseOrErrors(bookingCreateSchema, {
+      name: quick.data.name,
+      phone: quick.data.phone,
+      address: quick.data.address || "",
+      preferredDate: quick.data.date,
+      preferredTime: quick.data.time,
+      packageId: pkg.id,
+      notes: `Package: ${pkg.name} (${pkg.code || pkg.id})`,
+    });
+    if (!payload.ok) {
+      setFieldErrors(payload.errors);
+      alert(payload.message);
       return;
     }
-    const ids = pkgTests.map((t) => t.id).join(",");
-    router.push(`/book?testIds=${encodeURIComponent(ids)}`);
+
+    try {
+      setSubmitting(true);
+      setFieldErrors({});
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload.data),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        if (json.errors) setFieldErrors(json.errors);
+        throw new Error(json.message || "Failed to save booking");
+      }
+      setSuccess(true);
+    } catch (err) {
+      alert(err.message || "Failed to save booking");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  // 404 – Package not found
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <main className="pt-[80px] lg:pt-[88px]">
+          <p className="text-center text-slate-500 py-20 text-sm">Loading package…</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!pkg) {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />
         <main className="pt-[80px] lg:pt-[88px]">
           <div className="container mx-auto px-4 sm:px-6 py-20 text-center">
-            <h1 className="text-3xl font-bold text-slate-900 mb-4">
-              Package Not Found
-            </h1>
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">Package Not Found</h1>
             <p className="text-slate-600 mb-8">
-              The package you are looking for does not exist or has been removed.
+              {error || "The package you are looking for does not exist or has been removed."}
             </p>
             <Link href="/packages">
               <button className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors">
@@ -155,12 +167,46 @@ export default function BookPackagePage() {
     );
   }
 
+  if (success) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <main className="pt-[80px] lg:pt-[88px]">
+          <div className="max-w-lg mx-auto px-4 py-20 text-center">
+            <h1 className="text-2xl font-bold text-slate-900 mb-3">Booking Confirmed</h1>
+            <p className="text-slate-600 mb-2">
+              Your booking for <span className="font-semibold text-sky-700">{pkg.name}</span> has
+              been saved.
+            </p>
+            <p className="text-sm text-slate-500 mb-8">
+              Our team will contact you shortly to confirm the appointment.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/packages"
+                className="px-5 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700"
+              >
+                Browse Packages
+              </Link>
+              <Link
+                href="/"
+                className="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50"
+              >
+                Go Home
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <style>{datePickerStyles}</style>
       <Navbar />
       <main className="pt-[80px] lg:pt-[88px]">
-        {/* Hero Banner */}
         <section className="relative h-48 lg:h-60 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400 overflow-hidden">
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative h-full max-w-6xl mx-auto px-6 flex flex-col items-center justify-center text-center">
@@ -170,35 +216,26 @@ export default function BookPackagePage() {
             >
               ← Back to Packages
             </Link>
-            <h1 className="text-2xl lg:text-4xl font-bold text-white">
-              {pkg.name}
-            </h1>
-            <p className="text-sky-100 text-sm lg:text-base mt-1 max-w-lg">
-              {pkg.description}
-            </p>
+            <h1 className="text-2xl lg:text-4xl font-bold text-white">{pkg.name}</h1>
+            <p className="text-sky-100 text-sm lg:text-base mt-1 max-w-lg">{pkg.description}</p>
             <span className="mt-2 inline-block px-4 py-1 rounded-full bg-white/20 text-white text-xs lg:text-sm font-semibold">
-              Rs. {pkg.price} · {pkg.includes.length} Tests Included
+              Rs. {pkg.price} · {(pkg.includes || []).length} Tests Included
             </span>
           </div>
         </section>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
           <div className="grid lg:grid-cols-3 gap-8">
-
-            {/* Left — Package Test Details */}
             <div className="lg:col-span-2 space-y-6">
-              {/* What's Included */}
               <div className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden">
                 <div className="bg-[#FF6B6B] px-5 py-2">
-                  <h2 className="text-sm lg:text-base font-bold text-white">
-                    What&apos;s Included
-                  </h2>
+                  <h2 className="text-sm lg:text-base font-bold text-white">What&apos;s Included</h2>
                 </div>
                 <div className="p-5">
                   <div className="space-y-3">
-                    {pkgTests.map((test) => (
+                    {includeItems.map((item, index) => (
                       <div
-                        key={test.id}
+                        key={`${item.testName}-${index}`}
                         className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-sky-200 hover:bg-sky-50/50 transition-colors"
                       >
                         <div className="flex items-center gap-3 min-w-0">
@@ -207,24 +244,26 @@ export default function BookPackagePage() {
                           </span>
                           <div className="min-w-0">
                             <p className="text-sm font-medium text-slate-800 truncate">
-                              {test.name}
+                              {item.testName || item.name}
                             </p>
                             <p className="text-xs text-slate-400">
-                              {test.category}
+                              {item.category || pkg.category}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
-                          <span className="text-sm font-bold text-sky-600">
-                            ₹{test.price}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleBookSingle(test.id)}
-                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"
-                          >
-                            Book
-                          </button>
+                          {item.price != null && (
+                            <span className="text-sm font-bold text-sky-600">₹{item.price}</span>
+                          )}
+                          {item.testId && (
+                            <button
+                              type="button"
+                              onClick={() => handleBookSingle(item.testId)}
+                              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+                            >
+                              Book
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -232,126 +271,165 @@ export default function BookPackagePage() {
                 </div>
               </div>
 
-              {/* Package Description */}
               <div className="bg-slate-50 rounded-2xl border border-slate-100 p-5">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
-                  About This Package
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {pkg.description}
-                </p>
+                <h3 className="text-base font-semibold text-slate-800 mb-2">About This Package</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">{pkg.description}</p>
               </div>
             </div>
 
-            {/* Right — Quick Book Panel */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden sticky top-32">
-                {/* Price Card */}
+              <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden sticky top-32"
+              >
                 <div className="bg-sky-600 px-5 py-3">
                   <h3 className="text-sm font-bold text-white">Book This Package</h3>
                 </div>
                 <div className="p-5 space-y-4">
-                  {/* Total Price */}
                   <div className="bg-sky-50 rounded-xl p-4 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-500 mb-0.5">Package Price</p>
-                      <p className="text-2xl font-bold text-sky-600">
-                        Rs. {pkg.price}
-                      </p>
+                      <p className="text-2xl font-bold text-sky-600">Rs. {pkg.price}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-slate-500 mb-0.5">Tests Included</p>
                       <p className="text-xl font-bold text-slate-800">
-                        {pkg.includes.length}
+                        {(pkg.includes || []).length}
                       </p>
                     </div>
                   </div>
 
-                  {/* Date & Time */}
-                  <div className="grid grid-cols-1 gap-3">
-                    <div>
-                       <label className="block text-xs font-semibold text-slate-900 mb-1.5">
-                         Preferred Date *
-                       </label>
-                        <input
-                           type="date"
-                           name="date"
-                           required
-                           min={new Date().toISOString().split("T")[0]}
-                           value={formData.date}
-                           onChange={handleChange}
-                           style={{ colorScheme: 'light' }}
-                           className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white
-                                      text-slate-800 placeholder:text-slate-400
-                                      focus:border-sky-500 focus:ring-2 focus:ring-sky-100
-                                      text-sm outline-none transition-colors cursor-pointer"
-                        />
-                    </div>
-                    <div>
-                       <label className="block text-xs font-semibold text-slate-900 mb-1.5">
-                         Preferred Time Slot *
-                       </label>
-                      <select
-                        name="time"
-                        required
-                        value={formData.time}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-sm outline-none transition-colors bg-white"
-                      >
-                        <option value="">Select time…</option>
-                        {[
-                          "8:00 AM","9:00 AM","10:00 AM","11:00 AM",
-                          "12:00 PM","2:00 PM","3:00 PM","4:00 PM","5:00 PM","6:00 PM",
-                        ].map((slot) => (
-                          <option key={slot} value={slot}>
-                            {slot}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-900 mb-1.5">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                      placeholder="Your name"
+                    />
                   </div>
 
-                  {/* CTA Buttons */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-900 mb-1.5">
+                      Phone *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                      placeholder="98xxxxxxxx"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-900 mb-1.5">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                      placeholder="Home / collection address"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-900 mb-1.5">
+                      Preferred Date *
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      required
+                      min={new Date().toISOString().split("T")[0]}
+                      value={formData.date}
+                      onChange={handleChange}
+                      style={{ colorScheme: "light" }}
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-900 mb-1.5">
+                      Preferred Time Slot *
+                    </label>
+                    <select
+                      name="time"
+                      required
+                      value={formData.time}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-sm outline-none bg-white text-slate-800"
+                    >
+                      <option value="">Select time…</option>
+                      {[
+                        "8:00 AM",
+                        "9:00 AM",
+                        "10:00 AM",
+                        "11:00 AM",
+                        "12:00 PM",
+                        "2:00 PM",
+                        "3:00 PM",
+                        "4:00 PM",
+                        "5:00 PM",
+                        "6:00 PM",
+                      ].map((slot) => (
+                        <option key={slot} value={slot}>
+                          {slot}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <button
-                    type="button"
-                    onClick={handleQuickBook}
-                    className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm"
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
                   >
-                    Book All Tests (Rs. {pkg.price})
+                    {submitting ? "Booking…" : `Book Package (Rs. ${pkg.price})`}
                   </button>
 
-                  <Link
-                    href={`/book?testIds=${encodeURIComponent(pkgTests.map((t) => t.id).join(","))}`}
-                    className="block w-full py-2.5 text-center text-sky-600 font-semibold text-sm hover:underline"
-                  >
-                    View Full Booking Page →
-                  </Link>
+                  {pkgTests.length > 0 && (
+                    <Link
+                      href={`/book?testIds=${encodeURIComponent(pkgTests.map((t) => t.id).join(","))}`}
+                      className="block w-full py-2.5 text-center text-sky-600 font-semibold text-sm hover:underline"
+                    >
+                      Or book linked tests individually →
+                    </Link>
+                  )}
 
-                  {/* Tests Summary */}
                   <div className="border-t border-slate-100 pt-4">
                     <p className="text-xs font-semibold text-slate-700 mb-2">
-                      Tests Included ({pkgTests.length})
+                      Tests Included ({includeItems.length})
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      {pkgTests.slice(0, 4).map((t) => (
+                      {includeItems.slice(0, 4).map((t, i) => (
                         <span
-                          key={t.id}
+                          key={`${t.testName}-${i}`}
                           className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded-full"
                         >
-                          {t.name}
+                          {t.testName}
                         </span>
                       ))}
-                      {pkgTests.length > 4 && (
+                      {includeItems.length > 4 && (
                         <span className="px-2 py-0.5 bg-sky-50 text-sky-600 text-[10px] rounded-full font-medium">
-                          +{pkgTests.length - 4} more
+                          +{includeItems.length - 4} more
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
-
           </div>
         </div>
       </main>

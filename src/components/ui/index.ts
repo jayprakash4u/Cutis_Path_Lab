@@ -6,8 +6,6 @@ export {
   TestimonialCard,
   TeamMemberCard,
   InfoCard,
-  ServiceCard,
-  ServiceCardWithImage,
   PackageCard,
   ListItemCard,
   AchievementCard,
