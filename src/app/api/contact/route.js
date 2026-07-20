@@ -1,12 +1,31 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
+import { sendContactNotification } from "@/lib/mail";
+import { rateLimit } from "@/lib/rateLimit";
 import { escapeSql, newId, sqlExec } from "@/lib/sqlserver";
 import { contactCreateSchema } from "@/lib/validation/contact";
 import { parseOrErrors } from "@/lib/validation/common";
 import { validationError } from "@/lib/validation/http";
 
 export async function POST(request) {
+  const limited = rateLimit(request, {
+    key: "contact",
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const body = await request.json();
+
+    // Honeypot — bots often fill hidden fields
+    if (body._honeypot || body.website) {
+      return NextResponse.json(
+        { success: true, message: "Message saved", data: { id: "ok" } },
+        { status: 201 },
+      );
+    }
+
     const parsed = parseOrErrors(contactCreateSchema, {
       name: body.name ?? "",
       email: body.email ?? "",
@@ -37,15 +56,24 @@ export async function POST(request) {
       );
     `);
 
+    const mail = await sendContactNotification({
+      id,
+      name,
+      email,
+      phone,
+      subject,
+      message,
+    });
+
     return NextResponse.json(
-      { success: true, message: "Message saved", data: { id } },
+      {
+        success: true,
+        message: "Message saved",
+        data: { id, email: { labNotified: mail.sent } },
+      },
       { status: 201 },
     );
   } catch (error) {
-    console.error("POST /api/contact", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to save message" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to save message", 500, "POST /api/contact");
   }
 }

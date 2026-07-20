@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -58,10 +59,6 @@ export async function POST(request) {
       data: { url, filename },
     });
   } catch (error) {
-    console.error("POST /api/categories/upload", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Upload failed" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Upload failed", 500);
   }
 }

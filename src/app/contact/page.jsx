@@ -453,6 +453,7 @@ function ContactPageContent() {
           phone: data.phone,
           subject: subjectParts.join(" - "),
           message: data.message,
+          _honeypot: e.target._honeypot?.value || "",
         }),
       });
       const json = await res.json();
@@ -542,6 +543,15 @@ function ContactPageContent() {
                   noValidate
                   className="space-y-3 lg:space-y-5 p-4 lg:p-10"
                 >
+                  {/* Honeypot — hidden from users, traps bots */}
+                  <input
+                    type="text"
+                    name="_honeypot"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
                     <div>
                       <label

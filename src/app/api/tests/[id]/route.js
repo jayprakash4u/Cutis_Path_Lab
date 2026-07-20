@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, numOrNull } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -26,11 +27,7 @@ export async function GET(_request, { params }) {
     }
     return NextResponse.json({ success: true, data: list[0] });
   } catch (error) {
-    console.error("GET /api/tests/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load test" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load test", 500);
   }
 }
 
@@ -96,11 +93,7 @@ export async function PATCH(request, { params }) {
 
     return NextResponse.json({ success: true, message: "Test updated", data: { id: testId } });
   } catch (error) {
-    console.error("PATCH /api/tests/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update test" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update test", 500);
   }
 }
 
@@ -126,10 +119,6 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({ success: true, message: "Test deleted", data: { id: testId } });
   } catch (error) {
-    console.error("DELETE /api/tests/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete test" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete test", 500);
   }
 }

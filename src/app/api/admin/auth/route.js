@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import {
   clearAdminSessionCookie,
   createAdminSessionCookie,
@@ -6,6 +7,7 @@ import {
   requireAdmin,
   verifyAdminCredentials,
 } from "@/lib/adminAuth";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function GET(request) {
   const denied = requireAdmin(request);
@@ -18,6 +20,13 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  const limited = rateLimit(request, {
+    key: "admin-login",
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const body = await request.json();
     const username = String(body.username || body.user || "").trim();
@@ -40,10 +49,7 @@ export async function POST(request) {
     response.cookies.set(cookie);
     return response;
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Login failed" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Login failed", 500, "POST /api/admin/auth");
   }
 }
 

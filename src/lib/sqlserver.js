@@ -15,6 +15,25 @@ const DATABASE = process.env.SQLSERVER_DATABASE || "CutisPathLab";
 const LOGIN_TIMEOUT = Number(process.env.SQLSERVER_LOGIN_TIMEOUT || "60");
 const MAX_RETRIES = Number(process.env.SQLSERVER_MAX_RETRIES || "3");
 
+function isProduction() {
+  return process.env.NODE_ENV === "production";
+}
+
+function logDbError(context, error, detail = "") {
+  console.error(`[sqlserver] ${context}`, error?.message || error, detail);
+}
+
+function toPublicDbError(error, detail = "") {
+  logDbError("query failed", error, detail);
+  if (isProduction()) {
+    return new Error("Database operation failed");
+  }
+  if (detail) {
+    return new Error(`${error?.message || "sqlcmd error"} | ${detail}`);
+  }
+  return error instanceof Error ? error : new Error(String(error));
+}
+
 let sqlcmdChain = Promise.resolve();
 
 function enqueueSqlcmd(task) {
@@ -52,17 +71,11 @@ async function runSqlcmdWithRetry(args, options = {}) {
     }
   }
 
-  const detail = [
-    lastError?.message,
-    lastError?.stderr?.trim(),
-    lastError?.stdout?.trim(),
-  ]
-    .filter(Boolean)
-    .join(" | ");
-
-  throw new Error(
-    detail ||
-      `sqlcmd failed after ${MAX_RETRIES} attempts (server: ${SERVER}, database: ${DATABASE})`,
+  throw toPublicDbError(
+    lastError,
+    isProduction()
+      ? ""
+      : `sqlcmd failed after ${MAX_RETRIES} attempts (server: ${SERVER}, database: ${DATABASE})`,
   );
 }
 
@@ -115,7 +128,7 @@ SELECT ISNULL(@json, N'[]');
     return JSON.parse(jsonText);
   } catch (error) {
     if (error instanceof SyntaxError) {
-      throw new Error(`Could not parse SQL JSON result: ${String(error.message)}`);
+      throw toPublicDbError(error, isProduction() ? "" : "Could not parse SQL JSON result");
     }
 
     let outSnippet = "";
@@ -126,11 +139,10 @@ SELECT ISNULL(@json, N'[]');
       // ignore missing output file
     }
 
-    if (outSnippet) {
-      throw new Error(`${error.message} | sqlcmd output: ${outSnippet}`);
-    }
-
-    throw error;
+    throw toPublicDbError(
+      error,
+      isProduction() ? "" : outSnippet ? `sqlcmd output: ${outSnippet}` : "",
+    );
   } finally {
     await unlink(outFile).catch(() => {});
     await unlink(sqlFile).catch(() => {});
@@ -143,7 +155,7 @@ export async function sqlExec(query) {
     const { stderr, stdout } = await runSqlcmdWithRetry(["-b", "-Q", query]);
     const errText = (stderr || stdout || "").trim();
     if (errText && /error|failed|violation/i.test(errText)) {
-      throw new Error(errText);
+      throw toPublicDbError(new Error("SQL execution failed"), isProduction() ? "" : errText);
     }
   });
 }

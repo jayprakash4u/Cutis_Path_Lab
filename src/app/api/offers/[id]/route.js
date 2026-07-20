@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr, numOrNull } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -26,11 +27,7 @@ export async function GET(_request, { params }) {
     }
     return NextResponse.json({ success: true, data: list[0] });
   } catch (error) {
-    console.error("GET /api/offers/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load offer" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load offer", 500);
   }
 }
 
@@ -94,11 +91,7 @@ export async function PATCH(request, { params }) {
 
     return NextResponse.json({ success: true, message: "Offer updated", data: { id: offerId } });
   } catch (error) {
-    console.error("PATCH /api/offers/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update offer" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update offer", 500);
   }
 }
 
@@ -122,10 +115,6 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({ success: true, message: "Offer deleted", data: { id: offerId } });
   } catch (error) {
-    console.error("DELETE /api/offers/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete offer" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete offer", 500);
   }
 }

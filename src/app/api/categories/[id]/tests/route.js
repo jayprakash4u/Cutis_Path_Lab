@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
 
@@ -47,11 +48,7 @@ VALUES (${escapeSql(categoryId)}, ${escapeSql(testId)}, ${i});
       data: { id: categoryId, count: testIds.length },
     });
   } catch (error) {
-    console.error("PUT /api/categories/[id]/tests", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update category tests" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update category tests", 500);
   }
 }
 
@@ -72,9 +69,6 @@ export async function GET(_request, { params }) {
 
     return NextResponse.json({ success: true, data: tests });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load category tests" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load category tests", 500);
   }
 }

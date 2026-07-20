@@ -4,12 +4,21 @@ import { NextResponse } from "next/server";
 const COOKIE = "cutis_admin_session";
 const MAX_AGE_SEC = 60 * 60 * 24 * 7; // 7 days
 
+function isProduction() {
+  return process.env.NODE_ENV === "production";
+}
+
 function getSecret() {
-  return (
-    process.env.ADMIN_SESSION_SECRET ||
-    process.env.ADMIN_PASSWORD ||
-    "dev-only-change-me"
-  );
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (secret) return secret;
+
+  if (isProduction()) {
+    throw new Error(
+      "ADMIN_SESSION_SECRET must be set in production. Generate a long random string.",
+    );
+  }
+
+  return process.env.ADMIN_PASSWORD || "dev-only-change-me";
 }
 
 function getAdminUser() {
@@ -62,7 +71,7 @@ export function verifyAdminCredentials(username, password) {
   const expectedUser = getAdminUser();
   const expectedPass = getAdminPassword();
   if (!expectedPass) {
-    return { ok: false, message: "ADMIN_PASSWORD is not set in .env.local" };
+    return { ok: false, message: "Authentication is temporarily unavailable" };
   }
   if (username !== expectedUser || password !== expectedPass) {
     return { ok: false, message: "Invalid username or password" };
@@ -104,7 +113,7 @@ export function getAdminSession(request) {
 export function requireAdmin(request) {
   if (!getAdminPassword()) {
     return NextResponse.json(
-      { success: false, message: "Admin auth not configured (ADMIN_PASSWORD)" },
+      { success: false, message: "Authentication is temporarily unavailable" },
       { status: 503 },
     );
   }

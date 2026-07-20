@@ -1,6 +1,7 @@
 import { unlink } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -53,10 +54,7 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({ success: true, data: category });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load category" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load category", 500);
   }
 }
 
@@ -114,10 +112,7 @@ export async function PATCH(request, { params }) {
       data: { id: categoryId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update category" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update category", 500);
   }
 }
 
@@ -153,9 +148,6 @@ export async function DELETE(request, { params }) {
       data: { id: categoryId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete category" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete category", 500);
   }
 }

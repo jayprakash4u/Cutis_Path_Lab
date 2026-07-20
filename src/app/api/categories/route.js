@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
+import { resolveActiveFilter } from "@/lib/activeFilter";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
 import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -6,7 +8,8 @@ import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const activeOnly = searchParams.get("active") !== "false";
+    const { denied, activeOnly } = resolveActiveFilter(request, searchParams);
+    if (denied) return denied;
 
     let where = "1=1";
     if (activeOnly) where += " AND isActive = 1";
@@ -22,11 +25,7 @@ export async function GET(request) {
 
     return NextResponse.json({ success: true, data: rows });
   } catch (error) {
-    console.error("GET /api/categories", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load categories" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load categories", 500);
   }
 }
 
@@ -74,10 +73,6 @@ export async function POST(request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("POST /api/categories", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to create category" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to create category", 500);
   }
 }

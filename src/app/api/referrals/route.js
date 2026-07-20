@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
+import { resolveActiveFilter } from "@/lib/activeFilter";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
 import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -6,7 +8,9 @@ import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const activeOnly = searchParams.get("active") !== "false";
+    const { denied, activeOnly } = resolveActiveFilter(request, searchParams);
+    if (denied) return denied;
+
     const limitRaw = Number(searchParams.get("limit"));
     const limit =
       Number.isFinite(limitRaw) && limitRaw > 0
@@ -29,11 +33,7 @@ export async function GET(request) {
 
     return NextResponse.json({ success: true, data: rows });
   } catch (error) {
-    console.error("GET /api/referrals", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load referral doctors" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load referral doctors", 500, "GET /api/referrals");
   }
 }
 
@@ -75,10 +75,6 @@ export async function POST(request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("POST /api/referrals", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to add referral doctor" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to add referral doctor", 500);
   }
 }

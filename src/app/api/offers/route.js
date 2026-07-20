@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr, numOrNull } from "@/lib/adminSql";
 import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -31,11 +32,7 @@ export async function GET(request) {
 
     return NextResponse.json({ success: true, data: offers });
   } catch (error) {
-    console.error("GET /api/offers", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load offers" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load offers", 500);
   }
 }
 
@@ -88,10 +85,6 @@ export async function POST(request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("POST /api/offers", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to create offer" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to create offer", 500);
   }
 }

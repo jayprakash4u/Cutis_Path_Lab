@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -21,10 +22,7 @@ export async function GET(_request, { params }) {
     }
     return NextResponse.json({ success: true, data: list[0] });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load testimonial" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load testimonial", 500);
   }
 }
 
@@ -75,10 +73,7 @@ export async function PATCH(request, { params }) {
       data: { id: testimonialId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update testimonial" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update testimonial", 500);
   }
 }
 
@@ -103,9 +98,6 @@ export async function DELETE(request, { params }) {
       data: { id: testimonialId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete testimonial" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete testimonial", 500);
   }
 }

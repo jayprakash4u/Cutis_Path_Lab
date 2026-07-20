@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { numOrNull, replacePackageIncludes } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -91,11 +92,7 @@ export async function GET(_request, { params }) {
       },
     });
   } catch (error) {
-    console.error("GET /api/packages/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load package" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load package", 500);
   }
 }
 
@@ -154,11 +151,7 @@ export async function PATCH(request, { params }) {
       data: { id: packageId },
     });
   } catch (error) {
-    console.error("PATCH /api/packages/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update package" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update package", 500);
   }
 }
 
@@ -188,10 +181,6 @@ export async function DELETE(request, { params }) {
       data: { id: packageId },
     });
   } catch (error) {
-    console.error("DELETE /api/packages/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete package" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete package", 500);
   }
 }

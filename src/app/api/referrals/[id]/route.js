@@ -1,6 +1,7 @@
 import { unlink } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -35,10 +36,7 @@ export async function GET(_request, { params }) {
     }
     return NextResponse.json({ success: true, data: list[0] });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load referral doctor" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load referral doctor", 500);
   }
 }
 
@@ -103,10 +101,7 @@ export async function PATCH(request, { params }) {
       data: { id: doctorId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update referral doctor" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update referral doctor", 500);
   }
 }
 
@@ -140,9 +135,6 @@ export async function DELETE(request, { params }) {
       data: { id: doctorId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete referral doctor" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete referral doctor", 500);
   }
 }

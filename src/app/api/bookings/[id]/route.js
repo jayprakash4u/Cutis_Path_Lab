@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminAuth";
+import { apiErrorResponse } from "@/lib/apiError";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
 import { bookingStatusSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
 import { validationError } from "@/lib/validation/http";
 
-export async function GET(_request, { params }) {
+export async function GET(request, { params }) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     const bookingId = String(id || "").trim();
@@ -25,10 +29,7 @@ export async function GET(_request, { params }) {
     }
     return NextResponse.json({ success: true, data: list[0] });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load booking" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load booking", 500, "GET /api/bookings/[id]");
   }
 }
 
@@ -69,10 +70,6 @@ export async function PATCH(request, { params }) {
       data: { id: bookingId, status },
     });
   } catch (error) {
-    console.error("PATCH /api/bookings/[id]", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update booking" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update booking", 500, "PATCH /api/bookings/[id]");
   }
 }

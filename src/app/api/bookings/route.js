@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
 import {
   sendBookingNotification,
   sendPatientBookingConfirmation,
 } from "@/lib/mail";
 import { requireAdmin } from "@/lib/adminAuth";
+import { rateLimit } from "@/lib/rateLimit";
 import { bookingCreateSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
 import { validationError } from "@/lib/validation/http";
@@ -21,8 +23,22 @@ async function assertOptionalFk(table, id, label) {
 }
 
 export async function POST(request) {
+  const limited = rateLimit(request, {
+    key: "booking",
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const body = await request.json();
+
+    if (body._honeypot || body.website) {
+      return NextResponse.json(
+        { success: true, message: "Booking saved", data: { id: "ok" } },
+        { status: 201 },
+      );
+    }
 
     // Normalize aliases from older clients
     const incoming = {
@@ -111,7 +127,6 @@ export async function POST(request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("POST /api/bookings", error);
     const msg = String(error.message || "");
     // Surface DB CHECK constraint failures as 400
     if (/CK_Booking_|CHECK constraint/i.test(msg)) {
@@ -119,10 +134,7 @@ export async function POST(request) {
         message: "Please check your details and try again",
       });
     }
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to save booking" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to save booking", 500, "POST /api/bookings");
   }
 }
 
@@ -140,10 +152,6 @@ export async function GET(request) {
     `);
     return NextResponse.json({ success: true, data: bookings });
   } catch (error) {
-    console.error("GET /api/bookings", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load bookings" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load bookings", 500, "GET /api/bookings");
   }
 }

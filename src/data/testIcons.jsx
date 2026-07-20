@@ -1,14 +1,7 @@
-import React from "react";
-
-interface IconProps {
-  className?: string;
-  size?: number;
-}
-
 const primaryColor = "#0284C7";
 const accentColor = "#FF6B6B";
 
-export const APTTIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const APTTIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="8" y="6" width="24" height="28" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="12" y1="12" x2="22" y2="12" stroke={primaryColor} strokeWidth="2" />
@@ -18,7 +11,7 @@ export const APTTIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const ALTIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ALTIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="8" width="20" height="24" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="16" r="4" fill={accentColor} />
@@ -26,14 +19,14 @@ export const ALTIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const AlbuminIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const AlbuminIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M10 20 Q20 8 30 20 Q20 32 10 20" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M14 20 Q20 12 26 20 Q20 28 14 20" stroke={accentColor} strokeWidth="2" fill="none" />
   </svg>
 );
 
-export const ALPIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ALPIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="8" y="6" width="24" height="28" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="12" y1="12" x2="28" y2="12" stroke={primaryColor} strokeWidth="2" />
@@ -43,7 +36,7 @@ export const ALPIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const AntigenTestIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const AntigenTestIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="6" width="20" height="28" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <rect x="16" y="14" width="8" height="12" rx="1" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -52,14 +45,14 @@ export const AntigenTestIcon: React.FC<IconProps> = ({ className, size = 40 }) =
   </svg>
 );
 
-export const ASTIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ASTIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M10 28 Q15 20 20 24 Q25 28 30 12" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="30" cy="12" r="3" fill={accentColor} />
   </svg>
 );
 
-export const AutopsyPathologyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const AutopsyPathologyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="8" y="6" width="24" height="28" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="12" y1="12" x2="28" y2="12" stroke={primaryColor} strokeWidth="2" />
@@ -69,7 +62,7 @@ export const AutopsyPathologyIcon: React.FC<IconProps> = ({ className, size = 40
   </svg>
 );
 
-export const BilirubinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BilirubinIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M20 8 L20 26" stroke={primaryColor} strokeWidth="2" />
     <path d="M14 14 L20 8 L26 14" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -78,14 +71,14 @@ export const BilirubinIcon: React.FC<IconProps> = ({ className, size = 40 }) => 
   </svg>
 );
 
-export const BleedingTimeIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BleedingTimeIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M20 8 C20 8 12 18 12 24 C12 28 16 32 20 32 C24 32 28 28 28 24 C28 18 20 8 20 8Z" stroke={accentColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="24" r="3" fill={accentColor} />
   </svg>
 );
 
-export const BloodCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BloodCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 8 L14 28 C14 30 16 32 20 32 C24 32 26 30 26 28 L26 8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="12" y1="8" x2="28" y2="8" stroke={primaryColor} strokeWidth="2" />
@@ -93,14 +86,14 @@ export const BloodCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const BloodGlucoseIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BloodGlucoseIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="10" width="20" height="20" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M20 8 C20 8 16 12 16 16 C16 18 18 20 20 20 C22 20 24 18 24 16 C24 12 20 8 20 8Z" fill={accentColor} />
   </svg>
 );
 
-export const BloodTypingIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BloodTypingIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="20" r="6" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="26" cy="20" r="6" stroke={accentColor} strokeWidth="2" fill="none" />
@@ -108,7 +101,7 @@ export const BloodTypingIcon: React.FC<IconProps> = ({ className, size = 40 }) =
   </svg>
 );
 
-export const BUNIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BUNIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="20" r="4" fill={accentColor} />
@@ -117,7 +110,7 @@ export const BUNIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const BoneMarrowIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BoneMarrowIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="20" cy="12" rx="8" ry="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <ellipse cx="20" cy="28" rx="8" ry="4" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -127,7 +120,7 @@ export const BoneMarrowIcon: React.FC<IconProps> = ({ className, size = 40 }) =>
   </svg>
 );
 
-export const ChlamydiaCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ChlamydiaCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="14" r="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="26" cy="14" r="4" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -138,7 +131,7 @@ export const ChlamydiaCultureIcon: React.FC<IconProps> = ({ className, size = 40
   </svg>
 );
 
-export const ClottingTimeIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ClottingTimeIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="12" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="20" x2="20" y2="12" stroke={primaryColor} strokeWidth="2" />
@@ -147,7 +140,7 @@ export const ClottingTimeIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const CMVAntibodyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const CMVAntibodyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M20 10 L20 18" stroke={primaryColor} strokeWidth="2" />
     <path d="M12 14 L20 18 L28 14" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -156,7 +149,7 @@ export const CMVAntibodyIcon: React.FC<IconProps> = ({ className, size = 40 }) =
   </svg>
 );
 
-export const CBCIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const CBCIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="14" r="5" stroke={accentColor} strokeWidth="2" fill="none" />
     <circle cx="26" cy="14" r="5" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -165,14 +158,14 @@ export const CBCIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const CortisolIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const CortisolIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M12 28 L16 20 L20 24 L24 14 L28 18" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="24" cy="14" r="3" fill={accentColor} />
   </svg>
 );
 
-export const COVID19Icon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const COVID19Icon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="8" x2="20" y2="12" stroke={primaryColor} strokeWidth="2" />
@@ -183,14 +176,14 @@ export const COVID19Icon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const CreatinineIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const CreatinineIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M12 32 C12 20 16 14 20 14 C24 14 28 20 28 32" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="14" r="4" fill={accentColor} />
   </svg>
 );
 
-export const CSFCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const CSFCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 10 L14 26 C14 30 16 32 20 32 C24 32 26 30 26 26 L26 10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="14" y1="18" x2="26" y2="18" stroke={primaryColor} strokeWidth="2" />
@@ -199,7 +192,7 @@ export const CSFCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) =>
   </svg>
 );
 
-export const CytopathologyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const CytopathologyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="20" r="5" stroke={accentColor} strokeWidth="2" fill="none" />
@@ -207,14 +200,14 @@ export const CytopathologyIcon: React.FC<IconProps> = ({ className, size = 40 })
   </svg>
 );
 
-export const DDimerIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const DDimerIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M10 20 L18 12 L18 28 Z" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M30 20 L22 12 L22 28 Z" stroke={accentColor} strokeWidth="2" fill="none" />
   </svg>
 );
 
-export const DengueNS1Icon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const DengueNS1Icon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="8" width="20" height="24" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <text x="15" y="18" fill={primaryColor} fontSize="7" fontWeight="bold">Na</text>
@@ -226,7 +219,7 @@ export const DengueNS1Icon: React.FC<IconProps> = ({ className, size = 40 }) => 
   </svg>
 );
 
-export const ElectrolytesIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ElectrolytesIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="16" r="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <text x="14" y="18" textAnchor="middle" fill={primaryColor} fontSize="6">+</text>
@@ -237,7 +230,7 @@ export const ElectrolytesIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const ElectronMicroscopyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ElectronMicroscopyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="18" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="28" x2="20" y2="34" stroke={primaryColor} strokeWidth="2" />
@@ -246,7 +239,7 @@ export const ElectronMicroscopyIcon: React.FC<IconProps> = ({ className, size = 
   </svg>
 );
 
-export const ESRIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ESRIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="16" y="6" width="8" height="28" rx="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="16" y1="20" x2="24" y2="20" stroke={primaryColor} strokeWidth="1" />
@@ -254,7 +247,7 @@ export const ESRIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const EstrogenIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const EstrogenIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="16" r="8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="24" x2="20" y2="34" stroke={primaryColor} strokeWidth="2" />
@@ -262,7 +255,7 @@ export const EstrogenIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const ExfoliativeCytologyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ExfoliativeCytologyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="20" cy="16" rx="10" ry="6" stroke={primaryColor} strokeWidth="2" fill="none" />
     <ellipse cx="20" cy="26" rx="8" ry="5" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -270,7 +263,7 @@ export const ExfoliativeCytologyIcon: React.FC<IconProps> = ({ className, size =
   </svg>
 );
 
-export const FNAIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const FNAIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="18" y="6" width="4" height="20" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M18 26 L20 32 L22 26" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -278,7 +271,7 @@ export const FNAIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const FlowCytometryIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const FlowCytometryIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="10" width="20" height="20" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="16" cy="16" r="2" fill={primaryColor} />
@@ -289,7 +282,7 @@ export const FlowCytometryIcon: React.FC<IconProps> = ({ className, size = 40 })
   </svg>
 );
 
-export const FSHIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const FSHIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="12" width="20" height="16" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="14" y1="18" x2="14" y2="24" stroke={primaryColor} strokeWidth="2" />
@@ -298,7 +291,7 @@ export const FSHIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const FungalCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const FungalCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="20" cy="28" rx="10" ry="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M16 28 C16 28 16 20 20 16" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -307,14 +300,14 @@ export const FungalCultureIcon: React.FC<IconProps> = ({ className, size = 40 })
   </svg>
 );
 
-export const GGTIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const GGTIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="8" width="20" height="24" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M14 16 L18 24 L22 18 L26 26" stroke={accentColor} strokeWidth="2" fill="none" />
   </svg>
 );
 
-export const GonorrheaCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const GonorrheaCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="16" cy="16" r="4" fill={accentColor} />
     <circle cx="24" cy="16" r="4" fill={accentColor} />
@@ -324,7 +317,7 @@ export const GonorrheaCultureIcon: React.FC<IconProps> = ({ className, size = 40
   </svg>
 );
 
-export const GramStainIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const GramStainIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="14" r="3" fill={primaryColor} />
     <circle cx="22" cy="12" r="2" fill={accentColor} />
@@ -335,7 +328,7 @@ export const GramStainIcon: React.FC<IconProps> = ({ className, size = 40 }) => 
   </svg>
 );
 
-export const GrowthHormoneIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const GrowthHormoneIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="12" y="22" width="4" height="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <rect x="18" y="16" width="4" height="16" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -344,7 +337,7 @@ export const GrowthHormoneIcon: React.FC<IconProps> = ({ className, size = 40 })
   </svg>
 );
 
-export const HCGIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const HCGIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="12" y="8" width="16" height="24" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <rect x="16" y="14" width="8" height="8" rx="1" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -353,28 +346,28 @@ export const HCGIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const HemoglobinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const HemoglobinIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <text x="20" y="24" textAnchor="middle" fill={accentColor} fontSize="10" fontWeight="bold">Hb</text>
   </svg>
 );
 
-export const HepBIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const HepBIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <text x="20" y="24" textAnchor="middle" fill={accentColor} fontSize="10" fontWeight="bold">HBs</text>
   </svg>
 );
 
-export const HepCIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const HepCIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <text x="20" y="24" textAnchor="middle" fill={accentColor} fontSize="10" fontWeight="bold">HCV</text>
   </svg>
 );
 
-export const HistopathologyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const HistopathologyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="10" width="20" height="20" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="10" y1="16" x2="30" y2="16" stroke={primaryColor} strokeWidth="1" />
@@ -385,7 +378,7 @@ export const HistopathologyIcon: React.FC<IconProps> = ({ className, size = 40 }
   </svg>
 );
 
-export const HIVIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const HIVIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M20 10 L20 18" stroke={primaryColor} strokeWidth="2" />
     <path d="M12 14 L20 18 L28 14" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -394,7 +387,7 @@ export const HIVIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const ImmunoglobulinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ImmunoglobulinIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 10 L14 20 L10 26" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M14 20 L18 26" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -405,7 +398,7 @@ export const ImmunoglobulinIcon: React.FC<IconProps> = ({ className, size = 40 }
   </svg>
 );
 
-export const ImmunohistochemistryIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ImmunohistochemistryIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="10" width="20" height="20" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="16" cy="16" r="3" fill={accentColor} />
@@ -415,7 +408,7 @@ export const ImmunohistochemistryIcon: React.FC<IconProps> = ({ className, size 
   </svg>
 );
 
-export const InsulinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const InsulinIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="16" y="8" width="8" height="20" rx="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="28" x2="20" y2="34" stroke={primaryColor} strokeWidth="2" />
@@ -423,7 +416,7 @@ export const InsulinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const KidneyFunctionIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const KidneyFunctionIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 12 C8 14 8 28 14 30 C16 30 18 26 18 20 C18 14 16 12 14 12" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M26 12 C32 14 32 28 26 30 C24 30 22 26 22 20 C22 14 24 12 26 12" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -432,7 +425,7 @@ export const KidneyFunctionIcon: React.FC<IconProps> = ({ className, size = 40 }
   </svg>
 );
 
-export const LHIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const LHIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M10 28 L16 20 L22 24 L28 12" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="28" cy="12" r="3" fill={accentColor} />
@@ -440,7 +433,7 @@ export const LHIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const LipidProfileIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const LipidProfileIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M16 16 L20 12 L24 16" stroke={accentColor} strokeWidth="2" fill="none" />
@@ -448,14 +441,14 @@ export const LipidProfileIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const LiverFunctionIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const LiverFunctionIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M12 14 C12 10 16 8 22 10 C28 12 30 18 28 24 C26 30 20 32 14 30 C10 28 12 20 12 14" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="20" r="3" fill={accentColor} />
   </svg>
 );
 
-export const MalariaIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const MalariaIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M16 16 L24 24" stroke={accentColor} strokeWidth="2" />
@@ -464,7 +457,7 @@ export const MalariaIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const MeaslesIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const MeaslesIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M20 10 L20 18" stroke={primaryColor} strokeWidth="2" />
     <path d="M12 14 L20 18 L28 14" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -473,7 +466,7 @@ export const MeaslesIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const MolecularPathologyIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const MolecularPathologyIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="12" r="3" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="26" cy="12" r="3" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -487,7 +480,7 @@ export const MolecularPathologyIcon: React.FC<IconProps> = ({ className, size = 
   </svg>
 );
 
-export const MycoplasmaCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const MycoplasmaCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="20" cy="20" rx="12" ry="8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="16" cy="18" r="2" fill={accentColor} />
@@ -496,7 +489,7 @@ export const MycoplasmaCultureIcon: React.FC<IconProps> = ({ className, size = 4
   </svg>
 );
 
-export const PapSmearIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const PapSmearIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="16" cy="18" r="3" fill={accentColor} />
@@ -505,7 +498,7 @@ export const PapSmearIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const BloodSmearIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const BloodSmearIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="8" y="12" width="24" height="16" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="14" cy="20" r="3" fill={accentColor} />
@@ -514,7 +507,7 @@ export const BloodSmearIcon: React.FC<IconProps> = ({ className, size = 40 }) =>
   </svg>
 );
 
-export const PlateletCountIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const PlateletCountIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="14" cy="16" rx="4" ry="3" stroke={primaryColor} strokeWidth="2" fill="none" />
     <ellipse cx="26" cy="16" rx="4" ry="3" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -525,7 +518,7 @@ export const PlateletCountIcon: React.FC<IconProps> = ({ className, size = 40 })
   </svg>
 );
 
-export const PCRIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const PCRIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 10 C14 10 14 20 14 30" stroke={primaryColor} strokeWidth="2" />
     <path d="M26 10 C26 10 26 20 26 30" stroke={primaryColor} strokeWidth="2" />
@@ -536,7 +529,7 @@ export const PCRIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const ProgesteroneIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ProgesteroneIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M12 28 L18 20 L24 24 L30 12" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="30" cy="12" r="3" fill={accentColor} />
@@ -544,14 +537,14 @@ export const ProgesteroneIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const ProlactinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ProlactinIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M10 20 Q15 10 20 20 Q25 30 30 20" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="20" r="4" fill={accentColor} />
   </svg>
 );
 
-export const ProthrombinTimeIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ProthrombinTimeIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="20" x2="20" y2="14" stroke={primaryColor} strokeWidth="2" />
@@ -561,7 +554,7 @@ export const ProthrombinTimeIcon: React.FC<IconProps> = ({ className, size = 40 
   </svg>
 );
 
-export const RBCCountIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const RBCCountIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="16" r="5" stroke={accentColor} strokeWidth="2" fill="none" />
     <circle cx="26" cy="16" r="5" stroke={accentColor} strokeWidth="2" fill="none" />
@@ -569,7 +562,7 @@ export const RBCCountIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const RubellaIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const RubellaIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="14" cy="14" r="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="26" cy="14" r="4" stroke={primaryColor} strokeWidth="2" fill="none" />
@@ -580,7 +573,7 @@ export const RubellaIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const SputumAFBIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const SputumAFBIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="20" cy="20" rx="12" ry="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <path d="M14 18 C16 16 18 20 20 18 C22 16 24 20 26 18" stroke={accentColor} strokeWidth="2" fill="none" />
@@ -588,7 +581,7 @@ export const SputumAFBIcon: React.FC<IconProps> = ({ className, size = 40 }) => 
   </svg>
 );
 
-export const StoolCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const StoolCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="10" y="10" width="20" height="20" rx="4" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="16" cy="16" r="2" fill={accentColor} />
@@ -597,7 +590,7 @@ export const StoolCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const TestosteroneIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const TestosteroneIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="18" cy="22" r="8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="24" y1="16" x2="32" y2="8" stroke={primaryColor} strokeWidth="2" />
@@ -606,7 +599,7 @@ export const TestosteroneIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const ThyroidPanelIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ThyroidPanelIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 16 C10 18 10 26 14 28 L20 32 L26 28 C30 26 30 18 26 16" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="8" x2="20" y2="16" stroke={primaryColor} strokeWidth="2" />
@@ -614,7 +607,7 @@ export const ThyroidPanelIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const TORCHPanelIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const TORCHPanelIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="8" y="8" width="24" height="24" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="8" y1="20" x2="32" y2="20" stroke={primaryColor} strokeWidth="2" />
@@ -626,7 +619,7 @@ export const TORCHPanelIcon: React.FC<IconProps> = ({ className, size = 40 }) =>
   </svg>
 );
 
-export const TotalProteinIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const TotalProteinIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <rect x="14" y="8" width="12" height="24" rx="2" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="14" y1="16" x2="26" y2="16" stroke={primaryColor} strokeWidth="1" />
@@ -635,7 +628,7 @@ export const TotalProteinIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const TyphoidIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const TyphoidIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <ellipse cx="20" cy="20" rx="6" ry="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="14" y1="14" x2="10" y2="10" stroke={primaryColor} strokeWidth="2" />
@@ -646,7 +639,7 @@ export const TyphoidIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
   </svg>
 );
 
-export const UrinalysisIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const UrinalysisIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 8 L14 26 C14 30 16 32 20 32 C24 32 26 30 26 26 L26 8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="12" y1="8" x2="28" y2="8" stroke={primaryColor} strokeWidth="2" />
@@ -655,7 +648,7 @@ export const UrinalysisIcon: React.FC<IconProps> = ({ className, size = 40 }) =>
   </svg>
 );
 
-export const UrineCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const UrineCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <path d="M14 8 L14 26 C14 30 16 32 20 32 C24 32 26 30 26 26 L26 8" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="12" y1="8" x2="28" y2="8" stroke={primaryColor} strokeWidth="2" />
@@ -665,7 +658,7 @@ export const UrineCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const ViralCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const ViralCultureIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="6" stroke={primaryColor} strokeWidth="2" fill="none" />
     <line x1="20" y1="10" x2="20" y2="14" stroke={primaryColor} strokeWidth="2" />
@@ -680,7 +673,7 @@ export const ViralCultureIcon: React.FC<IconProps> = ({ className, size = 40 }) 
   </svg>
 );
 
-export const WBCCountIcon: React.FC<IconProps> = ({ className, size = 40 }) => (
+export const WBCCountIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>
     <circle cx="20" cy="20" r="10" stroke={primaryColor} strokeWidth="2" fill="none" />
     <circle cx="20" cy="20" r="4" fill={accentColor} />

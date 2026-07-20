@@ -1,6 +1,7 @@
 import { unlink } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -34,10 +35,7 @@ export async function GET(_request, { params }) {
     }
     return NextResponse.json({ success: true, data: list[0] });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to load gallery image" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to load gallery image", 500);
   }
 }
 
@@ -111,10 +109,7 @@ export async function PATCH(request, { params }) {
       data: { id: galleryId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to update gallery image" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to update gallery image", 500);
   }
 }
 
@@ -148,9 +143,6 @@ export async function DELETE(request, { params }) {
       data: { id: galleryId },
     });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message || "Failed to delete gallery image" },
-      { status: 500 },
-    );
+    return apiErrorResponse(error, "Failed to delete gallery image", 500);
   }
 }
