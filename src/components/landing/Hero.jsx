@@ -14,30 +14,29 @@ export default function Hero() {
     <section className="relative w-full overflow-hidden">
       <FloatingSidebar />
 
-      {/* Hero background — full banner on sm+, compact strip on mobile */}
-      <div className="relative mx-auto w-full max-w-[1920px] sm:bg-slate-900">
+      <div className="relative mx-auto w-full max-w-[1920px] bg-[#eef5fb] leading-none sm:bg-slate-900">
         <Image
           src={heroImage.url}
           alt={heroImage.alt}
           width={heroImage.width}
           height={heroImage.height}
           priority
-          sizes="100vw"
-          className="block h-[18vh] w-full object-cover object-center sm:h-auto sm:object-contain"
+          unoptimized
+          sizes="(min-width: 1920px) 1920px, 100vw"
+          className="block h-auto w-full max-w-full object-contain"
         />
 
-        {/* Gradient overlay — sm+ (original look) */}
+        {/* Gradient overlay — desktop only */}
         <div className="absolute inset-0 hidden bg-gradient-to-r from-slate-800/70 via-slate-900/50 to-slate-900/60 sm:block" />
         <div className="absolute inset-0 hidden bg-gradient-to-b from-transparent via-transparent to-slate-900/80 sm:block" />
 
-        {/* Sky accent blurs — sm+ */}
         <div className="absolute inset-0 hidden overflow-hidden sm:block">
           <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-sky-500/8 blur-3xl" />
           <div className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-sky-400/5 blur-3xl" />
         </div>
       </div>
 
-      {/* Center content — sm+ (original white text) */}
+      {/* Center content — desktop only */}
       <div className="absolute inset-0 z-10 hidden flex-col items-center justify-center px-4 text-center sm:flex sm:px-6 lg:px-8">
         <h1 className="mb-2 text-xl text-white drop-shadow-lg sm:mb-3 sm:text-2xl md:text-3xl lg:text-4xl">
           Your Trusted Partner in <span className="text-sky-400">Health</span>
@@ -53,7 +52,6 @@ export default function Hero() {
         </Link>
       </div>
 
-      {/* Scroll indicator — sm+ */}
       <div className="absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 animate-bounce sm:block sm:bottom-12 lg:bottom-16">
         <svg
           className="h-4 w-4 text-sky-400 sm:h-5 sm:w-5"

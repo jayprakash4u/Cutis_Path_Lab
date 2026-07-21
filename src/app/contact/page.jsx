@@ -493,7 +493,7 @@ function ContactPageContent() {
   return (
     <>
       <Navbar />
-      <main className="pt-16 lg:pt-24">
+      <main className="pt-below-nav">
         <PagePosterHero
           src="/images/6psd.png"
           alt="Contact Us"

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
+import { publicCatalogCache } from "@/lib/publicApiCache";
 import { requireAdmin } from "@/lib/adminAuth";
 import { numOrNull, replacePackageIncludes } from "@/lib/adminSql";
 import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -69,7 +70,10 @@ export async function GET(request) {
     `);
 
     const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
-    return NextResponse.json({ success: true, data: list.map(normalizePackage) });
+    return NextResponse.json(
+      { success: true, data: list.map(normalizePackage) },
+      publicCatalogCache(),
+    );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load packages", 500);
   }

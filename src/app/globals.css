@@ -8,6 +8,12 @@
   --bg-card: #0d1525;
   --bg-elevated: #131d33;
 
+  /* Fixed navbar height (match Navbar.jsx h-14 / h-16 / lg topbar+nav) */
+  --site-nav-h: 3.5rem;
+  --site-nav-h-sm: 4rem;
+  --site-nav-h-lg: 5.5rem;
+  --site-nav-h-lg-tall: 6.875rem;
+
   /* Text Colors */
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
@@ -50,6 +56,39 @@ body {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Main content offset below fixed navbar — avoids white gap above heroes */
+  .pt-below-nav {
+    padding-top: var(--site-nav-h);
+  }
+
+  @media (min-width: 640px) {
+    .pt-below-nav {
+      padding-top: var(--site-nav-h-sm);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pt-below-nav {
+      padding-top: var(--site-nav-h-lg);
+    }
+  }
+
+  .pt-below-nav-tall {
+    padding-top: var(--site-nav-h);
+  }
+
+  @media (min-width: 640px) {
+    .pt-below-nav-tall {
+      padding-top: var(--site-nav-h-sm);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pt-below-nav-tall {
+      padding-top: var(--site-nav-h-lg-tall);
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
+import { publicCatalogCache } from "@/lib/publicApiCache";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr, numOrNull } from "@/lib/adminSql";
 import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -30,7 +31,10 @@ export async function GET(request) {
       FOR JSON PATH
     `);
 
-    return NextResponse.json({ success: true, data: offers });
+    return NextResponse.json(
+      { success: true, data: offers },
+      publicCatalogCache(),
+    );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load offers", 500);
   }

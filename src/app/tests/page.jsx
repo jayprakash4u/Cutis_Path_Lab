@@ -32,7 +32,7 @@ export default function TestsPage() {
       fallback={
         <div className="min-h-screen bg-white">
           <Navbar />
-          <main className="pt-[72px] lg:pt-[110px] px-6 py-16 text-slate-500 text-sm">
+          <main className="pt-below-nav-tall px-6 py-16 text-slate-500 text-sm">
             Loading tests…
           </main>
         </div>
@@ -216,7 +216,7 @@ function TestsPageContent() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="pt-[72px] lg:pt-[110px]">
+      <main className="pt-below-nav-tall">
         <PagePosterHero
           src="/images/posters/tests-hero.png"
           alt="Cutis Path Lab Tests"

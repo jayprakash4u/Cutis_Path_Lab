@@ -14,6 +14,34 @@ const SERVER = process.env.SQLSERVER_HOST || DEFAULT_SERVER;
 const DATABASE = process.env.SQLSERVER_DATABASE || "CutisPathLab";
 const LOGIN_TIMEOUT = Number(process.env.SQLSERVER_LOGIN_TIMEOUT || "60");
 const MAX_RETRIES = Number(process.env.SQLSERVER_MAX_RETRIES || "3");
+const READ_CACHE_MS = Number(process.env.SQLSERVER_READ_CACHE_MS || "120000");
+
+const readCache = new Map();
+const inflightReads = new Map();
+
+function normalizeQueryKey(query) {
+  return query.replace(/\s+/g, " ").trim();
+}
+
+/** Drop cached reads after admin writes. */
+export function clearReadCache() {
+  readCache.clear();
+}
+
+function getCachedRead(query) {
+  if (READ_CACHE_MS <= 0) return null;
+  const key = normalizeQueryKey(query);
+  const hit = readCache.get(key);
+  if (hit && Date.now() - hit.at < READ_CACHE_MS) {
+    return hit.data;
+  }
+  return null;
+}
+
+function setCachedRead(query, data) {
+  if (READ_CACHE_MS <= 0) return;
+  readCache.set(normalizeQueryKey(query), { data, at: Date.now() });
+}
 
 function isProduction() {
   return process.env.NODE_ENV === "production";
@@ -82,8 +110,31 @@ async function runSqlcmdWithRetry(args, options = {}) {
 /**
  * Run a SQL batch against CutisPathLab using Windows Auth (sqlcmd).
  * Pass a SELECT ... FOR JSON PATH query.
+ * Reads run in parallel (not queued) and are cached briefly in dev.
  */
 export async function sqlJson(query) {
+  const cached = getCachedRead(query);
+  if (cached !== null) return cached;
+
+  const key = normalizeQueryKey(query);
+  if (inflightReads.has(key)) {
+    return inflightReads.get(key);
+  }
+
+  const run = sqlJsonUncached(query)
+    .then((data) => {
+      setCachedRead(query, data);
+      return data;
+    })
+    .finally(() => {
+      inflightReads.delete(key);
+    });
+
+  inflightReads.set(key, run);
+  return run;
+}
+
+async function sqlJsonUncached(query) {
   const outFile = path.join(tmpdir(), `cutis-json-${randomUUID()}.txt`);
   const sqlFile = path.join(tmpdir(), `cutis-sql-${randomUUID()}.sql`);
 
@@ -97,9 +148,8 @@ SELECT ISNULL(@json, N'[]');
   try {
     await writeFile(sqlFile, wrapped, "utf8");
 
-    await enqueueSqlcmd(() =>
-      runSqlcmdWithRetry(["-y", "0", "-i", sqlFile, "-o", outFile]),
-    );
+    // Read queries are not queued — homepage fires several API calls at once.
+    await runSqlcmdWithRetry(["-y", "0", "-i", sqlFile, "-o", outFile]);
 
     const raw = await readFile(outFile, "utf8");
     const text = raw
@@ -157,6 +207,7 @@ export async function sqlExec(query) {
     if (errText && /error|failed|violation/i.test(errText)) {
       throw toPublicDbError(new Error("SQL execution failed"), isProduction() ? "" : errText);
     }
+    clearReadCache();
   });
 }
 

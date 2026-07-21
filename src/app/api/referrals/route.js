@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
+import { publicCatalogCache } from "@/lib/publicApiCache";
 import { resolveActiveFilter } from "@/lib/activeFilter";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, intOr } from "@/lib/adminSql";
@@ -31,7 +32,10 @@ export async function GET(request) {
       FOR JSON PATH
     `);
 
-    return NextResponse.json({ success: true, data: rows });
+    return NextResponse.json(
+      { success: true, data: rows },
+      publicCatalogCache(),
+    );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load referral doctors", 500, "GET /api/referrals");
   }

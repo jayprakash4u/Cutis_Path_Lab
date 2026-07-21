@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="pt-16 lg:pt-[88px] pb-24 lg:pb-0">
+      <main className="pt-below-nav pb-24 lg:pb-0">
         <Hero />
         <TestsInOffers />
         <Stats />

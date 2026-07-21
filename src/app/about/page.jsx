@@ -14,7 +14,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
       
-      <main className="pt-[72px] lg:pt-[88px]">
+      <main className="pt-below-nav">
         <PagePosterHero
           src="/images/about-poster.png"
           alt="Cutis Path Lab About Us"

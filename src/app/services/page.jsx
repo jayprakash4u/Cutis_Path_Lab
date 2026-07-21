@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ServicesGrid from "@/components/sections/ServicesGrid";
+import PagePosterHero from "@/components/sections/PagePosterHero";
 import { services } from "@/data/staticData";
 
 const CATEGORIES = [
@@ -78,14 +79,13 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <main className="pt-[80px] lg:pt-[88px]">
-        <section className="relative w-full h-[18vh] sm:h-[180px]">
-          <img
-            src="/images/services-poster.png"
-            alt="Cutis Path Lab Services"
-            className="w-full h-full object-fill"
-          />
-        </section>
+      <main className="pt-below-nav">
+        <PagePosterHero
+          src="/images/services-poster.png"
+          alt="Cutis Path Lab Services"
+          width={6667}
+          height={579}
+        />
 
         <section className="bg-white border-b border-slate-100">
           <div className="max-w-7xl mx-auto px-6 py-6 space-y-4">

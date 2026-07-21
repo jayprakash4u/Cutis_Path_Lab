@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
+import { publicCatalogCache } from "@/lib/publicApiCache";
 import { requireAdmin } from "@/lib/adminAuth";
 import { bit, numOrNull } from "@/lib/adminSql";
 import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
@@ -57,7 +58,10 @@ export async function GET(request) {
       FOR JSON PATH
     `);
 
-    return NextResponse.json({ success: true, data: tests });
+    return NextResponse.json(
+      { success: true, data: tests },
+      publicCatalogCache(),
+    );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load tests", 500);
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
@@ -14,28 +14,28 @@ export default function BookTest() {
     time: "",
   });
   const [tests, setTests] = useState([]);
+  const [testsLoading, setTestsLoading] = useState(false);
+  const [testsLoaded, setTestsLoaded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [fieldErrors, setFieldErrors] = useState({});
 
-  useEffect(() => {
-    let cancelled = false;
-    async function loadTests() {
-      try {
-        const res = await fetch("/api/tests");
-        const json = await res.json();
-        if (!cancelled && json.success && Array.isArray(json.data)) {
-          setTests(json.data);
-        }
-      } catch {
-        // keep empty; form still works with manual notes
+  const loadTests = async () => {
+    if (testsLoaded || testsLoading) return;
+    setTestsLoading(true);
+    try {
+      const res = await fetch("/api/tests?limit=100");
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        setTests(json.data);
+        setTestsLoaded(true);
       }
+    } catch {
+      // keep empty; form still works with manual notes
+    } finally {
+      setTestsLoading(false);
     }
-    loadTests();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -481,9 +481,12 @@ export default function BookTest() {
                   name="test"
                   value={formData.test}
                   onChange={handleChange}
+                  onFocus={loadTests}
                   className={fieldClass("test")}
                 >
-                  <option value="">Select Test</option>
+                  <option value="">
+                    {testsLoading ? "Loading tests…" : "Select Test"}
+                  </option>
                   {tests.map((test) => (
                     <option key={test.id} value={test.id}>
                       {test.name} - Rs. {test.price}

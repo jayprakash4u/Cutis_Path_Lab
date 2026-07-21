@@ -53,7 +53,7 @@ export default function PackagesPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <main className="pt-[72px] lg:pt-[110px]">
+      <main className="pt-below-nav-tall">
         <PagePosterHero
           src="/images/posters/packages-poster.png"
           alt="Cutis Path Lab Packages"
@@ -97,10 +97,8 @@ export default function PackagesPage() {
                   <PackageCard
                     key={pkg.id}
                     title={pkg.name}
-                    description={pkg.description}
                     price={`Rs. ${pkg.price}`}
                     badge={pkg.category}
-                    image={pkg.image || pkg.imageUrl}
                     actionHref={null}
                     reportsTime={pkg.reportsTime || "24-48 hrs"}
                     fasting={pkg.fasting || "10-12 hrs"}
