@@ -6,11 +6,14 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PagePosterHero from "@/components/sections/PagePosterHero";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { TestIconView } from "@/lib/testIcons";
+import { tests as allTests } from "@/data/staticData";
+import { diseaseCategories } from "@/data/landingData";
 
 const CATEGORIES = [
-  { id: "all", name: "All Tests" },
-  { id: "Hematology", name: "Hematology" },
+  { id: "all", name: "All tests" },
+  { id: "Hematology", name: "Haematology" },
   { id: "Biochemistry", name: "Biochemistry" },
   { id: "Hormone", name: "Hormone" },
   { id: "Immunology", name: "Immunology" },
@@ -19,9 +22,9 @@ const CATEGORIES = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "name", label: "Sort: A-Z" },
-  { value: "price-low", label: "Price: Low to High" },
-  { value: "price-high", label: "Price: High to Low" },
+  { value: "name", label: "A–Z" },
+  { value: "price-low", label: "Price: low to high" },
+  { value: "price-high", label: "Price: high to low" },
 ];
 
 const PAGE_SIZE = 30;
@@ -30,9 +33,9 @@ export default function TestsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-paper">
           <Navbar />
-          <main className="pt-below-nav-tall px-6 py-16 text-slate-500 text-sm">
+          <main className="pt-below-nav-tall shell py-16 text-sm text-ink-500">
             Loading tests…
           </main>
         </div>
@@ -48,68 +51,31 @@ function TestsPageContent() {
   const searchParams = useSearchParams();
   const diseaseSlug = (searchParams.get("category") || "").trim().toLowerCase();
 
-  const [tests, setTests] = useState([]);
   const [diseaseLabel, setDiseaseLabel] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [selectedTests, setSelectedTests] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [bookingBusy, setBookingBusy] = useState(false);
 
+  // Local catalogue — narrowed to a disease area when ?category= is present.
+  const tests = useMemo(() => {
+    if (!diseaseSlug) return allTests;
+    const area = diseaseCategories.find((c) => c.slug === diseaseSlug);
+    if (!area) return allTests;
+    const matched = allTests.filter((t) => {
+      const haystack = `${t.name} ${t.description ?? ""}`.toLowerCase();
+      return area.match.some((kw) => haystack.includes(kw));
+    });
+    return matched.length > 0 ? matched : allTests;
+  }, [diseaseSlug]);
+
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadTests() {
-      try {
-        setLoading(true);
-        setError("");
-        setActiveCategory("all");
-        setSelectedTests([]);
-
-        const url = diseaseSlug
-          ? `/api/tests?disease=${encodeURIComponent(diseaseSlug)}`
-          : "/api/tests";
-        const res = await fetch(url);
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-          throw new Error(json.message || "Failed to load tests");
-        }
-        if (!cancelled) {
-          setTests(Array.isArray(json.data) ? json.data : []);
-        }
-
-        if (diseaseSlug && !cancelled) {
-          try {
-            const catRes = await fetch("/api/categories");
-            const catJson = await catRes.json();
-            const match = (catJson.data || []).find(
-              (c) => String(c.slug || "").toLowerCase() === diseaseSlug,
-            );
-            setDiseaseLabel(match?.label || diseaseSlug);
-          } catch {
-            setDiseaseLabel(diseaseSlug);
-          }
-        } else if (!cancelled) {
-          setDiseaseLabel("");
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message || "Could not load tests from database");
-          setTests([]);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    loadTests();
-    return () => {
-      cancelled = true;
-    };
+    const area = diseaseCategories.find((c) => c.slug === diseaseSlug);
+    setDiseaseLabel(diseaseSlug ? area?.label || diseaseSlug : "");
+    setActiveCategory("all");
+    setSelectedTests([]);
   }, [diseaseSlug]);
 
   const testsWithIcons = useMemo(() => {
@@ -123,9 +89,7 @@ function TestsPageContent() {
   const toggleTest = (test) => {
     setSelectedTests((prev) => {
       const exists = prev.find((t) => t.id === test.id);
-      if (exists) {
-        return prev.filter((t) => t.id !== test.id);
-      }
+      if (exists) return prev.filter((t) => t.id !== test.id);
       return [...prev, test];
     });
   };
@@ -189,9 +153,7 @@ function TestsPageContent() {
   const totalPages = Math.max(1, Math.ceil(filteredTests.length / PAGE_SIZE));
 
   useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
+    if (currentPage > totalPages) setCurrentPage(totalPages);
   }, [currentPage, totalPages]);
 
   const paginatedTests = useMemo(() => {
@@ -203,7 +165,7 @@ function TestsPageContent() {
     const pages = [];
     const windowSize = 5;
     let start = Math.max(1, currentPage - Math.floor(windowSize / 2));
-    let end = Math.min(totalPages, start + windowSize - 1);
+    const end = Math.min(totalPages, start + windowSize - 1);
     start = Math.max(1, end - windowSize + 1);
     for (let i = start; i <= end; i += 1) pages.push(i);
     return pages;
@@ -214,9 +176,9 @@ function TestsPageContent() {
   const rangeEnd = Math.min(currentPage * PAGE_SIZE, filteredTests.length);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-paper">
       <Navbar />
-      <main className="pt-below-nav-tall">
+      <main className="pt-below-nav-tall pb-28 lg:pb-0">
         <PagePosterHero
           src="/images/posters/tests-hero.png"
           alt="Cutis Path Lab Tests"
@@ -224,39 +186,78 @@ function TestsPageContent() {
           height={654}
         />
 
-        <div className="min-h-screen bg-slate-50 pb-20 lg:pb-0">
-          <div className="container mx-auto px-2 sm:px-6 py-4 sm:py-8">
-            {diseaseSlug && (
-              <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sky-100 bg-white px-4 py-3 shadow-sm">
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-700">
-                    Disease category
-                  </p>
-                  <p className="text-sm sm:text-base font-semibold text-slate-900 mt-0.5">
-                    Showing tests for {diseaseLabel || diseaseSlug}
-                  </p>
-                </div>
+        <div className="shell py-10 lg:py-14">
+          <SectionHeader
+            eyebrow={
+              diseaseSlug
+                ? `Condition · ${diseaseLabel || diseaseSlug}`
+                : "Catalogue"
+            }
+            title={
+              diseaseSlug
+                ? `Tests for ${diseaseLabel || diseaseSlug}`
+                : "Every test we run"
+            }
+            lede="Select as many as you need. The total updates as you go, and a 10% bundle discount applies to multi-test requests."
+            action={
+              diseaseSlug ? (
                 <Link
                   href="/tests"
-                  className="text-xs sm:text-sm font-semibold text-[#FF6B6B] hover:text-sky-700 transition-colors"
+                  className="hidden shrink-0 text-[13px] font-medium text-clinical-700 hover:text-clinical-600 sm:inline-flex"
                 >
-                  Clear · View all tests
+                  Clear filter
                 </Link>
-              </div>
-            )}
+              ) : null
+            }
+          />
 
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-              <div className="lg:hidden overflow-x-auto -mx-2 px-2 py-2 mb-2 bg-slate-50 border-b border-slate-200">
-                <div className="flex gap-2 w-max">
+          {/* Category chips — phones and tablets */}
+          <div className="scrollbar-hide -mx-4 mt-7 overflow-x-auto px-4 lg:hidden">
+            <div className="flex w-max gap-2">
+              {CATEGORIES.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveCategory(category.id)}
+                  className={`shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-[13px] font-medium transition ${
+                    activeCategory === category.id
+                      ? "bg-clinical-600 text-white"
+                      : "border border-line bg-surface text-ink-600"
+                  }`}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:gap-8">
+            {/* Filters */}
+            <aside className="hidden w-56 shrink-0 lg:block">
+              <div className="card sticky top-28 overflow-hidden">
+                <div className="border-b border-line px-4 py-3">
+                  <h2 className="label">Filters</h2>
+                </div>
+                <div className="border-b border-line p-3">
+                  <input
+                    type="text"
+                    placeholder="Search tests…"
+                    aria-label="Search tests"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink-800 placeholder:text-ink-400 focus:border-clinical-500 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-clinical-100"
+                  />
+                </div>
+                <div className="p-2">
                   {CATEGORIES.map((category) => (
                     <button
                       key={category.id}
                       type="button"
                       onClick={() => setActiveCategory(category.id)}
-                      className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                      className={`block w-full rounded-md px-3 py-2 text-left text-[13px] font-medium transition ${
                         activeCategory === category.id
-                          ? "bg-[#FF6B6B] text-white"
-                          : "bg-white text-slate-600 border border-slate-200"
+                          ? "bg-clinical-50 text-clinical-700"
+                          : "text-ink-600 hover:bg-paper"
                       }`}
                     >
                       {category.name}
@@ -264,351 +265,255 @@ function TestsPageContent() {
                   ))}
                 </div>
               </div>
+            </aside>
 
-              <div className="hidden lg:block lg:w-64 flex-shrink-0">
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden sticky top-24">
-                  <div className="bg-[#FF6B6B] px-4 py-3">
-                    <h3 className="text-white font-semibold">All Filters</h3>
-                  </div>
-                  <div className="p-3 border-b border-slate-200">
-                    <input
-                      type="text"
-                      placeholder="Search tests..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-3 py-2 rounded-md border border-slate-200 focus:outline-none focus:border-sky-500 text-sm text-black"
-                    />
-                  </div>
-                  <div className="p-2">
-                    {CATEGORIES.map((category) => (
+            {/* Results */}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-surface px-4 py-2.5">
+                <p className="mono text-[11px] text-ink-500">
+                  {filteredTests.length === 0
+                    ? "0 tests"
+                    : `${rangeStart}–${rangeEnd} of ${filteredTests.length}`}
+                </p>
+                <div className="flex items-center gap-2">
+                  <label htmlFor="sort" className="label hidden sm:block">
+                    Sort
+                  </label>
+                  <select
+                    id="sort"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="cursor-pointer rounded-md border border-line bg-paper px-2 py-1.5 text-[13px] text-ink-700 focus:border-clinical-500 focus:outline-none"
+                  >
+                    {SORT_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {filteredTests.length === 0 ? (
+                <div className="mt-4 rounded-lg border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+                  <p className="text-sm font-medium text-ink-700">
+                    No tests match this filter
+                  </p>
+                  <p className="mt-1 text-[13px] text-ink-500">
+                    Clear the search box or pick a different category.
+                  </p>
+                </div>
+              ) : (
+                <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {paginatedTests.map((item) => {
+                    const isSelected = Boolean(
+                      selectedTests.find((t) => t.id === item.id),
+                    );
+                    return (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          onClick={() => toggleTest(item)}
+                          aria-pressed={isSelected}
+                          className={`flex w-full items-center gap-3 rounded-lg border bg-surface p-3 text-left transition ${
+                            isSelected
+                              ? "border-clinical-500 ring-1 ring-clinical-500"
+                              : "border-line hover:border-clinical-200 hover:shadow-2"
+                          }`}
+                        >
+                          <span
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md ${
+                              isSelected ? "bg-clinical-100" : "bg-paper"
+                            }`}
+                          >
+                            <TestIconView test={item} size={24} />
+                          </span>
+
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-[13px] font-semibold text-ink-900">
+                              {item.text}
+                            </span>
+                            <span className="label mt-0.5 block">
+                              {item.category}
+                            </span>
+                          </span>
+
+                          <span className="flex shrink-0 flex-col items-end gap-1.5">
+                            <span className="mono text-[13px] font-semibold text-ink-900">
+                              Rs {item.price.toLocaleString("en-IN")}
+                            </span>
+                            <span
+                              className={`flex h-4 w-4 items-center justify-center rounded-xs border transition ${
+                                isSelected
+                                  ? "border-clinical-600 bg-clinical-600 text-white"
+                                  : "border-line-strong text-transparent"
+                              }`}
+                              aria-hidden="true"
+                            >
+                              <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+
+              {filteredTests.length > PAGE_SIZE && (
+                <nav
+                  className="mt-6 flex flex-col items-center justify-between gap-3 rounded-md border border-line bg-surface px-4 py-3 sm:flex-row"
+                  aria-label="Pagination"
+                >
+                  <p className="mono text-[11px] text-ink-500">
+                    Page {currentPage} of {totalPages}
+                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="rounded-md border border-line px-3 py-1.5 text-[13px] font-medium text-ink-600 transition hover:border-clinical-500 hover:text-clinical-700 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Prev
+                    </button>
+
+                    {pageNumbers.map((page) => (
                       <button
-                        key={category.id}
-                        onClick={() => setActiveCategory(category.id)}
-                        className={`w-full text-left px-4 py-3 rounded-md font-medium transition-all duration-300 ${
-                          activeCategory === category.id
-                            ? "bg-sky-100 text-sky-700 border-l-4 border-sky-600"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-sky-600 border-l-4 border-transparent"
+                        key={page}
+                        type="button"
+                        onClick={() => setCurrentPage(page)}
+                        aria-current={page === currentPage ? "page" : undefined}
+                        className={`mono h-8 min-w-8 rounded-md text-[13px] font-medium transition ${
+                          page === currentPage
+                            ? "bg-clinical-600 text-white"
+                            : "border border-line text-ink-600 hover:border-clinical-500 hover:text-clinical-700"
                         }`}
                       >
-                        {category.name}
+                        {page}
                       </button>
                     ))}
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex-1">
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between mb-4 sm:mb-6">
-                  <span className="text-xs sm:text-sm font-medium text-slate-700">
-                    {loading
-                      ? "Loading tests..."
-                      : filteredTests.length === 0
-                        ? "0 tests"
-                        : `Showing ${rangeStart}-${rangeEnd} of ${filteredTests.length} tests`}
-                  </span>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <span className="hidden sm:inline text-xs sm:text-sm text-slate-500">
-                      Sort:
-                    </span>
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="px-1 sm:px-3 py-1 rounded-md border border-slate-200 focus:outline-none focus:border-sky-500 bg-white text-xs sm:text-sm text-slate-700 cursor-pointer"
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="rounded-md border border-line px-3 py-1.5 text-[13px] font-medium text-ink-600 transition hover:border-clinical-500 hover:text-clinical-700 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      {SORT_OPTIONS.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                          className="text-slate-700"
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      Next
+                    </button>
                   </div>
+                </nav>
+              )}
+            </div>
+
+            {/* Basket */}
+            <aside className="hidden w-72 shrink-0 lg:block">
+              <div className="card sticky top-28 overflow-hidden">
+                <div className="flex items-center justify-between border-b border-line px-4 py-3">
+                  <h2 className="label">Selected</h2>
+                  <span className="mono text-[11px] text-ink-500">
+                    {selectedTests.length}
+                  </span>
                 </div>
 
-                {error && (
-                  <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                    {error}
-                  </div>
-                )}
-
-                {!loading && !error && diseaseSlug && tests.length === 0 && (
-                  <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
-                    No tests are linked to{" "}
-                    <span className="font-semibold">{diseaseLabel || diseaseSlug}</span> yet.
-                    Ask the lab admin to assign tests under Admin → Categories, or{" "}
-                    <Link href="/tests" className="underline font-semibold text-sky-700">
-                      browse all tests
-                    </Link>
-                    .
-                  </div>
-                )}
-
-                {loading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
-                    {Array.from({ length: 9 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-20 animate-pulse rounded-lg bg-slate-200"
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
-                    {paginatedTests.map((item) => {
-                      const isSelected = selectedTests.find(
-                        (t) => t.id === item.id,
-                      );
-                      return (
-                        <div
-                          key={item.id}
-                          onClick={() => toggleTest(item)}
-                          className={`flex items-center group cursor-pointer ${
-                            isSelected ? "opacity-100" : ""
-                          }`}
-                        >
-                          <div
-                            className={`relative z-10 w-20 h-20 sm:w-[68px] sm:h-[68px] flex items-center justify-center rounded-full flex-shrink-0 shadow-md overflow-hidden ${
-                              isSelected
-                                ? "bg-sky-200 border border-sky-600"
-                                : "bg-sky-100 border border-[#FF6B6B]"
-                            }`}
-                          >
-                            <TestIconView
-                              test={item}
-                              size={36}
-                              className="sm:w-10 sm:h-10"
-                            />
-                          </div>
-                          <div
-                            className={`px-3 sm:px-3 rounded-r-lg -ml-12 sm:-ml-12 shadow-md h-20 sm:h-14 w-full sm:w-52 flex items-center justify-between border-t-4 ${
-                              isSelected
-                                ? "bg-[#FF6B6B] border-sky-600"
-                                : "bg-sky-600 border-[#FF6B6B]"
-                            }`}
-                          >
-                            <p className="text-xs sm:text-xs text-white font-medium leading-tight ml-12 sm:ml-10">
-                              {item.text}
-                            </p>
-                            <span className="text-xs sm:text-xs font-bold text-white mr-3 sm:mr-2">
-                              ₹{item.price}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {!loading && !error && filteredTests.length === 0 && (
-                  <p className="text-center text-sm text-slate-500 py-10">
-                    No tests found for this filter.
+                {selectedTests.length === 0 ? (
+                  <p className="px-4 py-8 text-center text-[13px] text-ink-400">
+                    Pick a test to start building a request.
                   </p>
-                )}
-
-                {!loading && filteredTests.length > PAGE_SIZE && (
-                  <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 sm:px-4">
-                    <p className="text-xs sm:text-sm text-slate-500">
-                      Page {currentPage} of {totalPages}
-                    </p>
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                      >
-                        Prev
-                      </button>
-
-                      {pageNumbers.map((page) => (
-                        <button
-                          key={page}
-                          type="button"
-                          onClick={() => setCurrentPage(page)}
-                          className={`min-w-8 h-8 sm:min-w-9 sm:h-9 rounded-md text-xs sm:text-sm font-semibold transition-colors ${
-                            page === currentPage
-                              ? "bg-sky-600 text-white"
-                              : "border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700"
-                          }`}
+                ) : (
+                  <>
+                    <ul className="max-h-80 divide-y divide-line overflow-y-auto">
+                      {selectedTests.map((test) => (
+                        <li
+                          key={test.id}
+                          className="flex items-start justify-between gap-2 px-4 py-2.5"
                         >
-                          {page}
-                        </button>
-                      ))}
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCurrentPage((p) => Math.min(totalPages, p + 1))
-                        }
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="hidden lg:block lg:w-72 flex-shrink-0">
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden sticky top-24">
-                  <div className="bg-sky-600 px-4 py-3">
-                    <h3 className="text-white font-semibold">
-                      Selected Tests ({selectedTests.length})
-                    </h3>
-                  </div>
-                  <div className="p-4 max-h-96 overflow-y-auto">
-                    {selectedTests.length === 0 ? (
-                      <p className="text-sm text-slate-500 text-center py-4">
-                        No tests selected
-                      </p>
-                    ) : (
-                      <div className="space-y-3">
-                        {selectedTests.map((test) => (
-                          <div
-                            key={test.id}
-                            className="flex justify-between items-center border-b border-slate-100 pb-2"
-                          >
-                            <div className="flex-1">
-                              <p className="text-xs text-slate-700 font-medium">
-                                {test.text}
-                              </p>
-                              <p className="text-xs text-slate-500">
-                                ₹{test.price}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => toggleTest(test)}
-                              className="text-red-500 text-xs hover:text-red-700"
-                            >
-                              Remove
-                            </button>
+                          <div className="min-w-0">
+                            <p className="truncate text-[13px] font-medium text-ink-800">
+                              {test.text}
+                            </p>
+                            <p className="mono mt-0.5 text-[11px] text-ink-400">
+                              Rs {test.price.toLocaleString("en-IN")}
+                            </p>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  {selectedTests.length > 0 && (
-                    <div className="border-t border-slate-200 p-4">
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm text-slate-600">
-                          Total Price:
-                        </span>
-                        <span className="text-sm font-medium">
-                          ₹{totalPrice}
-                        </span>
-                      </div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm text-slate-600">
-                          Discount (10%):
-                        </span>
-                        <span className="text-sm text-green-600">
-                          -₹{discount}
-                        </span>
-                      </div>
-                      <div className="flex justify-between mb-4">
-                        <span className="text-sm font-semibold">
-                          Final Price:
-                        </span>
-                        <span className="text-sm font-bold text-sky-600">
-                          ₹{finalPrice}
-                        </span>
-                      </div>
+                          <button
+                            type="button"
+                            onClick={() => toggleTest(test)}
+                            className="shrink-0 text-[11px] font-medium text-flag-700 hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="border-t border-line bg-paper p-4">
+                      <dl className="space-y-1.5">
+                        <div className="flex justify-between">
+                          <dt className="text-[13px] text-ink-500">Subtotal</dt>
+                          <dd className="mono text-[13px] text-ink-700">
+                            Rs {totalPrice.toLocaleString("en-IN")}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between">
+                          <dt className="text-[13px] text-ink-500">
+                            Bundle discount
+                          </dt>
+                          <dd className="mono text-[13px] text-assay-700">
+                            −Rs {discount.toLocaleString("en-IN")}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between border-t border-line pt-1.5">
+                          <dt className="text-[13px] font-semibold text-ink-900">
+                            Total
+                          </dt>
+                          <dd className="mono text-[15px] font-semibold text-ink-900">
+                            Rs {finalPrice.toLocaleString("en-IN")}
+                          </dd>
+                        </div>
+                      </dl>
+
                       <button
                         type="button"
                         onClick={handleBookNow}
                         disabled={bookingBusy}
-                        className="w-full bg-[#FF6B6B] text-white py-2.5 rounded-lg font-semibold hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait shadow-sm"
+                        className="btn-primary mt-4 w-full !py-2.5"
                       >
-                        {bookingBusy ? "Opening booking…" : "Book Now"}
+                        {bookingBusy ? "Opening booking…" : "Book selected"}
                       </button>
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
               </div>
-            </div>
+            </aside>
           </div>
         </div>
 
+        {/* Sticky basket bar — phones and tablets */}
         {selectedTests.length > 0 && (
-          <div className="lg:hidden fixed bottom-[4.75rem] left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-[60] px-3 py-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs text-slate-600">
-                {selectedTests.length} test{selectedTests.length > 1 ? "s" : ""} selected
+          <div className="fixed bottom-[4.25rem] left-0 right-0 z-[60] border-t border-line bg-surface px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-3 lg:hidden">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[13px] text-ink-600">
+                {selectedTests.length} test
+                {selectedTests.length > 1 ? "s" : ""} selected
               </span>
-              <span className="text-xs font-bold text-sky-600">
-                ₹{finalPrice}
+              <span className="mono text-[13px] font-semibold text-ink-900">
+                Rs {finalPrice.toLocaleString("en-IN")}
               </span>
             </div>
             <button
               type="button"
               onClick={handleBookNow}
               disabled={bookingBusy}
-              className="w-full bg-[#FF6B6B] text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait"
+              className="btn-primary w-full !py-2.5"
             >
-              {bookingBusy ? "Opening booking…" : "Book Now"}
+              {bookingBusy ? "Opening booking…" : "Book selected"}
             </button>
-          </div>
-        )}
-
-        {showFilters && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-50"
-            onClick={() => setShowFilters(false)}
-          >
-            <div
-              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl max-h-[70%] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-                <h3 className="font-semibold text-sm">Filters</h3>
-                <button onClick={() => setShowFilters(false)} className="p-1">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="p-3">
-                <input
-                  type="text"
-                  placeholder="Search tests..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md border border-slate-200 text-xs mb-3"
-                />
-                <div className="space-y-1">
-                  {CATEGORIES.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => {
-                        setActiveCategory(category.id);
-                        setShowFilters(false);
-                      }}
-                      className={`w-full text-left px-3 py-2 rounded-md text-xs font-medium transition-all ${
-                        activeCategory === category.id
-                          ? "bg-sky-100 text-sky-700 border-l-4 border-sky-600"
-                          : "text-slate-600 hover:bg-slate-50 border-l-4 border-transparent"
-                      }`}
-                    >
-                      {category.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </main>

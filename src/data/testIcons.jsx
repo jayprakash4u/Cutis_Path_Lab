@@ -1,5 +1,5 @@
 const primaryColor = "#0284C7";
-const accentColor = "#FF6B6B";
+const accentColor = "#C0431B";
 
 export const APTTIcon = ({ className, size = 40 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" className={className}>

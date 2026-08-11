@@ -1,8 +1,6 @@
-"use client";
-
-import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const categories = [
   { label: "Anemia", image: "/images/disease-categories/anemia.jpg", slug: "anemia" },
@@ -18,105 +16,52 @@ const categories = [
 ];
 
 export default function TestByDiseaseCategories() {
-  const scrollRef = useRef(null);
-
   return (
-    <section className="py-8 sm:py-10 lg:py-12 bg-slate-50 relative shadow-lg shadow-slate-200/50">
-      <div className="absolute top-0 left-0">
-        <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-          <h2 className="text-lg md:text-xl font-bold text-white">
-            Test by Disease Categories
-          </h2>
-        </div>
+    <section className="section-tight border-y border-line bg-surface">
+      <div className="shell">
+        <SectionHeader
+          eyebrow="Browse by condition"
+          title="Not sure which test you need?"
+          lede="Start from what you are being investigated for. Each area lists the panels a clinician would usually order."
+        />
       </div>
 
-      <div className="w-full pt-12">
-        <div 
-          ref={scrollRef}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 24,
-            padding: "20px 24px",
-            background: "#f8fafc",
-            fontFamily: "'Segoe UI', Arial, sans-serif",
-            width: "100%",
-            overflowX: "auto",
-            scrollBehavior: "smooth",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          <style jsx>{`
-            div::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
-          
-          {categories.map((cat, index) => (
-            <Link 
-              href={`/tests?category=${cat.slug}`}
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                flexShrink: 0,
-                textDecoration: "none",
-                marginRight: 24,
-              }}
-            >
-              <div style={{
-                width: 70,
-                height: 70,
-                borderRadius: "50%",
-                border: "1px solid #e2e8f0",
-                background: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                zIndex: 1,
-                overflow: "hidden",
-                position: "relative",
-              }}>
-                <Image
-                  src={cat.image}
-                  alt={cat.label}
-                  fill
-                  sizes="70px"
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-
-              <div style={{
-                background: "#FF6B6B",
-                color: "#ffffff",
-                fontSize: 13,
-                fontWeight: 600,
-                padding: "0 16px 0 20px",
-                height: 44,
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "0 10px 10px 0",
-                marginLeft: -10,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: 180,
-                transition: "background 0.3s ease",
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = "#0284c7"}
-              onMouseLeave={(e) => e.currentTarget.style.background = "#FF6B6B"}
+      <div className="scrollbar-hide mt-7 overflow-x-auto">
+        <ul className="shell flex min-w-max items-stretch gap-3">
+          {categories.map((cat) => (
+            <li key={cat.slug}>
+              <Link
+                href={`/tests?category=${cat.slug}`}
+                className="group flex w-[9.5rem] flex-col overflow-hidden rounded-lg border border-line bg-surface transition duration-200 hover:border-clinical-200 hover:shadow-2"
               >
-                {cat.label}
-              </div>
-            </Link>
+                <span className="relative block h-20 w-full overflow-hidden bg-surface-sunk">
+                  <Image
+                    src={cat.image}
+                    alt=""
+                    fill
+                    sizes="152px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </span>
+                <span className="flex items-center justify-between gap-2 px-3 py-2.5">
+                  <span className="text-[13px] font-semibold text-ink-800 group-hover:text-clinical-700">
+                    {cat.label}
+                  </span>
+                  <svg
+                    className="h-3.5 w-3.5 shrink-0 text-ink-300 transition group-hover:translate-x-0.5 group-hover:text-clinical-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
-
-

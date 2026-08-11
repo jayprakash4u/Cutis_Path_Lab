@@ -1,100 +1,113 @@
-const steps = [
+import Image from "next/image";
+import SectionHeader from "@/components/ui/SectionHeader";
+
+/**
+ * These are controls, not steps — so they are laid out as a grid of hairline
+ * cells rather than a numbered sequence.
+ */
+const controls = [
   {
-    number: "01",
-    color: "#FF6B6B",
-    title: "Expert Team",
-    desc: "Our team consists of highly skilled & experienced pathologists",
-    icon: (color) => (
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="#4a9aba">
-        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-      </svg>
-    )
+    title: "Pathologist review",
+    desc: "Every abnormal result is read by a consultant pathologist before it leaves the lab.",
+    icon: (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.6}
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+      />
+    ),
   },
   {
-    number: "02",
-    color: "#FF6B6B",
-    title: "Accurate Reports",
-    desc: "We provide accurate and reliable test reports",
-    icon: (color) => (
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="#4a9aba">
-        <path d="M12 2C9.24 2 7 4.24 7 7c0 2.08 1.23 3.87 3 4.72V20h4v-8.28A5.003 5.003 0 0017 7c0-2.76-2.24-5-5-5z"/>
-      </svg>
-    )
+    title: "Daily calibration",
+    desc: "Analysers run internal quality controls each morning and are recalibrated against reference material.",
+    icon: (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.6}
+        d="M12 6V3m0 3a6 6 0 100 12 6 6 0 000-12zm0 12v3m6-9h3M3 12h3m11.657-5.657l2.122-2.122M4.221 19.779l2.122-2.122m0-11.314L4.221 4.221m15.558 15.558l-2.122-2.122"
+      />
+    ),
   },
   {
-    number: "03",
-    color: "#FF6B6B",
-    title: "24/7 Support",
-    desc: "We are available 24/7 for your support",
-    icon: (color) => (
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="#4a9aba">
-        <path d="M9 13.5c-2.5 0-7.5 1.25-7.5 3.75V19h15v-1.75C16.5 14.75 11.5 13.5 9 13.5zm8-1c2.07 0 6.25.93 6.25 2.75V17h-5v-1.75c0-.92-.38-1.77-.99-2.42.56-.1 1.1-.33 1.74-.33zM9 12a3 3 0 100-6 3 3 0 000 6zm7.5-.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/>
-      </svg>
-    )
+    title: "Tracked chain of custody",
+    desc: "Barcodes are applied at collection and scanned at every handover, so no sample is ever unaccounted for.",
+    icon: (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.6}
+        d="M4 5v14M8 5v14M12 5v14M16 5v10M20 5v14"
+      />
+    ),
   },
   {
-    number: "04",
-    color: "#FF6B6B",
-    title: "Quality Assurance",
-    desc: "International quality standards with NABL accreditation",
-    icon: (color) => (
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="#4a9aba">
-        <circle cx="18" cy="5" r="3"/>
-        <circle cx="6" cy="12" r="3"/>
-        <circle cx="18" cy="19" r="3"/>
-        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="#4a9aba" strokeWidth="1.5" fill="none"/>
-        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="#4a9aba" strokeWidth="1.5" fill="none"/>
-      </svg>
-    )
-  }
+    title: "Accredited methods",
+    desc: "Testing follows NABL and ISO 15189 protocols, with documented procedures for each assay.",
+    icon: (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.6}
+        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+      />
+    ),
+  },
 ];
 
 export default function Stats() {
   return (
-    <section className="py-4 sm:py-6 lg:py-10 bg-slate-100 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="relative mb-3 sm:mb-6">
-          <div className="absolute top-0 left-0">
-            <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-              <h2 className="text-lg md:text-xl font-bold text-white">Why Choose Us</h2>
-            </div>
-          </div>
-          <div className="pt-12">
-            <h2 className="text-lg md:text-2xl font-bold text-slate-900">Why to Choose Cutis Path Lab</h2>
-          </div>
-        </div>
+    <section className="section bg-paper">
+      <div className="shell">
+        <SectionHeader
+          eyebrow="Quality control"
+          title="What stands behind a number"
+          lede="A result is only useful if it is reproducible. These are the four controls that make ours dependable."
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
-          {/* Image - Hidden on very small screens, visible on sm+ */}
-          <div className="hidden sm:block relative rounded-xl overflow-hidden h-48 sm:h-64 lg:h-96">
-            <img 
-              src="/images/home/stats-image.jpg" 
-              alt="LifeLine Lab Team" 
-              className="w-full h-full object-cover"
+        <div className="mt-10 grid gap-8 lg:grid-cols-[22rem_minmax(0,1fr)] lg:gap-12">
+          <div className="relative hidden overflow-hidden rounded-lg sm:block">
+            <Image
+              src="/images/home/stats-image.jpg"
+              alt="Technicians at work in the Cutis Path Lab processing area"
+              width={880}
+              height={1100}
+              className="h-64 w-full object-cover lg:h-full"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-            <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
-              <p className="text-xs sm:text-sm md:text-base font-medium">Best Pathology Lab in town</p>
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/10 to-transparent"
+              aria-hidden="true"
+            />
+            <div className="absolute inset-x-0 bottom-0 p-5">
+              <p className="label !text-clinical-200/70">Processing floor</p>
+              <p className="mt-1 text-sm font-semibold text-white">
+                Mid-Baneshwor, Kathmandu
+              </p>
             </div>
           </div>
 
-          {/* Cards - Stacked on mobile */}
-          <div className="space-y-3 sm:space-y-4 w-full">
-            {steps.map((s, i) => (
-              <div key={i} className="flex items-center bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="min-w-[80px] sm:min-w-[100px] md:min-w-[120px] h-16 sm:h-20 flex flex-col items-center justify-center" style={{ background: s.color, clipPath: 'polygon(0 0, 85% 0, 100% 100%, 0 100%)' }}>
-                  <span className="text-white text-sm sm:text-lg md:text-xl font-bold">{s.number}</span>
-                </div>
-
-                <div className="flex-1 p-2 sm:p-3">
-                  <h3 className="text-xs sm:text-sm md:text-base font-semibold text-slate-800 mb-0.5">{s.title}</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-500 line-clamp-2">{s.desc}</p>
-                </div>
-
-                <div className="p-2 sm:p-3 flex-shrink-0 hidden sm:block">
-                  {s.icon(s.color)}
-                </div>
+          {/* Hairline grid — the report's ruling, used structurally */}
+          <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
+            {controls.map((c) => (
+              <div key={c.title} className="bg-surface p-5 sm:p-6">
+                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-clinical-50 text-clinical-600">
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    {c.icon}
+                  </svg>
+                </span>
+                <h3 className="mt-4 text-[0.9375rem] font-semibold text-ink-900">
+                  {c.title}
+                </h3>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-ink-500">
+                  {c.desc}
+                </p>
               </div>
             ))}
           </div>

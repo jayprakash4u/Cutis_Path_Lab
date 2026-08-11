@@ -14,7 +14,7 @@ import DoctorReferrals from "@/components/landing/DoctorReferrals";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-paper">
       <Navbar />
       <main className="pt-below-nav pb-24 lg:pb-0">
         <Hero />

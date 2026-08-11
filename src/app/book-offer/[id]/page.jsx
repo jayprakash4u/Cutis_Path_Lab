@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/booking";
+import { bookingQuickSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
+import { offers } from "@/data/landingData";
 
 const datePickerStyles = `
   input[type="date"] {
@@ -22,9 +23,17 @@ export default function BookOfferPage() {
   const params = useParams();
   const offerId = String(params.id || "").trim();
 
-  const [offer, setOffer] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const offer = useMemo(() => {
+    const found = offers.find((o) => String(o.id) === offerId);
+    if (!found) return null;
+    return {
+      ...found,
+      discount: Math.round(
+        ((found.originalPrice - found.discountedPrice) / found.originalPrice) * 100,
+      ),
+    };
+  }, [offerId]);
+
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,36 +44,6 @@ export default function BookOfferPage() {
     time: "",
   });
   const [fieldErrors, setFieldErrors] = useState({});
-
-  useEffect(() => {
-    if (!offerId) return;
-    let cancelled = false;
-
-    async function load() {
-      try {
-        setLoading(true);
-        setError("");
-        const res = await fetch(`/api/offers/${encodeURIComponent(offerId)}`);
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-          throw new Error(json.message || "Offer not found");
-        }
-        if (!cancelled) setOffer(json.data);
-      } catch (err) {
-        if (!cancelled) {
-          setOffer(null);
-          setError(err.message || "Failed to load offer");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [offerId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -81,55 +60,12 @@ export default function BookOfferPage() {
       return;
     }
 
-    const payload = parseOrErrors(bookingCreateSchema, {
-      name: quick.data.name,
-      phone: quick.data.phone,
-      address: quick.data.address || "",
-      preferredDate: quick.data.date,
-      preferredTime: quick.data.time,
-      offerId: offer.id,
-      packageId: offer.packageId || null,
-      testId: offer.testId || null,
-      notes: `Special Offer: ${offer.name} — ₹${offer.discountedPrice} (${offer.discount}% OFF)`,
-    });
-    if (!payload.ok) {
-      setFieldErrors(payload.errors);
-      alert(payload.message);
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-      setFieldErrors({});
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload.data),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        if (json.errors) setFieldErrors(json.errors);
-        throw new Error(json.message || "Failed to save booking");
-      }
-      setSuccess(true);
-    } catch (err) {
-      alert(err.message || "Failed to save booking");
-    } finally {
-      setSubmitting(false);
-    }
+    // Demo build — the booking is validated and held locally, not sent.
+    setSubmitting(true);
+    setFieldErrors({});
+    setSuccess(true);
+    setSubmitting(false);
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <main className="pt-[80px] lg:pt-[88px]">
-          <p className="text-center text-slate-500 py-20 text-sm">Loading offer…</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   if (!offer) {
     return (
@@ -138,7 +74,7 @@ export default function BookOfferPage() {
         <main className="pt-[80px] lg:pt-[88px]">
           <div className="container mx-auto px-4 py-20 text-center">
             <h1 className="text-2xl font-bold text-slate-900 mb-3">Offer Not Found</h1>
-            <p className="text-slate-600 mb-8">{error || "This offer is no longer available."}</p>
+            <p className="text-slate-600 mb-8">This offer is no longer available.</p>
             <Link href="/" className="text-sky-600 font-semibold hover:underline">
               Back to Home
             </Link>
@@ -205,7 +141,7 @@ export default function BookOfferPage() {
             onSubmit={handleSubmit}
             className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden"
           >
-            <div className="bg-[#FF6B6B] px-5 py-3">
+            <div className="bg-[#C0431B] px-5 py-3">
               <h2 className="text-sm font-bold text-white">Book This Offer</h2>
             </div>
 
@@ -319,7 +255,7 @@ export default function BookOfferPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
+                className="w-full py-3 bg-[#C0431B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
               >
                 {submitting
                   ? "Booking…"

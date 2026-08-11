@@ -1,45 +1,20 @@
 /**
- * Packages Page — loads packages from /api/packages
+ * Packages Page — rendered from static sample data in src/data/landingData.js
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PagePosterHero from "@/components/sections/PagePosterHero";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { PackageCard } from "@/components/ui";
+import { packages } from "@/data/landingData";
 
 export default function PackagesPage() {
   const router = useRouter();
-  const [packages, setPackages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [selectedPackage, setSelectedPackage] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        setLoading(true);
-        setError("");
-        const res = await fetch("/api/packages");
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-          throw new Error(json.message || "Failed to load packages");
-        }
-        if (!cancelled) setPackages(json.data || []);
-      } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load packages");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const handleViewDetails = (pkg) => setSelectedPackage(pkg);
   const closePanel = () => setSelectedPackage(null);
@@ -50,10 +25,10 @@ export default function PackagesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-paper">
       <Navbar />
 
-      <main className="pt-below-nav-tall">
+      <main className="pt-below-nav-tall pb-24 lg:pb-0">
         <PagePosterHero
           src="/images/posters/packages-poster.png"
           alt="Cutis Path Lab Packages"
@@ -61,145 +36,139 @@ export default function PackagesPage() {
           height={654}
         />
 
-        <section className="py-4 lg:py-8 px-4 lg:px-19 bg-white">
-          <div className="max-w-7xl mx-auto px-3 lg:px-6">
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 border-t border-[#FF6B6B] z-0"></div>
-                <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
-                  <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
-                    Our Packages
-                  </h2>
-                </div>
-              </div>
+        <section className="section bg-paper">
+          <div className="shell">
+            <SectionHeader
+              eyebrow="Bundled testing"
+              title="Health packages"
+              lede="Grouped panels priced below the sum of their parts. Each one lists exactly which tests it contains — open a package to see the breakdown."
+            />
 
-              <div className="px-4 lg:px-8 pb-4 lg:pb-8">
-                <p className="text-slate-600 text-xs lg:text-sm leading-relaxed">
-                  We offer comprehensive pathology and diagnostic packages including blood
-                  tests, urine tests, histopathology, genetic testing, and more.
-                </p>
-              </div>
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {packages.map((pkg) => (
+                <PackageCard
+                  key={pkg.id}
+                  title={pkg.name}
+                  price={`Rs ${pkg.price.toLocaleString("en-IN")}`}
+                  badge={pkg.category}
+                  actionHref={null}
+                  reportsTime={pkg.reportsTime}
+                  fasting={pkg.fasting}
+                  sampleType={pkg.sampleType}
+                  includes={pkg.includes}
+                  onViewDetails={() => handleViewDetails(pkg)}
+                />
+              ))}
             </div>
-          </div>
-        </section>
-
-        <section className="pb-8 lg:pb-12">
-          <div className="max-w-7xl mx-auto px-3 lg:px-8">
-            {loading && (
-              <p className="text-center text-slate-500 py-12 text-sm">Loading packages…</p>
-            )}
-            {error && !loading && (
-              <p className="text-center text-red-600 py-12 text-sm">{error}</p>
-            )}
-            {!loading && !error && (
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
-                {packages.map((pkg) => (
-                  <PackageCard
-                    key={pkg.id}
-                    title={pkg.name}
-                    price={`Rs. ${pkg.price}`}
-                    badge={pkg.category}
-                    actionHref={null}
-                    reportsTime={pkg.reportsTime || "24-48 hrs"}
-                    fasting={pkg.fasting || "10-12 hrs"}
-                    sampleType={pkg.sampleType || "Blood"}
-                    includes={pkg.includes}
-                    onViewDetails={() => handleViewDetails(pkg)}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         </section>
       </main>
 
       {selectedPackage && (
-        <div className="fixed right-0 top-[330px] lg:top-[300px] bottom-0 w-full max-w-[320px] pointer-events-none z-40">
-          <div className="h-full bg-white shadow-2xl overflow-y-auto animate-slide-in pointer-events-auto">
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-sky-100 text-sky-700 mb-2">
-                    {selectedPackage.category}
-                  </span>
-                  <h2 className="text-2xl font-bold text-slate-800">
-                    {selectedPackage.name}
-                  </h2>
-                </div>
-                <button
-                  onClick={closePanel}
-                  className="p-2 hover:bg-slate-100 rounded-full transition-colors border border-slate-200 bg-white shadow-sm"
-                  aria-label="Close panel"
-                >
-                  <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+        <div className="fixed inset-0 z-[70]">
+          <button
+            type="button"
+            className="absolute inset-0 bg-ink-900/45"
+            aria-label="Close package details"
+            onClick={closePanel}
+          />
 
-              <div className="bg-sky-50 rounded-lg p-4 mb-6">
-                <p className="text-sm text-slate-600 mb-1">Package Price</p>
-                <p className="text-3xl font-bold text-sky-600">Rs. {selectedPackage.price}</p>
+          <aside
+            className="animate-slide-in absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-line bg-surface shadow-3"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${selectedPackage.name} details`}
+          >
+            <header className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
+              <div>
+                <span className="chip-clinical">{selectedPackage.category}</span>
+                <h2 className="mt-2.5 text-xl font-bold text-ink-900">
+                  {selectedPackage.name}
+                </h2>
               </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-800 mb-2">Description</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  {selectedPackage.description}
-                </p>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-800 mb-3">
-                  Includes ({selectedPackage.includes?.length || 0} Tests)
-                </h3>
-                <div className="space-y-2">
-                  {(selectedPackage.includes || []).map((test, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                      <div className="w-2 h-2 bg-sky-600 rounded-full"></div>
-                      <span className="text-slate-700 text-sm font-medium">{test}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-800 mb-3">Sample Details</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Reports In</p>
-                    <p className="text-sm font-medium text-slate-700">
-                      {selectedPackage.reportsTime || "24-48 hrs"}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Fasting</p>
-                    <p className="text-sm font-medium text-slate-700">
-                      {selectedPackage.fasting || "10-12 hrs"}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Sample Type</p>
-                    <p className="text-sm font-medium text-slate-700">
-                      {selectedPackage.sampleType || "Blood"}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 mb-1">Category</p>
-                    <p className="text-sm font-medium text-slate-700">{selectedPackage.category}</p>
-                  </div>
-                </div>
-              </div>
-
               <button
                 type="button"
-                onClick={() => handleBookPackage(selectedPackage)}
-                className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-lg hover:bg-[#e55a5a] transition-colors"
+                onClick={closePanel}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-line text-ink-500 transition hover:border-clinical-500 hover:text-clinical-700"
+                aria-label="Close panel"
               >
-                Book This Package
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
+            </header>
+
+            <div className="flex-1 overflow-y-auto px-6 py-5">
+              <p className="text-sm leading-relaxed text-ink-600">
+                {selectedPackage.description}
+              </p>
+
+              <div className="mt-6">
+                <div className="flex items-center gap-3">
+                  <h3 className="label">
+                    Includes · {selectedPackage.includes?.length || 0} tests
+                  </h3>
+                  <span className="sec-rule" aria-hidden="true" />
+                </div>
+                <ul className="mt-3 divide-y divide-line rounded-lg border border-line">
+                  {(selectedPackage.includes || []).map((test, index) => (
+                    <li
+                      key={index}
+                      className="flex items-baseline gap-3 px-4 py-2.5"
+                    >
+                      <span className="mono text-[11px] text-ink-300">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-[13px] text-ink-700">{test}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-6">
+                <div className="flex items-center gap-3">
+                  <h3 className="label">Sample details</h3>
+                  <span className="sec-rule" aria-hidden="true" />
+                </div>
+                <dl className="mt-3 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line">
+                  {[
+                    ["Report", selectedPackage.reportsTime],
+                    ["Fasting", selectedPackage.fasting],
+                    ["Sample", selectedPackage.sampleType],
+                    ["Category", selectedPackage.category],
+                  ].map(([k, v]) => (
+                    <div key={k} className="bg-surface px-4 py-3">
+                      <dt className="label">{k}</dt>
+                      <dd className="mono mt-1 text-[12px] text-ink-700">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             </div>
-          </div>
+
+            <footer className="border-t border-line bg-paper px-6 py-4">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <p className="label">Package price</p>
+                  <p className="mono mt-1 text-2xl font-semibold leading-none text-ink-900">
+                    Rs {selectedPackage.price.toLocaleString("en-IN")}
+                  </p>
+                  {selectedPackage.originalPrice && (
+                    <p className="mono mt-1.5 text-[11px] text-ink-400 line-through">
+                      Rs {selectedPackage.originalPrice.toLocaleString("en-IN")}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleBookPackage(selectedPackage)}
+                  className="btn-primary !py-3"
+                >
+                  Book this package
+                </button>
+              </div>
+            </footer>
+          </aside>
         </div>
       )}
 

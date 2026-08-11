@@ -4,7 +4,7 @@ import React from "react";
 
 const primary = "#0284C7"
 const primaryLight = "#7DD3FC"
-const accent = "#FF6B6B"
+const accent = "#C0431B"
 const accentLight = "#FFA8A8"
 
 export const BloodTestsIcon = ({ className, size = 48 }) => (

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/booking";
+import { bookingQuickSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
+import { packages } from "@/data/landingData";
 
 const datePickerStyles = `
   input[type="date"] {
@@ -29,9 +30,11 @@ export default function BookPackagePage() {
   const router = useRouter();
   const packageId = String(params.id || "").trim();
 
-  const [pkg, setPkg] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const pkg = useMemo(
+    () => packages.find((p) => String(p.id) === packageId) || null,
+    [packageId],
+  );
+
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -44,42 +47,12 @@ export default function BookPackagePage() {
   });
   const [fieldErrors, setFieldErrors] = useState({});
 
-  useEffect(() => {
-    if (!packageId) return;
-    let cancelled = false;
-
-    async function load() {
-      try {
-        setLoading(true);
-        setError("");
-        const res = await fetch(`/api/packages/${encodeURIComponent(packageId)}`);
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-          throw new Error(json.message || "Package not found");
-        }
-        if (!cancelled) setPkg(json.data);
-      } catch (err) {
-        if (!cancelled) {
-          setPkg(null);
-          setError(err.message || "Failed to load package");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [packageId]);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const pkgTests = pkg?.tests || [];
-  const includeItems = pkg?.includeItems || [];
+  const includeItems = pkg?.includes || [];
 
   const handleBookSingle = (testId) => {
     if (!testId) return;
@@ -97,53 +70,12 @@ export default function BookPackagePage() {
       return;
     }
 
-    const payload = parseOrErrors(bookingCreateSchema, {
-      name: quick.data.name,
-      phone: quick.data.phone,
-      address: quick.data.address || "",
-      preferredDate: quick.data.date,
-      preferredTime: quick.data.time,
-      packageId: pkg.id,
-      notes: `Package: ${pkg.name} (${pkg.code || pkg.id})`,
-    });
-    if (!payload.ok) {
-      setFieldErrors(payload.errors);
-      alert(payload.message);
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-      setFieldErrors({});
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload.data),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        if (json.errors) setFieldErrors(json.errors);
-        throw new Error(json.message || "Failed to save booking");
-      }
-      setSuccess(true);
-    } catch (err) {
-      alert(err.message || "Failed to save booking");
-    } finally {
-      setSubmitting(false);
-    }
+    // Demo build — the booking is validated and held locally, not sent.
+    setSubmitting(true);
+    setFieldErrors({});
+    setSuccess(true);
+    setSubmitting(false);
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <main className="pt-[80px] lg:pt-[88px]">
-          <p className="text-center text-slate-500 py-20 text-sm">Loading package…</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   if (!pkg) {
     return (
@@ -153,7 +85,7 @@ export default function BookPackagePage() {
           <div className="container mx-auto px-4 sm:px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-slate-900 mb-4">Package Not Found</h1>
             <p className="text-slate-600 mb-8">
-              {error || "The package you are looking for does not exist or has been removed."}
+              The package you are looking for does not exist or has been removed.
             </p>
             <Link href="/packages">
               <button className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors">
@@ -228,7 +160,7 @@ export default function BookPackagePage() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden">
-                <div className="bg-[#FF6B6B] px-5 py-2">
+                <div className="bg-[#C0431B] px-5 py-2">
                   <h2 className="text-sm lg:text-base font-bold text-white">What&apos;s Included</h2>
                 </div>
                 <div className="p-5">
@@ -393,7 +325,7 @@ export default function BookPackagePage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
+                    className="w-full py-3 bg-[#C0431B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
                   >
                     {submitting ? "Booking…" : `Book Package (Rs. ${pkg.price})`}
                   </button>

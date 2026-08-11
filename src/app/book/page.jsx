@@ -19,7 +19,8 @@ import {
   bookingScheduleSchema,
   buildBookingPayloadFromWizard,
 } from "@/lib/validation/booking";
-import { mapBookingApiErrorsToWizard, parseOrErrors } from "@/lib/validation/common";
+import { parseOrErrors } from "@/lib/validation/common";
+import { tests as allTests } from "@/data/staticData";
 
 // ========== CONSTANTS & CONFIGURATION ==========
 
@@ -130,32 +131,11 @@ export default function BookPage() {
 
 function BookPageContent() {
   const searchParams = useSearchParams();
-  const [tests, setTests] = useState([]);
-  const [testsLoading, setTestsLoading] = useState(true);
+  // Local catalogue — no API in this build.
+  const tests = allTests;
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState({ type: "", text: "" });
   const [fieldErrors, setFieldErrors] = useState({});
-
-  useEffect(() => {
-    let cancelled = false;
-    async function loadTests() {
-      try {
-        const res = await fetch("/api/tests");
-        const json = await res.json();
-        if (!cancelled && json.success && Array.isArray(json.data)) {
-          setTests(json.data);
-        }
-      } catch {
-        if (!cancelled) setTests([]);
-      } finally {
-        if (!cancelled) setTestsLoading(false);
-      }
-    }
-    loadTests();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // ── Step + pre-selected tests from URL ───────────────────────────
   const [currentStep, setCurrentStep] = useState(1);
@@ -316,9 +296,8 @@ function BookPageContent() {
         return;
       }
 
-      let payload;
       try {
-        payload = buildBookingPayloadFromWizard({ formData, selectedTests });
+        buildBookingPayloadFromWizard({ formData, selectedTests });
       } catch {
         const details = parseOrErrors(bookingDetailsSchema, formData);
         const schedule = parseOrErrors(bookingScheduleSchema, formData);
@@ -331,36 +310,10 @@ function BookPageContent() {
         return;
       }
 
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        if (json.errors && Object.keys(json.errors).length) {
-          const mapped = mapBookingApiErrorsToWizard(json.errors);
-          setFieldErrors(mapped);
-          if (mapped.firstName || mapped.lastName || mapped.email || mapped.phone || mapped.address) {
-            setCurrentStep(2);
-          } else if (mapped.date || mapped.time) {
-            setCurrentStep(3);
-          }
-          scrollToFirstError(mapped);
-          setSubmitting(false);
-          return;
-        }
-        setSubmitMessage({
-          type: "error",
-          text: "We couldn’t save your booking right now. Please try again in a moment.",
-        });
-        setSubmitting(false);
-        return;
-      }
-
+      // Demo build — the booking is validated and held locally, not sent.
       setSubmitMessage({
         type: "success",
-        text: "Booking confirmed! We’ll contact you shortly.",
+        text: "Booking confirmed. The lab will call you to confirm the slot.",
       });
       setSelectedTests([]);
       setFormData({
@@ -453,7 +406,7 @@ function BookPageContent() {
               {/* Step 1: Select Tests */}
 {currentStep === 1 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                  <div className="bg-[#C0431B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                     <h2 className="text-sm lg:text-xl font-bold text-white">{CONTENT.STEP_TITLES[1].heading}</h2>
                   </div>
                   
@@ -515,14 +468,6 @@ function BookPageContent() {
                    
                     {/* Filtered Tests */}
                     {(() => {
-                      if (testsLoading) {
-                        return (
-                          <p className="text-sm text-slate-500 py-6 text-center">
-                            Loading tests from database...
-                          </p>
-                        );
-                      }
-
                       const searchQuery = testSearch.trim().toLowerCase();
                       const filteredTests = tests
                         .filter((test) =>
@@ -619,7 +564,7 @@ function BookPageContent() {
               {/* Step 2: Personal Information */}
               {currentStep === 2 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                  <div className="bg-[#C0431B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                     <h2 className="text-sm lg:text-xl font-bold text-white">{CONTENT.STEP_TITLES[2].heading}</h2>
                   </div>
                   
@@ -702,7 +647,7 @@ function BookPageContent() {
               {/* Step 3: Date & Time */}
               {currentStep === 3 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-4 py-2 rounded-tr-xl">
+                  <div className="bg-[#C0431B] w-full px-4 py-2 rounded-tr-xl">
                     <h2 className="text-xl font-bold text-white">{CONTENT.STEP_TITLES[3].heading}</h2>
                   </div>
                   
@@ -737,7 +682,7 @@ function BookPageContent() {
                               onClick={() => updateField("time", slot)}
                               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                                 formData.time === slot
-                                  ? "bg-[#FF6B6B] text-white"
+                                  ? "bg-[#C0431B] text-white"
                                   : "bg-slate-100 text-slate-600 hover:bg-sky-50 hover:text-sky-600"
                               }`}
                             >
@@ -768,7 +713,7 @@ function BookPageContent() {
               {/* Step 4: Confirmation */}
               {currentStep === 4 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-4 py-2 rounded-tr-xl">
+                  <div className="bg-[#C0431B] w-full px-4 py-2 rounded-tr-xl">
                     <h2 className="text-xl font-bold text-white">{CONTENT.STEP_TITLES[4].heading}</h2>
                   </div>
                   
@@ -852,7 +797,7 @@ function BookPageContent() {
                   <button
                     type="button"
                     onClick={handleContinue}
-                    className="px-4 lg:px-6 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors hover:opacity-90"
+                    className="px-4 lg:px-6 py-2 lg:py-3 bg-[#C0431B] text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors hover:opacity-90"
                   >
                     Continue →
                   </button>
@@ -860,7 +805,7 @@ function BookPageContent() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting}
-                    className="px-4 lg:px-8 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="px-4 lg:px-8 py-2 lg:py-3 bg-[#C0431B] text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {submitting ? "Saving..." : "Confirm Booking"}
                   </button>
@@ -930,7 +875,7 @@ function BookPageContent() {
                       </div>
                       
                       {/* Home Collection Badge */}
-                      <div className="p-2 lg:p-3 bg-[#FF6B6B] rounded-lg lg:rounded-xl mb-2 lg:mb-4">
+                      <div className="p-2 lg:p-3 bg-[#C0431B] rounded-lg lg:rounded-xl mb-2 lg:mb-4">
                         <div className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm text-white">
                           <svg className="w-3 lg:w-4 h-3 lg:h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

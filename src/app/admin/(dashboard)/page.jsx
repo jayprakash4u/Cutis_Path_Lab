@@ -66,7 +66,7 @@ export default function AdminDashboardPage() {
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-sky-200/40 blur-2xl pointer-events-none" />
         <div className="relative grid md:grid-cols-[1.2fr_0.8fr] gap-8 items-end">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#FF6B6B] mb-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#C0431B] mb-3">
               Needs attention
             </p>
             <p className="admin-display text-5xl sm:text-6xl text-slate-900 leading-none">

@@ -104,7 +104,7 @@ export default function AdminShell({ children }) {
           >
             <span
               className={`h-5 w-1 shrink-0 rounded-full ${
-                active ? "bg-[#FF6B6B]" : "bg-transparent"
+                active ? "bg-[#C0431B]" : "bg-transparent"
               }`}
             />
             {item.label}
@@ -172,7 +172,7 @@ export default function AdminShell({ children }) {
             <button
               type="button"
               onClick={handleLogout}
-              className="px-3 py-2 rounded-xl text-xs font-semibold text-white bg-[#FF6B6B] hover:bg-[#e55a5a] transition-colors"
+              className="px-3 py-2 rounded-xl text-xs font-semibold text-white bg-[#C0431B] hover:bg-[#e55a5a] transition-colors"
             >
               Sign out
             </button>

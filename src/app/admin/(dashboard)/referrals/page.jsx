@@ -210,7 +210,7 @@ export default function AdminReferralsPage() {
           {displayPreview && (
             <div className="sm:col-span-2">
               <p className="mb-2 text-xs font-medium text-slate-500">Photo preview</p>
-              <div className="relative h-24 w-24 overflow-hidden rounded-2xl border-2 border-[#FF6B6B] bg-slate-100">
+              <div className="relative h-24 w-24 overflow-hidden rounded-2xl border-2 border-[#C0431B] bg-slate-100">
                 <Image src={displayPreview} alt="Preview" fill className="object-cover" unoptimized />
               </div>
             </div>

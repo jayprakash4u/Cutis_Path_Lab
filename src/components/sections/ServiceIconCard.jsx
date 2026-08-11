@@ -6,13 +6,11 @@ import {
   shortServiceDescription,
 } from "@/lib/serviceIcons";
 
-/**
- * Icon service card — roomy layout matching the original services grid.
- */
+/** Icon service card — one of the grid cells on the services page. */
 export default function ServiceIconCard({
   service,
   href,
-  ctaLabel = "Know More",
+  ctaLabel = "Know more",
   descriptionMax = 48,
   className = "",
 }) {
@@ -21,25 +19,33 @@ export default function ServiceIconCard({
 
   return (
     <article
-      className={`flex h-full flex-col items-center rounded-xl border border-slate-200 border-t-4 border-t-[#FF6B6B] bg-white p-5 shadow-sm transition-all duration-300 group hover:border-[#FF6B6B] hover:shadow-lg sm:p-6 md:p-7 ${className}`}
+      className={`card card-hover group flex h-full flex-col p-5 sm:p-6 ${className}`}
     >
-      <div className="mb-4">
-        <IconComponent size={52} className="h-12 w-12 sm:h-14 sm:w-14" />
-      </div>
-      <h3 className="mb-2 text-center text-sm font-semibold text-slate-800 transition-colors group-hover:text-[#FF6B6B] sm:text-base">
+      <span className="flex h-12 w-12 items-center justify-center rounded-md bg-clinical-50">
+        <IconComponent size={28} className="h-7 w-7" />
+      </span>
+
+      <h3 className="mt-4 text-[0.9375rem] font-semibold text-ink-900 transition-colors group-hover:text-clinical-700">
         {service.name}
       </h3>
-      <p className="mb-5 flex-1 text-center text-xs leading-relaxed text-slate-500 sm:text-sm">
+      <p className="mt-1.5 flex-1 text-[13px] leading-relaxed text-ink-500">
         {shortServiceDescription(service.description, descriptionMax)}
       </p>
+
       <Link
         href={linkHref}
-        className="inline-flex items-center justify-center rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:bg-sky-700"
+        className="mt-5 inline-flex items-center gap-1.5 border-t border-line pt-4 text-[13px] font-semibold text-clinical-700 transition-colors hover:text-clinical-600"
       >
-        {ctaLabel}{" "}
-        <span className="ml-1 text-[#FF6B6B]" aria-hidden="true">
-          &gt;&gt;
-        </span>
+        {ctaLabel}
+        <svg
+          className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
       </Link>
     </article>
   );

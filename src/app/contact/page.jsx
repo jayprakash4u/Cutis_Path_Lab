@@ -65,9 +65,9 @@ const QUICK_CONTACTS = [
           strokeWidth="2.2"
           strokeLinejoin="round"
         />
-        <circle cx="82" cy="38" r="16" fill="#FF6B6B" opacity="0.2" />
-        <circle cx="82" cy="38" r="11" fill="#FF6B6B" opacity="0.35" />
-        <circle cx="82" cy="38" r="7" fill="#FF6B6B" />
+        <circle cx="82" cy="38" r="16" fill="#C0431B" opacity="0.2" />
+        <circle cx="82" cy="38" r="11" fill="#C0431B" opacity="0.35" />
+        <circle cx="82" cy="38" r="7" fill="#C0431B" />
         <line
           x1="82"
           y1="33"
@@ -125,7 +125,7 @@ const QUICK_CONTACTS = [
           cx="82"
           cy="84"
           r="14"
-          fill="#FF6B6B"
+          fill="#C0431B"
           stroke="#fff"
           strokeWidth="2"
         />
@@ -225,7 +225,7 @@ const QUICK_CONTACTS = [
           cx="60"
           cy="98"
           r="5"
-          fill="#FF6B6B"
+          fill="#C0431B"
           stroke="#fff"
           strokeWidth="1.5"
         />
@@ -238,7 +238,7 @@ const QUICK_CONTACTS = [
           strokeWidth="1.8"
           strokeLinecap="round"
         />
-        <rect x="44" y="54" width="32" height="16" rx="8" fill="#FF6B6B" />
+        <rect x="44" y="54" width="32" height="16" rx="8" fill="#C0431B" />
         <text
           x="60"
           y="65"
@@ -402,16 +402,6 @@ function ContactPageContent() {
     el?.focus?.({ preventScroll: true });
   };
 
-  const mapApiErrors = (errors = {}) => {
-    const mapped = { ...errors };
-    if (errors.name) {
-      if (!mapped.firstName) mapped.firstName = "Please check your first name";
-      if (!mapped.lastName) mapped.lastName = "Please check your last name";
-      delete mapped.name;
-    }
-    return mapped;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (submitting) return;
@@ -434,41 +424,10 @@ function ContactPageContent() {
         return;
       }
 
-      const data = formCheck.data;
-      const name = `${data.firstName} ${data.lastName}`.trim();
-      const subjectParts = [
-        CONTENT.FORM_TITLES[activeTab] || activeTab,
-        data.position
-          ? CONTENT.POSITIONS.find((p) => p.value === data.position)?.label ||
-            data.position
-          : "",
-      ].filter(Boolean);
-
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email: data.email,
-          phone: data.phone,
-          subject: subjectParts.join(" - "),
-          message: data.message,
-          _honeypot: e.target._honeypot?.value || "",
-        }),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        if (json.errors) {
-          const mapped = mapApiErrors(json.errors);
-          setFieldErrors(mapped);
-          focusFirstError(mapped);
-        }
-        throw new Error(json.message || "Failed to send message");
-      }
-
+      // Demo build — the message is validated and held locally, not sent.
       setStatus({
         type: "success",
-        text: "Message sent successfully! We will get back to you soon.",
+        text: "Message received. We reply within one working day.",
       });
       setFormData({
         firstName: "",
@@ -532,11 +491,12 @@ function ContactPageContent() {
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-16">
               {/* Contact Form - title changes based on activeTab */}
-              <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
-                  <h2 className="text-sm lg:text-xl font-bold text-white">
+              <div className="card overflow-hidden">
+                <div className="flex items-baseline justify-between gap-3 border-b border-line bg-surface-sunk px-5 py-3.5">
+                  <h2 className="text-[0.9375rem] font-semibold text-ink-900">
                     {CONTENT.FORM_TITLES[activeTab]}
                   </h2>
+                  <span className="label">Replies within 1 working day</span>
                 </div>
                 <form
                   onSubmit={handleSubmit}
@@ -718,19 +678,21 @@ function ContactPageContent() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-2.5 lg:py-3.5 bg-sky-600 text-white text-xs lg:text-sm font-semibold rounded-lg lg:rounded-xl hover:bg-sky-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="btn-primary w-full !py-3"
                   >
-                    {submitting ? "Sending..." : "Send Message"}
+                    {submitting ? "Sending…" : "Send message"}
                   </button>
                 </form>
               </div>
 
               {/* Contact Info - from CONTENT.CONTACT_INFO */}
               <div className="space-y-4 lg:space-y-8 w-full">
-                <div className="bg-sky-600 w-full px-4 lg:px-6 py-1.5 lg:py-2 rounded-tr-xl">
-                  <h2 className="text-sm lg:text-xl font-bold text-white">
-                    Get in Touch
-                  </h2>
+                <div>
+                  <p className="eyebrow">Visit or call</p>
+                  <div className="mt-2.5 flex items-center gap-4">
+                    <h2 className="sec-title">Get in touch</h2>
+                    <span className="sec-rule" aria-hidden="true" />
+                  </div>
                 </div>
 
                 {/* Info Cards */}
@@ -769,7 +731,7 @@ function ContactPageContent() {
                           stroke="#0284c7"
                           strokeWidth="2"
                         />
-                        <circle cx="60" cy="44" r="6" fill="#FF6B6B" />
+                        <circle cx="60" cy="44" r="6" fill="#C0431B" />
                         <ellipse
                           cx="60"
                           cy="92"
@@ -838,18 +800,18 @@ function ContactPageContent() {
                         <path
                           d="M72 28 Q84 36 84 50"
                           fill="none"
-                          stroke="#FF6B6B"
+                          stroke="#C0431B"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
                         <path
                           d="M78 22 Q96 34 96 54"
                           fill="none"
-                          stroke="#FF6B6B"
+                          stroke="#C0431B"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
-                        <circle cx="68" cy="30" r="3.5" fill="#FF6B6B" />
+                        <circle cx="68" cy="30" r="3.5" fill="#C0431B" />
                       </svg>
                     }
                   />
@@ -974,18 +936,18 @@ function ContactPageContent() {
                           y1="62"
                           x2="76"
                           y2="62"
-                          stroke="#FF6B6B"
+                          stroke="#C0431B"
                           strokeWidth="3"
                           strokeLinecap="round"
                         />
-                        <circle cx="60" cy="62" r="4" fill="#FF6B6B" />
-                        <circle cx="60" cy="22" r="6" fill="#FF6B6B" />
+                        <circle cx="60" cy="62" r="4" fill="#C0431B" />
+                        <circle cx="60" cy="22" r="6" fill="#C0431B" />
                         <line
                           x1="60"
                           y1="14"
                           x2="60"
                           y2="11"
-                          stroke="#FF6B6B"
+                          stroke="#C0431B"
                           strokeWidth="2"
                           strokeLinecap="round"
                         />
@@ -994,7 +956,7 @@ function ContactPageContent() {
                           y1="16"
                           x2="68"
                           y2="14"
-                          stroke="#FF6B6B"
+                          stroke="#C0431B"
                           strokeWidth="2"
                           strokeLinecap="round"
                         />
@@ -1003,7 +965,7 @@ function ContactPageContent() {
                           y1="16"
                           x2="52"
                           y2="14"
-                          stroke="#FF6B6B"
+                          stroke="#C0431B"
                           strokeWidth="2"
                           strokeLinecap="round"
                         />
@@ -1065,7 +1027,7 @@ function ContactPageContent() {
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
-                        <circle cx="60" cy="57" r="14" fill="#FF6B6B" />
+                        <circle cx="60" cy="57" r="14" fill="#C0431B" />
                         <circle
                           cx="60"
                           cy="57"
@@ -1117,7 +1079,7 @@ function ContactPageContent() {
                             />
                             <path
                               d="M34 18 L30 18 Q24 18 24 24 L24 28 L19 28 L19 35 L24 35 L24 54 L32 54 L32 35 L37 35 L38 28 L32 28 L32 24 Q32 22 34 22 L38 22 Z"
-                              fill="#FF6B6B"
+                              fill="#C0431B"
                               opacity="0.25"
                             />
                           </svg>
@@ -1156,11 +1118,11 @@ function ContactPageContent() {
                               cy="30"
                               r="8"
                               fill="none"
-                              stroke="#FF6B6B"
+                              stroke="#C0431B"
                               stroke-width="3"
                             />
-                            <circle cx="30" cy="30" r="4" fill="#FF6B6B" />
-                            <circle cx="43" cy="17" r="3" fill="#FF6B6B" />
+                            <circle cx="30" cy="30" r="4" fill="#C0431B" />
+                            <circle cx="43" cy="17" r="3" fill="#C0431B" />
                             <circle cx="43" cy="17" r="1.5" fill="#fff" />
                           </svg>
                         ),
@@ -1191,7 +1153,7 @@ function ContactPageContent() {
                               rx="2"
                               fill="#fff"
                             />
-                            <circle cx="17" cy="15" r="5" fill="#FF6B6B" />
+                            <circle cx="17" cy="15" r="5" fill="#C0431B" />
                             <circle cx="17" cy="15" r="3" fill="#fff" />
                             <path
                               d="M25 26 L25 46 L33 46 L33 34 Q33 28 38 28 Q43 28 43 34 L43 46 L51 46 L51 33 Q51 22 40 22 Q35 22 33 26 L33 22 L25 22 Z"
@@ -1227,7 +1189,7 @@ function ContactPageContent() {
                             />
                             <path
                               d="M12 12 L26 32 L12 48 L18 48 L29 36 L39 48 L48 48 L33.5 27.5 L47 12 L41 12 L27.5 23.5 L19 12 Z"
-                              fill="#FF6B6B"
+                              fill="#C0431B"
                               opacity="0.3"
                             />
                           </svg>
@@ -1251,34 +1213,36 @@ function ContactPageContent() {
         </section>
 
         {/* FAQ Section - from FAQS */}
-        <section className="py-8 lg:py-24 bg-slate-50">
-          <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div className="text-center mb-6 lg:mb-12">
-              <h2 className="text-lg lg:text-3xl font-bold text-slate-900 mb-2 lg:mb-4 border-b-2 lg:border-b-4 border-[#FF6B6B] inline-block pb-1 lg:pb-2">
-                FAQs
-              </h2>
+        <section className="section border-t border-line bg-paper">
+          <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
+              <p className="eyebrow">Common questions</p>
+              <div className="mt-2.5 flex items-center gap-4">
+                <h2 className="sec-title">Before you ask</h2>
+                <span className="sec-rule" aria-hidden="true" />
+              </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface">
               {FAQS.map((faq, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl border border-slate-200 overflow-hidden"
-                >
+                <div key={index}>
                   <button
+                    type="button"
+                    aria-expanded={expandedFaq === index}
                     onClick={() =>
                       setExpandedFaq(expandedFaq === index ? null : index)
                     }
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-paper"
                   >
-                    <span className="font-medium text-slate-900">
+                    <span className="text-[0.9375rem] font-medium text-ink-900">
                       {faq.question}
                     </span>
                     <svg
-                      className={`w-5 h-5 text-slate-500 transition-transform ${expandedFaq === index ? "rotate-180" : ""}`}
+                      className={`h-4 w-4 shrink-0 text-ink-400 transition-transform ${expandedFaq === index ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      aria-hidden="true"
                     >
                       <path
                         strokeLinecap="round"
@@ -1289,8 +1253,10 @@ function ContactPageContent() {
                     </svg>
                   </button>
                   {expandedFaq === index && (
-                    <div className="px-6 pb-4">
-                      <p className="text-slate-600">{faq.answer}</p>
+                    <div className="px-5 pb-4">
+                      <p className="text-[13px] leading-relaxed text-ink-600">
+                        {faq.answer}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1300,15 +1266,19 @@ function ContactPageContent() {
         </section>
 
         {/* Map Section */}
-        <section className="w-full">
-          <div className="bg-sky-600 px-4 lg:px-6 py-2 lg:py-3 w-full text-left">
-            <h2 className="text-sm lg:text-xl font-bold text-white">
-              Cutis Path Lab
-            </h2>
+        <section className="w-full border-t border-line">
+          <div className="bg-ink-900 px-4 py-3 lg:px-6">
+            <div className="shell !px-0">
+              <p className="label !text-clinical-200/60">Find us</p>
+              <h2 className="mt-1 text-[0.9375rem] font-semibold text-white">
+                Cutis Path Lab · Mid-Baneshwor, Kathmandu
+              </h2>
+            </div>
           </div>
           <iframe
+            title="Map showing Cutis Path Lab in Mid-Baneshwor, Kathmandu"
             width="100%"
-            height="250 lg:400"
+            height="400"
             frameBorder="0"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.8907380419406!2d85.32390742346914!3d27.71922847096282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19a3778e0001%3A0x1234567890!2sMid-Baneshwor!5e0!3m2!1sen!2snp!4v1234567890"
             allowFullScreen=""
@@ -1325,7 +1295,7 @@ function ContactPageContent() {
 
 export default function ContactPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+    <Suspense fallback={<div className="min-h-screen bg-paper" />}>
       <ContactPageContent />
     </Suspense>
   );

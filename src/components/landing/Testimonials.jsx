@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import SectionHeader from "@/components/ui/SectionHeader";
+import { testimonials } from "@/data/landingData";
 import {
   useFullCardCarousel,
   CAROUSEL_BREAKPOINTS,
@@ -8,11 +9,11 @@ import {
 
 function Stars({ rating }) {
   return (
-    <div className="mb-3 flex gap-1 sm:mb-4" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex gap-0.5" aria-label={`${rating} out of 5`}>
       {[...Array(5)].map((_, i) => (
         <svg
           key={i}
-          className={`h-4 w-4 ${i < rating ? "text-amber-400" : "text-slate-200"}`}
+          className={`h-3.5 w-3.5 ${i < rating ? "text-clinical-600" : "text-line-strong"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
           aria-hidden="true"
@@ -24,29 +25,30 @@ function Stars({ rating }) {
   );
 }
 
-function NavArrow({ direction, onClick, className = "" }) {
+function RailButton({ direction, onClick, disabled = false }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 md:h-11 md:w-11 ${className}`}
+      disabled={disabled}
+      className="flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface text-ink-500 transition
+        hover:border-clinical-500 hover:text-clinical-700
+        disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:text-ink-500"
       aria-label={direction === "left" ? "Previous reviews" : "Next reviews"}
     >
-      <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        {direction === "left" ? (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        ) : (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        )}
+      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d={direction === "left" ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
+        />
       </svg>
     </button>
   );
 }
 
-export default function Reviews() {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+export default function Testimonials() {
   const {
     scrollRef,
     viewportRef,
@@ -58,157 +60,80 @@ export default function Reviews() {
     handleScroll,
     scroll,
     scrollToDot,
+    canScrollLeft,
+    canScrollRight,
     gap,
   } = useFullCardCarousel({
     gap: 16,
     breakpoints: CAROUSEL_BREAKPOINTS.testimonials,
-    itemCount: reviews.length,
-    deps: [reviews.length, loading],
+    itemCount: testimonials.length,
+    deps: [testimonials.length],
   });
 
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/testimonials?featured=true");
-        const json = await res.json();
-        if (!cancelled && json.success && Array.isArray(json.data)) {
-          setReviews(json.data);
-        }
-      } catch {
-        if (!cancelled) setReviews([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-sky-50/60 via-white to-slate-50 py-6 sm:py-14 md:py-20">
-      <div
-        className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-sky-200/35 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-20 left-0 h-64 w-64 rounded-full bg-[#FF6B6B]/10 blur-3xl"
-        aria-hidden="true"
-      />
+    <section className="section bg-paper">
+      <div className="shell">
+        <SectionHeader
+          eyebrow="Feedback"
+          title="What people say afterwards"
+          lede="Unedited comments from patients and referring physicians."
+          action={
+            <div className="hidden items-center gap-2 sm:flex">
+              <RailButton direction="left" onClick={() => scroll("left")} disabled={!canScrollLeft} />
+              <RailButton direction="right" onClick={() => scroll("right")} disabled={!canScrollRight} />
+            </div>
+          }
+        />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-5 sm:mb-10 md:mb-12">
-          <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
-              What Our Patients Say
-            </h2>
+        <div ref={viewportRef} className="mt-8 w-full overflow-hidden">
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className={scrollClassName}
+            style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {testimonials.map((review) => (
+              <article
+                key={review.id}
+                style={cardWidthStyle}
+                className={cardClassName}
+              >
+                <div className="card card-hover flex h-full flex-col p-5 sm:p-6">
+                  <Stars rating={review.rating} />
+
+                  <p className="mt-4 flex-1 text-[13px] leading-relaxed text-ink-600 sm:text-sm">
+                    {review.content}
+                  </p>
+
+                  <div className="mt-5 border-t border-line pt-4">
+                    <p className="text-[13px] font-semibold text-ink-900">
+                      {review.name}
+                    </p>
+                    <p className="label mt-1">{review.role}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
-            Real feedback from patients, physicians, and partners who trust our
-            laboratory every day.
-          </p>
         </div>
 
-        {loading && (
-          <p className="py-8 text-sm text-slate-500">Loading testimonials…</p>
-        )}
-
-        {!loading && reviews.length === 0 && (
-          <p className="py-8 text-sm text-slate-500">No testimonials yet.</p>
-        )}
-
-        {!loading && reviews.length > 0 && (
-          <>
-            <div className="relative sm:px-10 md:px-12 lg:px-14">
-              <NavArrow
-                direction="left"
-                onClick={() => scroll("left")}
-                className="absolute left-0 top-1/2 z-20 hidden -translate-y-1/2 sm:flex"
+        <div className="mt-6 flex items-center justify-center gap-3 sm:hidden">
+          <RailButton direction="left" onClick={() => scroll("left")} disabled={!canScrollLeft} />
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: totalDots }).map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => scrollToDot(index)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  index === activeIndex ? "w-6 bg-clinical-600" : "w-1.5 bg-line-strong"
+                }`}
+                aria-label={`Go to review set ${index + 1}`}
               />
-
-              <div ref={viewportRef} className="w-full overflow-hidden py-2 sm:py-3">
-                <div
-                  ref={scrollRef}
-                  onScroll={handleScroll}
-                  className={scrollClassName}
-                  style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                  {reviews.map((review) => (
-                    <article
-                      key={review.id}
-                      data-review-card
-                      style={cardWidthStyle}
-                      className={cardClassName}
-                    >
-                      <div className="flex h-full flex-col rounded-2xl border-b-4 border-b-[#FF6B6B] bg-white px-3 py-4 shadow-md sm:px-5 sm:py-6 md:px-6 md:py-7">
-                        <Stars rating={review.rating} />
-
-                        <p className="mb-4 line-clamp-4 flex-1 text-xs leading-snug text-slate-600 sm:mb-6 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed">
-                          &ldquo;{review.content}&rdquo;
-                        </p>
-
-                        <div className="mt-auto flex items-center gap-2.5 border-t border-sky-100 pt-3 sm:gap-3 sm:pt-4">
-                          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl sm:h-11 sm:w-11">
-                            <img
-                              src={review.image}
-                              alt={review.name}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <h3 className="truncate text-sm font-bold text-slate-900 sm:text-base">
-                              {review.name}
-                            </h3>
-                            <p className="truncate text-xs font-medium uppercase tracking-wider text-sky-600">
-                              {review.role}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-
-              <NavArrow
-                direction="right"
-                onClick={() => scroll("right")}
-                className="absolute right-0 top-1/2 z-20 hidden -translate-y-1/2 sm:flex"
-              />
-            </div>
-
-            <div className="mt-4 flex items-center justify-center gap-3 sm:mt-8">
-              <NavArrow
-                direction="left"
-                onClick={() => scroll("left")}
-                className="sm:hidden"
-              />
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalDots }).map((_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => scrollToDot(index)}
-                    className={`rounded-full transition-all duration-300 ${
-                      index === activeIndex
-                        ? "h-2.5 w-8 bg-sky-600"
-                        : "h-2 w-2 bg-slate-300 hover:bg-slate-400"
-                    }`}
-                    aria-label={`Go to review set ${index + 1}`}
-                  />
-                ))}
-              </div>
-              <NavArrow
-                direction="right"
-                onClick={() => scroll("right")}
-                className="sm:hidden"
-              />
-            </div>
-          </>
-        )}
+            ))}
+          </div>
+          <RailButton direction="right" onClick={() => scroll("right")} disabled={!canScrollRight} />
+        </div>
       </div>
     </section>
   );
