@@ -1,12 +1,65 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const heroImage = {
-  url: "/images/banners/hero-main.png",
-  alt: "",
-  width: 6400,
-  height: 1428,
-};
+const AUTOPLAY_MS = 6500;
+
+const slides = [
+  {
+    image: "/images/banners/hero-main.png",
+    width: 6400,
+    height: 1428,
+    label: "Results you can act on",
+    headline: (
+      <>
+        Results your doctor{" "}
+        <span className="text-assay-400">can act on.</span>
+      </>
+    ),
+    lede: "Pathology, haematology and molecular testing under one roof. We collect at your door and send the report back within 24 hours.",
+  },
+  {
+    image: "/images/banners/1.jpg",
+    width: 880,
+    height: 586,
+    label: "Diagnostic precision",
+    headline: (
+      <>
+        Every sample, read with{" "}
+        <span className="text-assay-400">precision.</span>
+      </>
+    ),
+    lede: "NABL-accredited technologists and calibrated instruments behind every slide we examine and every panel we run.",
+  },
+  {
+    image: "/images/banners/2.jpg",
+    width: 960,
+    height: 640,
+    label: "Home collection, fast reports",
+    headline: (
+      <>
+        From your doorstep to your{" "}
+        <span className="text-assay-400">inbox in 24 hours.</span>
+      </>
+    ),
+    lede: "Free home collection and careful handling, with a report delivered the same day it's ready — no clinic visit required.",
+  },
+  {
+    image: "/images/banners/5.jpg",
+    width: 1200,
+    height: 675,
+    label: "Our specialists",
+    headline: (
+      <>
+        A full team of <span className="text-assay-400">specialists</span>{" "}
+        behind every report.
+      </>
+    ),
+    lede: "Pathologists and consultants review anything flagged before it ever reaches your doctor's desk.",
+  },
+];
 
 const accreditations = ["NABL accredited", "ISO 15189:2012", "Open 365 days"];
 
@@ -86,21 +139,77 @@ function SpecimenCard() {
   );
 }
 
-export default function Hero() {
+function ArrowButton({ direction, onClick }) {
   return (
-    <section className="band-deep relative isolate overflow-hidden">
-      {/* Photograph as texture — blended so the blue stays blue */}
-      <Image
-        src={heroImage.url}
-        alt={heroImage.alt}
-        width={heroImage.width}
-        height={heroImage.height}
-        priority
-        unoptimized
-        sizes="100vw"
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover object-center opacity-40 mix-blend-soft-light"
-      />
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex h-9 w-9 items-center justify-center rounded-md border border-clinical-300/45 text-clinical-100 transition
+        hover:border-clinical-300 hover:bg-clinical-300/10 hover:text-white"
+      aria-label={direction === "left" ? "Previous highlight" : "Next highlight"}
+    >
+      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d={direction === "left" ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
+        />
+      </svg>
+    </button>
+  );
+}
+
+export default function Hero() {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const count = slides.length;
+
+  const goTo = useCallback(
+    (i) => setIndex(((i % count) + count) % count),
+    [count],
+  );
+
+  useEffect(() => {
+    if (paused) return undefined;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return undefined;
+    }
+    const id = setInterval(() => setIndex((i) => (i + 1) % count), AUTOPLAY_MS);
+    return () => clearInterval(id);
+  }, [paused, count]);
+
+  const slide = slides[index];
+
+  return (
+    <section
+      className="band-deep relative isolate overflow-hidden"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      {/* Photographs as texture — stacked and crossfaded, blended so the blue stays blue */}
+      <div className="absolute inset-0" aria-hidden="true">
+        {slides.map((s, i) => (
+          <Image
+            key={s.image}
+            src={s.image}
+            alt=""
+            width={s.width}
+            height={s.height}
+            priority={i === 0}
+            unoptimized
+            sizes="100vw"
+            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 ease-in-out ${
+              i === index ? "opacity-90" : "opacity-0"
+            }`}
+          />
+        ))}
+      </div>
 
       {/* Colour wash: cyan light from the right, teal lift at the base */}
       <div
@@ -114,7 +223,7 @@ export default function Hero() {
 
       {/* Legibility scrim on the text side only */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-deep-900/85 via-deep-900/45 to-transparent"
+        className="absolute inset-0 bg-gradient-to-r from-deep-900/70 via-deep-900/25 to-transparent"
         aria-hidden="true"
       />
 
@@ -134,15 +243,15 @@ export default function Hero() {
             Cutis Path Lab · Mid-Baneshwor, Kathmandu
           </p>
 
-          <h1 className="rise [animation-delay:80ms] mt-4 max-w-[16ch] text-[2.125rem] font-bold leading-[1.05] text-white sm:text-[2.75rem] lg:text-[3.5rem]">
-            Results your doctor{" "}
-            <span className="text-assay-400">can act on.</span>
-          </h1>
+          <div key={index} aria-live="polite">
+            <h1 className="rise mt-4 max-w-[16ch] text-[2.125rem] font-bold leading-[1.05] text-white sm:text-[2.75rem] lg:text-[3.5rem]">
+              {slide.headline}
+            </h1>
 
-          <p className="rise [animation-delay:150ms] mt-5 max-w-[48ch] text-[0.9375rem] leading-relaxed text-clinical-100/85 sm:text-base">
-            Pathology, haematology and molecular testing under one roof. We
-            collect at your door and send the report back within 24 hours.
-          </p>
+            <p className="rise [animation-delay:70ms] mt-5 max-w-[48ch] text-[0.9375rem] leading-relaxed text-clinical-100/85 sm:text-base">
+              {slide.lede}
+            </p>
+          </div>
 
           <div className="rise [animation-delay:220ms] mt-8 flex flex-wrap items-center gap-3">
             <Link
@@ -159,7 +268,29 @@ export default function Hero() {
             </Link>
           </div>
 
-          <dl className="rise [animation-delay:290ms] mt-10 grid max-w-lg grid-cols-1 gap-px overflow-hidden rounded-md bg-clinical-300/25 sm:grid-cols-3">
+          {/* Carousel controls */}
+          <div className="rise [animation-delay:260ms] mt-8 flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              {slides.map((s, i) => (
+                <button
+                  key={s.image}
+                  type="button"
+                  onClick={() => goTo(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === index ? "w-6 bg-assay-400" : "w-1.5 bg-clinical-300/35 hover:bg-clinical-300/60"
+                  }`}
+                  aria-label={`Show highlight: ${s.label}`}
+                  aria-current={i === index}
+                />
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <ArrowButton direction="left" onClick={() => goTo(index - 1)} />
+              <ArrowButton direction="right" onClick={() => goTo(index + 1)} />
+            </div>
+          </div>
+
+          <dl className="rise [animation-delay:290ms] mt-8 grid max-w-lg grid-cols-1 gap-px overflow-hidden rounded-md bg-clinical-300/25 sm:grid-cols-3">
             {promises.map((p) => (
               <div
                 key={p.k}

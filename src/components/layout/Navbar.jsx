@@ -29,8 +29,17 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Elevate the header once the page scrolls out from under it
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // ── Search state ─────────────────────────────────────────────────
   const [searchQuery, setSearchQuery] = useState("");
@@ -273,7 +282,7 @@ export default function Navbar() {
   return (
     <div className="fixed left-0 right-0 top-0 z-50">
       {/* UTILITY STRIP — desktop only */}
-      <div className="hidden bg-deep-900 text-clinical-100/80 lg:block">
+      <div className="hidden border-b border-white/10 bg-gradient-to-r from-deep-900 via-deep-800 to-deep-900 text-clinical-100/80 lg:block">
         <div className="shell-wide">
           <div className="mono flex items-center justify-between gap-4 py-2 text-[11px] tracking-wide">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
@@ -284,7 +293,7 @@ export default function Navbar() {
               <span className="h-3 w-px bg-white/15" aria-hidden="true" />
               <a
                 href="tel:+9779825849435"
-                className="flex items-center gap-1.5 transition-colors hover:text-white"
+                className="flex items-center gap-1.5 transition-colors hover:text-assay-400"
               >
                 <PhoneIcon size={13} />
                 +977-9825849435
@@ -292,14 +301,15 @@ export default function Navbar() {
               <span className="h-3 w-px bg-white/15" aria-hidden="true" />
               <a
                 href="mailto:cutislabpath@gmail.com"
-                className="flex items-center gap-1.5 transition-colors hover:text-white"
+                className="flex items-center gap-1.5 transition-colors hover:text-assay-400"
               >
                 <EmailIcon size={13} />
                 cutislabpath@gmail.com
               </a>
             </div>
             <div className="flex items-center gap-1">
-              <span className="mr-2 hidden text-[10px] uppercase tracking-[0.16em] text-clinical-300/70 xl:inline">
+              <span className="mr-2 hidden items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-assay-400 xl:flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-assay-400" aria-hidden="true" />
                 Open 365 days
               </span>
               {[
@@ -314,7 +324,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-7 w-7 items-center justify-center rounded-xs transition-colors hover:bg-white/10 hover:text-white"
+                  className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-white/10 hover:text-white"
                 >
                   <Icon size={15} />
                 </a>
@@ -325,24 +335,35 @@ export default function Navbar() {
       </div>
 
       {/* MAIN NAVBAR */}
-      <nav className="relative z-[60] border-b border-line bg-surface/95 backdrop-blur-md">
+      <nav
+        className={`relative z-[60] border-b bg-surface/95 backdrop-blur-md transition-shadow duration-300 ${
+          scrolled ? "border-line shadow-[var(--shadow-2)]" : "border-line/70"
+        }`}
+      >
         <div className="shell-wide relative z-[70]">
           <div className="flex h-14 items-center justify-between gap-6 sm:h-16 lg:h-[3.75rem]">
             {/* Logo */}
-            <Link
-              href="/"
-              className="flex shrink-0 items-center"
-              onClick={closeMobileMenu}
-            >
-              <Image
-                src="/images/cutis.png"
-                alt="Cutis Path Lab"
-                width={120}
-                height={45}
-                className="h-auto w-[104px] sm:w-28 lg:w-[7.5rem]"
-                priority
-              />
-            </Link>
+            <div className="flex shrink-0 items-center gap-3">
+              <Link
+                href="/"
+                className="flex shrink-0 items-center"
+                onClick={closeMobileMenu}
+              >
+                <Image
+                  src="/images/cutis.png"
+                  alt="Cutis Path Lab"
+                  width={120}
+                  height={45}
+                  className="h-auto w-[104px] sm:w-28 lg:w-[7.5rem]"
+                  priority
+                />
+              </Link>
+              <span className="hidden h-8 w-px bg-line xl:block" aria-hidden="true" />
+              <span className="chip-assay hidden xl:inline-flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-assay-600" aria-hidden="true" />
+                NABL Accredited
+              </span>
+            </div>
 
             {/* Desktop Menu */}
             <div className="hidden items-center lg:flex">
@@ -352,16 +373,28 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-3.5 py-5 text-[14px] font-medium transition-colors xl:px-4 ${
-                      active
-                        ? "text-clinical-700"
-                        : "text-ink-600 hover:text-clinical-700"
-                    }`}
+                    className="group relative px-3.5 py-5 text-[14px] font-medium xl:px-4"
                   >
-                    {link.label}
                     <span
-                      className={`absolute inset-x-3 bottom-0 h-0.5 rounded-full transition-colors ${
-                        active ? "bg-clinical-600" : "bg-transparent"
+                      className={`absolute inset-x-1 inset-y-2.5 -z-10 rounded-full transition-colors duration-200 ${
+                        active ? "bg-clinical-50" : "bg-transparent group-hover:bg-clinical-50"
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <span
+                      className={`relative transition-colors duration-200 ${
+                        active
+                          ? "text-clinical-700"
+                          : "text-ink-600 group-hover:text-clinical-700"
+                      }`}
+                    >
+                      {link.label}
+                    </span>
+                    <span
+                      className={`absolute inset-x-3 bottom-0 h-0.5 rounded-full transition-colors duration-200 ${
+                        active
+                          ? "bg-gradient-to-r from-clinical-500 to-assay-500"
+                          : "bg-transparent"
                       }`}
                       aria-hidden="true"
                     />
@@ -371,11 +404,11 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Right */}
-            <div className="hidden shrink-0 items-center gap-2.5 lg:flex">
+            <div className="hidden shrink-0 items-center gap-3 lg:flex">
               <div className="relative flex items-center" ref={searchRef}>
                 <SearchIcon
                   size={15}
-                  className="pointer-events-none absolute left-3 text-ink-400"
+                  className="pointer-events-none absolute left-3.5 text-ink-400"
                 />
                 <input
                   type="text"
@@ -385,12 +418,18 @@ export default function Navbar() {
                   onChange={handleSearchChange}
                   onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
                   onKeyDown={searchKeyDown}
-                  className="w-48 rounded-md border border-line bg-paper py-2 pl-9 pr-3 text-sm text-ink-800 placeholder:text-ink-400 transition focus:border-clinical-500 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-clinical-100 xl:w-56"
+                  className="w-48 rounded-full border border-line bg-paper py-2 pl-10 pr-3.5 text-sm text-ink-800 placeholder:text-ink-400 shadow-[var(--shadow-1)] transition focus:border-clinical-500 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-clinical-100 hover:border-clinical-300 xl:w-60"
                 />
                 {renderSearchResults()}
               </div>
 
-              <Link href="/book" className="btn-primary">
+              <Link
+                href="/book"
+                className="btn-primary transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M8 7V3m8 4V3M4.5 11h15M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
                 Book a test
               </Link>
             </div>
@@ -404,7 +443,7 @@ export default function Navbar() {
                   setMobileSearchOpen((v) => !v);
                   setIsOpen(false);
                 }}
-                className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${
+                className={`flex h-10 w-10 items-center justify-center rounded-full border shadow-[var(--shadow-1)] transition-colors ${
                   mobileSearchOpen
                     ? "border-clinical-500 bg-clinical-50 text-clinical-700"
                     : "border-line bg-surface text-ink-500"
@@ -416,7 +455,7 @@ export default function Navbar() {
               </button>
               <button
                 type="button"
-                className={`flex h-10 w-10 items-center justify-center rounded-md transition-colors ${
+                className={`flex h-10 w-10 items-center justify-center rounded-full shadow-[var(--shadow-1)] transition-colors ${
                   isOpen
                     ? "bg-deep-900 text-white"
                     : "bg-clinical-600 text-white hover:bg-clinical-700"
