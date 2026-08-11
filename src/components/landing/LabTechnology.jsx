@@ -105,12 +105,20 @@ function TechIcon({ index, className = "" }) {
 
 export default function LabTechnology() {
   return (
-    <section className="section relative isolate overflow-hidden bg-ink-900">
+    <section className="band-deep section relative isolate overflow-hidden">
       <div
-        className="absolute inset-0 opacity-[0.05]"
+        className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-clinical-500/30 blur-[130px]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -right-32 bottom-0 h-[26rem] w-[26rem] rounded-full bg-assay-600/25 blur-[130px]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 opacity-[0.06]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(to bottom, rgba(255,255,255,.5) 0 1px, transparent 1px 34px)",
+            "repeating-linear-gradient(to bottom, rgba(255,255,255,.6) 0 1px, transparent 1px 34px)",
         }}
         aria-hidden="true"
       />
@@ -124,36 +132,35 @@ export default function LabTechnology() {
           action={
             <Link
               href="/services"
-              className="hidden text-[13px] font-medium text-clinical-200 transition-colors hover:text-white sm:inline-flex"
+              className="hidden shrink-0 text-[13px] font-medium text-clinical-300 transition-colors hover:text-white sm:inline-flex"
             >
               All services →
             </Link>
           }
         />
 
-        <div className="mt-10 grid gap-px overflow-hidden rounded-lg bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {technologies.map((tech, idx) => (
             <article
               key={tech.title}
-              className="group bg-ink-900 p-6 transition-colors duration-300 hover:bg-ink-800"
+              className="group rounded-lg border border-clinical-300/20 bg-white/[0.07] p-6 backdrop-blur-sm transition duration-300 hover:border-clinical-300/45 hover:bg-white/[0.12]"
             >
-              <TechIcon
-                index={idx}
-                className="h-10 w-10 text-clinical-200/70 transition-colors duration-300 group-hover:text-clinical-200"
-              />
+              <span className="flex h-12 w-12 items-center justify-center rounded-md bg-clinical-300/15 text-clinical-300 transition-colors duration-300 group-hover:bg-assay-400/20 group-hover:text-assay-400">
+                <TechIcon index={idx} className="h-8 w-8" />
+              </span>
 
               <h3 className="mt-5 text-base font-semibold text-white">
                 {tech.title}
               </h3>
-              <p className="mt-1 text-[13px] leading-relaxed text-clinical-100/60">
+              <p className="mt-1 text-[13px] leading-relaxed text-clinical-100/75">
                 {tech.claim}
               </p>
 
-              <ul className="mono mt-4 space-y-1.5 border-t border-white/10 pt-4 text-[11px] text-clinical-100/50">
+              <ul className="mono mt-4 space-y-1.5 border-t border-clinical-300/20 pt-4 text-[11px] text-clinical-100/85">
                 {tech.points.map((point) => (
                   <li key={point} className="flex items-start gap-2">
                     <span
-                      className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-assay-600"
+                      className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-assay-400"
                       aria-hidden="true"
                     />
                     {point}
@@ -166,7 +173,7 @@ export default function LabTechnology() {
 
         <Link
           href="/services"
-          className="btn mt-8 !border !border-white/25 !text-white hover:!border-white/60 hover:!bg-white/5 sm:hidden"
+          className="btn mt-8 !border !border-clinical-300/45 !text-clinical-100 hover:!border-clinical-300 hover:!bg-clinical-300/10 hover:!text-white sm:hidden"
         >
           All services →
         </Link>

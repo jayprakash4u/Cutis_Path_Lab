@@ -76,7 +76,7 @@ export default function GalleryPage() {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/92 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-deep-900/94 p-4"
           role="dialog"
           aria-modal="true"
           aria-label={lightbox.title}
@@ -97,7 +97,7 @@ export default function GalleryPage() {
             className="relative w-full max-w-5xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-ink-900">
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-deep-900">
               <Image
                 src={lightbox.imageUrl}
                 alt={lightbox.title}

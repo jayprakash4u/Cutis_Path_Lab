@@ -3,6 +3,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 const preparation = [
   {
     title: "Fast beforehand",
+    tone: "clinical",
     window: "8–12 h",
     detail:
       "For lipid, glucose and liver panels, stop eating the evening before. Plain water is fine and encouraged.",
@@ -17,6 +18,7 @@ const preparation = [
   },
   {
     title: "Drink water",
+    tone: "assay",
     window: "1–2 glasses",
     detail:
       "Hydrated veins are easier to draw from. It shortens the appointment and reduces bruising.",
@@ -31,6 +33,7 @@ const preparation = [
   },
   {
     title: "Skip alcohol",
+    tone: "flag",
     window: "24 h before",
     detail:
       "Alcohol shifts liver enzymes and triglycerides enough to change how a result reads.",
@@ -55,11 +58,26 @@ export default function HealthTips() {
           lede="Three things that keep a result clean. If you are unsure whether they apply to your test, call the lab and ask."
         />
 
-        <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
           {preparation.map((p) => (
-            <div key={p.title} className="bg-surface p-5 sm:p-6">
+            <div
+              key={p.title}
+              className="card card-hover overflow-hidden p-5 sm:p-6"
+              style={{
+                borderTopColor: `var(--${p.tone}-600)`,
+                borderTopWidth: "3px",
+              }}
+            >
               <div className="flex items-center justify-between gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-clinical-50 text-clinical-600">
+                <span
+                  className={`flex h-10 w-10 items-center justify-center rounded-md ${
+                    p.tone === "assay"
+                      ? "bg-assay-100 text-assay-700"
+                      : p.tone === "flag"
+                        ? "bg-flag-100 text-flag-700"
+                        : "bg-clinical-100 text-clinical-700"
+                  }`}
+                >
                   <svg
                     className="h-5 w-5"
                     fill="none"
@@ -70,7 +88,17 @@ export default function HealthTips() {
                     {p.icon}
                   </svg>
                 </span>
-                <span className="chip-quiet">{p.window}</span>
+                <span
+                  className={
+                    p.tone === "assay"
+                      ? "chip-assay"
+                      : p.tone === "flag"
+                        ? "chip-flag"
+                        : "chip-clinical"
+                  }
+                >
+                  {p.window}
+                </span>
               </div>
 
               <h3 className="mt-4 text-[0.9375rem] font-semibold text-ink-900">

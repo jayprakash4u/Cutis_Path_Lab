@@ -273,7 +273,7 @@ export default function Navbar() {
   return (
     <div className="fixed left-0 right-0 top-0 z-50">
       {/* UTILITY STRIP — desktop only */}
-      <div className="hidden bg-ink-900 text-clinical-100/70 lg:block">
+      <div className="hidden bg-deep-900 text-clinical-100/80 lg:block">
         <div className="shell-wide">
           <div className="mono flex items-center justify-between gap-4 py-2 text-[11px] tracking-wide">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
@@ -299,7 +299,7 @@ export default function Navbar() {
               </a>
             </div>
             <div className="flex items-center gap-1">
-              <span className="mr-2 hidden text-[10px] uppercase tracking-[0.16em] text-clinical-200/50 xl:inline">
+              <span className="mr-2 hidden text-[10px] uppercase tracking-[0.16em] text-clinical-300/70 xl:inline">
                 Open 365 days
               </span>
               {[
@@ -418,7 +418,7 @@ export default function Navbar() {
                 type="button"
                 className={`flex h-10 w-10 items-center justify-center rounded-md transition-colors ${
                   isOpen
-                    ? "bg-ink-900 text-white"
+                    ? "bg-deep-900 text-white"
                     : "bg-clinical-600 text-white hover:bg-clinical-700"
                 }`}
                 onClick={toggleMobileMenu}
@@ -473,7 +473,7 @@ export default function Navbar() {
           <>
             <button
               type="button"
-              className="fixed inset-x-0 bottom-0 top-14 z-[55] bg-ink-900/40 sm:top-16 lg:hidden"
+              className="fixed inset-x-0 bottom-0 top-14 z-[55] bg-deep-900/45 sm:top-16 lg:hidden"
               aria-label="Close menu"
               onClick={closeMobileMenu}
             />

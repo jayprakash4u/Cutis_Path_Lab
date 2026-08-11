@@ -32,7 +32,7 @@ export default function TestByDiseaseCategories() {
             <li key={cat.slug}>
               <Link
                 href={`/tests?category=${cat.slug}`}
-                className="group flex w-[9.5rem] flex-col overflow-hidden rounded-lg border border-line bg-surface transition duration-200 hover:border-clinical-200 hover:shadow-2"
+                className="group flex w-[9.5rem] flex-col overflow-hidden rounded-lg border border-line bg-surface transition duration-200 hover:-translate-y-0.5 hover:border-clinical-500 hover:shadow-2"
               >
                 <span className="relative block h-20 w-full overflow-hidden bg-surface-sunk">
                   <Image
@@ -42,13 +42,17 @@ export default function TestByDiseaseCategories() {
                     sizes="152px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                  <span
+                    className="absolute inset-0 bg-gradient-to-t from-deep-900/45 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-30"
+                    aria-hidden="true"
+                  />
                 </span>
-                <span className="flex items-center justify-between gap-2 px-3 py-2.5">
+                <span className="flex items-center justify-between gap-2 border-t-2 border-t-clinical-500/0 px-3 py-2.5 transition-colors group-hover:border-t-clinical-500">
                   <span className="text-[13px] font-semibold text-ink-800 group-hover:text-clinical-700">
                     {cat.label}
                   </span>
                   <svg
-                    className="h-3.5 w-3.5 shrink-0 text-ink-300 transition group-hover:translate-x-0.5 group-hover:text-clinical-600"
+                    className="h-3.5 w-3.5 shrink-0 text-clinical-500 transition group-hover:translate-x-0.5 group-hover:text-clinical-700"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

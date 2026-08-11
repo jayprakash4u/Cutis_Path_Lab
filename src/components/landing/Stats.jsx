@@ -76,11 +76,11 @@ export default function Stats() {
               className="h-64 w-full object-cover lg:h-full"
             />
             <div
-              className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/10 to-transparent"
+              className="absolute inset-0 bg-gradient-to-t from-deep-900/90 via-deep-900/15 to-transparent"
               aria-hidden="true"
             />
             <div className="absolute inset-x-0 bottom-0 p-5">
-              <p className="label !text-clinical-200/70">Processing floor</p>
+              <p className="label !text-clinical-300">Processing floor</p>
               <p className="mt-1 text-sm font-semibold text-white">
                 Mid-Baneshwor, Kathmandu
               </p>
@@ -89,9 +89,18 @@ export default function Stats() {
 
           {/* Hairline grid — the report's ruling, used structurally */}
           <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
-            {controls.map((c) => (
-              <div key={c.title} className="bg-surface p-5 sm:p-6">
-                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-clinical-50 text-clinical-600">
+            {controls.map((c, i) => (
+              <div
+                key={c.title}
+                className="group bg-surface p-5 transition-colors duration-300 hover:bg-clinical-50 sm:p-6"
+              >
+                <span
+                  className={`flex h-10 w-10 items-center justify-center rounded-md ${
+                    i % 2 === 0
+                      ? "bg-clinical-100 text-clinical-700"
+                      : "bg-assay-100 text-assay-700"
+                  }`}
+                >
                   <svg
                     className="h-5 w-5"
                     fill="none"

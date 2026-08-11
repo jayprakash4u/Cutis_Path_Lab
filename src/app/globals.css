@@ -11,41 +11,54 @@
    ========================================================================== */
 
 :root {
-  /* Ink — text and dark surfaces */
-  --ink-900: #0a1826;
-  --ink-800: #12283c;
-  --ink-700: #1e3a52;
-  --ink-600: #33526b;
-  --ink-500: #4a6478;
-  --ink-400: #6b8299;
-  --ink-300: #93a7b8;
+  /* Colours are stored as space-separated RGB channels, not hex, so Tailwind
+     can compose alpha (`text-clinical-300/80`) against them. Hex values here
+     would make every `/opacity` utility silently fail to generate.
+     In plain CSS below, wrap them: rgb(var(--token)) or rgb(var(--token)/.5). */
 
-  /* Ground */
-  --paper: #f6f9fb;
-  --surface: #ffffff;
-  --surface-sunk: #edf3f8;
+  /* Ink — text only. Blue-tinted rather than neutral black. */
+  --ink-900: 15 43 67; /* #0F2B43 */
+  --ink-800: 27 61 87; /* #1B3D57 */
+  --ink-700: 42 81 112; /* #2A5170 */
+  --ink-600: 59 102 135; /* #3B6687 */
+  --ink-500: 76 113 143; /* #4C718F */
+  --ink-400: 84 122 153; /* #547A99 */
+  --ink-300: 154 183 205; /* #9AB7CD */
+
+  /* Ground — cool, faintly blue paper stock */
+  --paper: 241 247 252; /* #F1F7FC */
+  --surface: 255 255 255;
+  --surface-sunk: 229 239 248; /* #E5EFF8 */
 
   /* Rules */
-  --line: #dce4ec;
-  --line-strong: #c3d0dc;
+  --line: 212 227 240; /* #D4E3F0 */
+  --line-strong: 177 203 224; /* #B1CBE0 */
 
-  /* Clinical blue — primary, institutional rather than consumer */
-  --clinical-700: #0a4e7a;
-  --clinical-600: #0e6ba8;
-  --clinical-500: #1782c6;
-  --clinical-200: #b9d8ec;
-  --clinical-100: #e1eef7;
-  --clinical-50: #f1f7fc;
+  /* Deep — the dark surfaces. Ocean blue, never black. */
+  --deep-900: 6 48 79; /* #06304F */
+  --deep-800: 9 69 104; /* #094568 */
+  --deep-700: 13 91 134; /* #0D5B86 */
 
-  /* Assay teal — in range, verified, accredited */
-  --assay-700: #0b6357;
-  --assay-600: #0f7d6e;
-  --assay-100: #dcf2ee;
+  /* Clinical blue — primary */
+  --clinical-700: 10 91 146; /* #0A5B92 */
+  --clinical-600: 12 111 175; /* #0C6FAF */
+  --clinical-500: 30 147 220; /* #1E93DC */
+  --clinical-300: 124 194 236; /* #7CC2EC */
+  --clinical-200: 169 213 240; /* #A9D5F0 */
+  --clinical-100: 220 237 249; /* #DCEDF9 */
+  --clinical-50: 239 247 253; /* #EFF7FD */
+
+  /* Assay teal — in range, verified, accredited, savings */
+  --assay-700: 10 110 98; /* #0A6E62 */
+  --assay-600: 16 153 137; /* #109989 */
+  --assay-400: 53 201 182; /* #35C9B6 */
+  --assay-100: 214 243 238; /* #D6F3EE */
 
   /* Flag — out of range, urgent, price reductions. Used sparingly. */
-  --flag-700: #9c3616;
-  --flag-600: #c0431b;
-  --flag-100: #fbe7df;
+  --flag-700: 168 65 15; /* #A8410F */
+  --flag-600: 212 87 31; /* #D4571F */
+  --flag-300: 243 163 123; /* #F3A37B */
+  --flag-100: 252 233 222; /* #FCE9DE */
 
   /* Radii — modest. Precision reads more clinical than roundness. */
   --r-xs: 3px;
@@ -54,10 +67,10 @@
   --r-lg: 12px;
   --r-xl: 18px;
 
-  /* Elevation — restrained; the hairline does most of the separating */
-  --shadow-1: 0 1px 2px rgba(10, 24, 38, 0.06);
-  --shadow-2: 0 6px 20px -8px rgba(10, 24, 38, 0.18);
-  --shadow-3: 0 20px 48px -20px rgba(10, 24, 38, 0.28);
+  /* Elevation — cool-tinted so shadows read as blue depth, not grey soot */
+  --shadow-1: 0 1px 2px rgba(6, 48, 79, 0.07);
+  --shadow-2: 0 6px 20px -8px rgba(6, 48, 79, 0.2);
+  --shadow-3: 0 20px 48px -20px rgba(6, 48, 79, 0.32);
 
   /* Fixed navbar height (match Navbar.jsx h-14 / h-16 / lg utility strip + nav) */
   --site-nav-h: 3.5rem;
@@ -65,12 +78,6 @@
   --site-nav-h-lg: 6.5625rem;
   --site-nav-h-lg-tall: 6.5625rem;
 
-  /* Legacy aliases kept so untouched pages keep rendering */
-  --text-primary: var(--ink-900);
-  --text-secondary: var(--ink-500);
-  --text-muted: var(--ink-400);
-  --border: var(--line);
-  --border-accent: var(--line-strong);
 }
 
 @layer base {
@@ -79,8 +86,8 @@
   }
 
   body {
-    background: var(--paper);
-    color: var(--ink-800);
+    background: rgb(var(--paper));
+    color: rgb(var(--ink-800));
     font-family: var(--font-sans), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
     font-feature-settings: "kern" 1;
     text-rendering: optimizeLegibility;
@@ -91,7 +98,7 @@
   h3,
   h4 {
     font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    color: var(--ink-900);
+    color: rgb(var(--ink-900));
     letter-spacing: -0.018em;
     text-wrap: balance;
   }
@@ -103,14 +110,14 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--clinical-600);
+    outline: 2px solid rgb(var(--clinical-600));
     outline-offset: 2px;
     border-radius: 2px;
   }
 
   ::selection {
-    background: var(--clinical-100);
-    color: var(--ink-900);
+    background: rgb(var(--clinical-100));
+    color: rgb(var(--ink-900));
   }
 }
 
@@ -194,9 +201,52 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Derives its colour from whatever it sits on, so the same class is legible
+     on a white card and on a deep blue band without a per-use override. */
   .label {
     font-family: var(--font-mono), ui-monospace, monospace;
-    @apply text-[10px] uppercase tracking-[0.14em] text-ink-400;
+    color: color-mix(in srgb, currentColor 66%, transparent);
+    @apply text-[10px] uppercase tracking-[0.14em];
+  }
+
+  /* Deep blue band — the dark surfaces on the site. Gradient, never flat. */
+  .band-deep {
+    background-image: linear-gradient(
+      140deg,
+      rgb(var(--deep-900)) 0%,
+      rgb(var(--deep-800)) 52%,
+      rgb(var(--deep-700)) 100%
+    );
+    color: rgb(var(--clinical-100));
+  }
+
+  /* Text defaults for any deep surface. Light surfaces nested inside a band
+     (cards, popovers) opt back out with .on-light. */
+  .band-deep h1,
+  .band-deep h2,
+  .band-deep h3,
+  .on-deep h1,
+  .on-deep h2,
+  .on-deep h3 {
+    color: #ffffff;
+  }
+
+  .on-deep {
+    color: rgb(var(--clinical-100));
+  }
+
+  .band-deep .on-light,
+  .on-deep .on-light {
+    color: rgb(var(--ink-800));
+  }
+
+  .band-deep .on-light h1,
+  .band-deep .on-light h2,
+  .band-deep .on-light h3,
+  .on-deep .on-light h1,
+  .on-deep .on-light h2,
+  .on-deep .on-light h3 {
+    color: rgb(var(--ink-900));
   }
 
   .chip {
@@ -218,7 +268,7 @@
   }
 
   .chip-quiet {
-    @apply chip bg-surface-sunk text-ink-500;
+    @apply chip bg-surface-sunk text-ink-600;
   }
 
   /* ---- Utilities ------------------------------------------------------- */
@@ -234,7 +284,7 @@
 
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: var(--line-strong) transparent;
+    scrollbar-color: rgb(var(--line-strong)) transparent;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -247,12 +297,12 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--line-strong);
+    background: rgb(var(--line-strong));
     border-radius: 999px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--ink-300);
+    background: rgb(var(--ink-300));
   }
 
   /* Main content offset below fixed navbar — avoids white gap above heroes */

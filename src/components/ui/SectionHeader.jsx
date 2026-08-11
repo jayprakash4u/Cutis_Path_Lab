@@ -22,7 +22,7 @@ export default function SectionHeader({
       className={`${align === "center" ? "text-center" : ""} ${className}`}
     >
       {eyebrow && (
-        <p className={`eyebrow ${onDark ? "!text-clinical-200" : ""}`}>
+        <p className={`eyebrow ${onDark ? "!text-clinical-300" : ""}`}>
           {eyebrow}
         </p>
       )}
@@ -33,8 +33,13 @@ export default function SectionHeader({
         }`}
       >
         <h2 className={`sec-title ${onDark ? "text-white" : ""}`}>{title}</h2>
+        {/* The rule picks up the accent at its start, then fades out */}
         <span
-          className={`sec-rule ${onDark ? "!bg-white/20" : ""}`}
+          className={`h-px flex-1 ${
+            onDark
+              ? "bg-gradient-to-r from-assay-400/70 via-clinical-300/35 to-transparent"
+              : "bg-gradient-to-r from-clinical-500/50 via-line to-line"
+          }`}
           aria-hidden="true"
         />
         {action && <div className="shrink-0">{action}</div>}
@@ -42,7 +47,7 @@ export default function SectionHeader({
 
       {lede && (
         <p
-          className={`sec-lede ${onDark ? "!text-clinical-100/80" : ""} ${
+          className={`sec-lede ${onDark ? "!text-clinical-100/85" : ""} ${
             align === "center" ? "mx-auto" : ""
           }`}
         >

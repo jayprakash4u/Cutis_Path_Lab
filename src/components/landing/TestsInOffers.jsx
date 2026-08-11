@@ -100,7 +100,9 @@ export default function TestsInOffers() {
                         {offer.name}
                       </h3>
                     </div>
-                    <span className="chip-flag shrink-0">−{percent}%</span>
+                    <span className="chip shrink-0 bg-flag-700 text-white">
+                      −{percent}%
+                    </span>
                   </div>
 
                   <dl className="flex-1 divide-y divide-line px-4 text-[12px]">
@@ -119,7 +121,7 @@ export default function TestsInOffers() {
 
                   <div className="flex items-end justify-between gap-3 border-t border-line px-4 py-3">
                     <div>
-                      <p className="mono text-lg font-semibold leading-none text-ink-900">
+                      <p className="mono text-lg font-semibold leading-none text-clinical-700">
                         Rs {offer.discountedPrice.toLocaleString("en-IN")}
                       </p>
                       <p className="mono mt-1 text-[11px] text-ink-400 line-through">
@@ -128,7 +130,7 @@ export default function TestsInOffers() {
                     </div>
                     <Link
                       href={`/book-offer/${encodeURIComponent(offer.id)}`}
-                      className="btn-outline !px-3 !py-1.5 !text-[13px]"
+                      className="btn-primary !px-3.5 !py-1.5 !text-[13px]"
                     >
                       Book
                     </Link>

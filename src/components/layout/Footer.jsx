@@ -58,7 +58,7 @@ function FooterLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="text-[13px] text-clinical-100/60 transition-colors hover:text-white"
+      className="text-[13px] text-clinical-100/80 transition-colors hover:text-white"
     >
       {children}
     </Link>
@@ -67,8 +67,12 @@ function FooterLink({ href, children }) {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-ink-900 text-clinical-100/70">
-      <div className="shell py-12 lg:py-16">
+    <footer className="band-deep relative isolate overflow-hidden text-clinical-100/75">
+      <div
+        className="absolute -right-40 -top-32 h-[26rem] w-[26rem] rounded-full bg-clinical-500/22 blur-[130px]"
+        aria-hidden="true"
+      />
+      <div className="shell relative py-12 lg:py-16">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
             <Link
@@ -83,7 +87,7 @@ export default function Footer() {
                 className="h-8 w-auto lg:h-9"
               />
             </Link>
-            <p className="mt-5 max-w-sm text-[13px] leading-relaxed text-clinical-100/55">
+            <p className="mt-5 max-w-sm text-[13px] leading-relaxed text-clinical-100/70">
               A pathology laboratory in Mid-Baneshwor running haematology,
               biochemistry, microbiology and molecular testing, with home
               collection across Kathmandu valley.
@@ -96,7 +100,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-clinical-100/60 transition-all hover:border-white/30 hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border border-clinical-300/20 text-clinical-100/70 transition-all hover:border-assay-400/60 hover:text-white"
                   aria-label={social.name}
                 >
                   {social.icon}
@@ -107,7 +111,7 @@ export default function Footer() {
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:col-span-4">
             <div>
-              <h2 className="label !text-clinical-200/60">Explore</h2>
+              <h2 className="label !text-clinical-300">Explore</h2>
               <ul className="mt-4 space-y-2.5">
                 {exploreLinks.map((link) => (
                   <li key={link.href}>
@@ -117,7 +121,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h2 className="label !text-clinical-200/60">Company</h2>
+              <h2 className="label !text-clinical-300">Company</h2>
               <ul className="mt-4 space-y-2.5">
                 {companyLinks.map((link) => (
                   <li key={link.href}>
@@ -129,36 +133,36 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-4">
-            <h2 className="label !text-clinical-200/60">Visit &amp; contact</h2>
+            <h2 className="label !text-clinical-300">Visit &amp; contact</h2>
             <dl className="mt-4 space-y-3 text-[13px]">
               <div>
                 <dt className="sr-only">Address</dt>
-                <dd className="text-clinical-100/60">{contact.address}</dd>
+                <dd className="text-clinical-100/70">{contact.address}</dd>
               </div>
               <div className="flex items-baseline gap-3">
-                <dt className="label w-16 shrink-0">Phone</dt>
+                <dt className="label w-16 shrink-0 !text-clinical-300">Phone</dt>
                 <dd>
                   <a
                     href={contact.phoneHref}
-                    className="mono text-[13px] text-clinical-100/70 transition-colors hover:text-white"
+                    className="mono text-[13px] text-clinical-100/80 transition-colors hover:text-white"
                   >
                     {contact.phone}
                   </a>
                 </dd>
               </div>
               <div className="flex items-baseline gap-3">
-                <dt className="label w-16 shrink-0">Email</dt>
+                <dt className="label w-16 shrink-0 !text-clinical-300">Email</dt>
                 <dd>
                   <a
                     href={contact.emailHref}
-                    className="mono break-all text-[13px] text-clinical-100/70 transition-colors hover:text-white"
+                    className="mono break-all text-[13px] text-clinical-100/80 transition-colors hover:text-white"
                   >
                     {contact.email}
                   </a>
                 </dd>
               </div>
               <div className="flex items-baseline gap-3">
-                <dt className="label w-16 shrink-0">Hours</dt>
+                <dt className="label w-16 shrink-0 !text-clinical-300">Hours</dt>
                 <dd className="mono text-[13px] text-clinical-100/70">
                   {contact.hours}
                 </dd>
@@ -167,11 +171,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="mono text-[11px] text-clinical-100/40">
+        <div className="mt-12 flex flex-col gap-2 border-t border-clinical-300/20 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="mono text-[11px] text-clinical-200/85">
             © {new Date().getFullYear()} Cutis Path Lab
           </p>
-          <p className="mono text-[11px] uppercase tracking-[0.14em] text-clinical-100/40">
+          <p className="mono text-[11px] uppercase tracking-[0.14em] text-clinical-200/85">
             NABL accredited · ISO 15189:2012
           </p>
         </div>

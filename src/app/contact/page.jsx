@@ -1267,9 +1267,9 @@ function ContactPageContent() {
 
         {/* Map Section */}
         <section className="w-full border-t border-line">
-          <div className="bg-ink-900 px-4 py-3 lg:px-6">
+          <div className="band-deep px-4 py-3 lg:px-6">
             <div className="shell !px-0">
-              <p className="label !text-clinical-200/60">Find us</p>
+              <p className="label !text-clinical-300">Find us</p>
               <h2 className="mt-1 text-[0.9375rem] font-semibold text-white">
                 Cutis Path Lab · Mid-Baneshwor, Kathmandu
               </h2>

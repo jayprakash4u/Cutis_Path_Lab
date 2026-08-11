@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 
+/** Reads a channel-triplet CSS variable as a Tailwind colour that supports
+ *  the `/opacity` modifier. See the note at the top of globals.css. */
+const t = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,57 +18,67 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       colors: {
-        paper: "var(--paper)",
+        // `<alpha-value>` is what lets `text-clinical-300/80` and friends
+        // generate at all. Without it Tailwind drops every opacity variant.
+        paper: t("--paper"),
         surface: {
-          DEFAULT: "var(--surface)",
-          sunk: "var(--surface-sunk)",
+          DEFAULT: t("--surface"),
+          sunk: t("--surface-sunk"),
         },
         line: {
-          DEFAULT: "var(--line)",
-          strong: "var(--line-strong)",
+          DEFAULT: t("--line"),
+          strong: t("--line-strong"),
         },
         ink: {
-          300: "var(--ink-300)",
-          400: "var(--ink-400)",
-          500: "var(--ink-500)",
-          600: "var(--ink-600)",
-          700: "var(--ink-700)",
-          800: "var(--ink-800)",
-          900: "var(--ink-900)",
+          300: t("--ink-300"),
+          400: t("--ink-400"),
+          500: t("--ink-500"),
+          600: t("--ink-600"),
+          700: t("--ink-700"),
+          800: t("--ink-800"),
+          900: t("--ink-900"),
+        },
+        deep: {
+          700: t("--deep-700"),
+          800: t("--deep-800"),
+          900: t("--deep-900"),
         },
         clinical: {
-          50: "var(--clinical-50)",
-          100: "var(--clinical-100)",
-          200: "var(--clinical-200)",
-          500: "var(--clinical-500)",
-          600: "var(--clinical-600)",
-          700: "var(--clinical-700)",
+          50: t("--clinical-50"),
+          100: t("--clinical-100"),
+          200: t("--clinical-200"),
+          300: t("--clinical-300"),
+          500: t("--clinical-500"),
+          600: t("--clinical-600"),
+          700: t("--clinical-700"),
         },
         assay: {
-          100: "var(--assay-100)",
-          600: "var(--assay-600)",
-          700: "var(--assay-700)",
+          100: t("--assay-100"),
+          400: t("--assay-400"),
+          600: t("--assay-600"),
+          700: t("--assay-700"),
         },
         flag: {
-          100: "var(--flag-100)",
-          600: "var(--flag-600)",
-          700: "var(--flag-700)",
+          100: t("--flag-100"),
+          300: t("--flag-300"),
+          600: t("--flag-600"),
+          700: t("--flag-700"),
         },
         // `sky-*` is used across every interior page and the admin panel.
         // Remapping it onto the clinical ramp moves the whole site to the new
         // palette without touching those files.
         sky: {
-          50: "#f1f7fc",
-          100: "#e1eef7",
-          200: "#b9d8ec",
-          300: "#8bbcdd",
-          400: "#4c9bcd",
-          500: "#1782c6",
-          600: "#0e6ba8",
-          700: "#0a4e7a",
-          800: "#0a3f61",
-          900: "#0b3450",
-          950: "#062134",
+          50: "#eff7fd",
+          100: "#dcedf9",
+          200: "#a9d5f0",
+          300: "#7cc2ec",
+          400: "#43a6e2",
+          500: "#1e93dc",
+          600: "#0c6faf",
+          700: "#0a5b92",
+          800: "#094568",
+          900: "#06304f",
+          950: "#04223a",
         },
       },
       fontSize: {

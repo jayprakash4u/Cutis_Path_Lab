@@ -48,12 +48,12 @@ export default function AboutUsSection() {
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="col-span-2 row-span-1 hidden items-center rounded-lg bg-ink-900 p-4 sm:col-span-3 sm:flex">
+            <div className="band-deep col-span-2 row-span-1 hidden items-center rounded-lg p-4 sm:col-span-3 sm:flex">
               <div>
-                <p className="mono text-2xl font-semibold leading-none text-white">
+                <p className="mono text-2xl font-semibold leading-none text-assay-400">
                   15+
                 </p>
-                <p className="label mt-1.5 !text-clinical-200/60">
+                <p className="label mt-1.5 !text-clinical-300">
                   Technicians on staff
                 </p>
               </div>

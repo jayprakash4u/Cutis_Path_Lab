@@ -68,7 +68,7 @@ export default function PackagesPage() {
         <div className="fixed inset-0 z-[70]">
           <button
             type="button"
-            className="absolute inset-0 bg-ink-900/45"
+            className="absolute inset-0 bg-deep-900/50"
             aria-label="Close package details"
             onClick={closePanel}
           />

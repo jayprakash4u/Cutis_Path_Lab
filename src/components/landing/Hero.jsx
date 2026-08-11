@@ -28,7 +28,7 @@ function SpecimenCard() {
   const position = ((value - low) / (high - low)) * 100;
 
   return (
-    <figure className="rise [animation-delay:320ms] w-full max-w-md rounded-lg bg-surface shadow-3 lg:justify-self-end">
+    <figure className="on-light rise [animation-delay:320ms] w-full max-w-md rounded-lg bg-surface shadow-3 lg:justify-self-end">
       <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3">
         <p className="label !text-ink-500">
           Specimen{" "}
@@ -88,7 +88,8 @@ function SpecimenCard() {
 
 export default function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-ink-900">
+    <section className="band-deep relative isolate overflow-hidden">
+      {/* Photograph as texture — blended so the blue stays blue */}
       <Image
         src={heroImage.url}
         alt={heroImage.alt}
@@ -98,33 +99,47 @@ export default function Hero() {
         unoptimized
         sizes="100vw"
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover object-center opacity-25"
+        className="absolute inset-0 h-full w-full object-cover object-center opacity-40 mix-blend-soft-light"
       />
+
+      {/* Colour wash: cyan light from the right, teal lift at the base */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-ink-900 via-ink-900/95 to-ink-900/75"
+        className="absolute -right-24 top-[-30%] h-[36rem] w-[36rem] rounded-full bg-clinical-500/35 blur-[120px]"
         aria-hidden="true"
       />
+      <div
+        className="absolute -left-32 bottom-[-40%] h-[30rem] w-[30rem] rounded-full bg-assay-600/25 blur-[130px]"
+        aria-hidden="true"
+      />
+
+      {/* Legibility scrim on the text side only */}
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-deep-900/85 via-deep-900/45 to-transparent"
+        aria-hidden="true"
+      />
+
       {/* Faint ruling, like report stock */}
       <div
-        className="absolute inset-0 opacity-[0.07]"
+        className="absolute inset-0 opacity-[0.08]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(to bottom, rgba(255,255,255,.5) 0 1px, transparent 1px 34px)",
+            "repeating-linear-gradient(to bottom, rgba(255,255,255,.6) 0 1px, transparent 1px 34px)",
         }}
         aria-hidden="true"
       />
 
       <div className="shell relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:gap-16 lg:py-28">
         <div>
-          <p className="rise eyebrow !text-clinical-200">
+          <p className="rise eyebrow !text-clinical-300">
             Cutis Path Lab · Mid-Baneshwor, Kathmandu
           </p>
 
           <h1 className="rise [animation-delay:80ms] mt-4 max-w-[16ch] text-[2.125rem] font-bold leading-[1.05] text-white sm:text-[2.75rem] lg:text-[3.5rem]">
-            Results your doctor can act on.
+            Results your doctor{" "}
+            <span className="text-assay-400">can act on.</span>
           </h1>
 
-          <p className="rise [animation-delay:150ms] mt-5 max-w-[48ch] text-[0.9375rem] leading-relaxed text-clinical-100/75 sm:text-base">
+          <p className="rise [animation-delay:150ms] mt-5 max-w-[48ch] text-[0.9375rem] leading-relaxed text-clinical-100/85 sm:text-base">
             Pathology, haematology and molecular testing under one roof. We
             collect at your door and send the report back within 24 hours.
           </p>
@@ -132,22 +147,25 @@ export default function Hero() {
           <div className="rise [animation-delay:220ms] mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/book"
-              className="btn-primary !bg-white !px-6 !py-3 !text-ink-900 hover:!bg-clinical-100"
+              className="btn-primary !bg-white !px-6 !py-3 !text-deep-900 hover:!bg-clinical-100"
             >
               Book a test
             </Link>
             <Link
               href="/tests"
-              className="btn !border !border-white/25 !px-6 !py-3 !text-white hover:!border-white/60 hover:!bg-white/5"
+              className="btn !border !border-clinical-300/45 !px-6 !py-3 !text-clinical-100 hover:!border-clinical-300 hover:!bg-clinical-300/10 hover:!text-white"
             >
               Browse all tests
             </Link>
           </div>
 
-          <dl className="rise [animation-delay:290ms] mt-10 grid max-w-lg grid-cols-1 gap-px overflow-hidden rounded-md bg-white/10 sm:grid-cols-3">
+          <dl className="rise [animation-delay:290ms] mt-10 grid max-w-lg grid-cols-1 gap-px overflow-hidden rounded-md bg-clinical-300/25 sm:grid-cols-3">
             {promises.map((p) => (
-              <div key={p.k} className="bg-ink-900/60 px-4 py-3 backdrop-blur-sm">
-                <dt className="label !text-clinical-200/70">{p.k}</dt>
+              <div
+                key={p.k}
+                className="bg-deep-900/55 px-4 py-3 backdrop-blur-sm"
+              >
+                <dt className="label !text-clinical-300">{p.k}</dt>
                 <dd className="mt-1 text-[13px] font-semibold text-white">
                   {p.v}
                 </dd>
@@ -155,11 +173,11 @@ export default function Hero() {
             ))}
           </dl>
 
-          <ul className="rise [animation-delay:360ms] mono mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-clinical-200/60">
+          <ul className="rise [animation-delay:360ms] mono mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-clinical-200">
             {accreditations.map((a) => (
               <li key={a} className="flex items-center gap-2">
                 <span
-                  className="h-1 w-1 rounded-full bg-assay-600"
+                  className="h-1.5 w-1.5 rounded-full bg-assay-400"
                   aria-hidden="true"
                 />
                 {a}
@@ -170,7 +188,7 @@ export default function Hero() {
 
         <div>
           <SpecimenCard />
-          <p className="rise [animation-delay:420ms] ml-auto mt-4 max-w-md text-xs leading-relaxed text-clinical-100/55">
+          <p className="rise [animation-delay:420ms] ml-auto mt-4 max-w-md text-xs leading-relaxed text-clinical-100/70">
             Every result arrives like this — the value, its units, and the
             reference interval it sits in. No guesswork.
           </p>

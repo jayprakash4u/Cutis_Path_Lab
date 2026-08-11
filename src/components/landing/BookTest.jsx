@@ -98,7 +98,7 @@ export default function BookTest() {
             <ol className="mt-9 space-y-px overflow-hidden rounded-lg border border-line bg-line">
               {steps.map((s) => (
                 <li key={s.n} className="flex gap-4 bg-surface p-5">
-                  <span className="mono shrink-0 text-[13px] font-semibold text-clinical-600">
+                  <span className="mono flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-clinical-600 text-[11px] font-semibold text-white">
                     {s.n}
                   </span>
                   <div>

@@ -93,7 +93,11 @@ export default function PopularTestsPackages() {
                     <div className="flex items-center justify-between gap-2">
                       <p className="label">{item.code}</p>
                       <span
-                        className={item.kind === "package" ? "chip-assay" : "chip-clinical"}
+                        className={`chip text-white ${
+                          item.kind === "package"
+                            ? "bg-assay-700"
+                            : "bg-clinical-600"
+                        }`}
                       >
                         {item.kind}
                       </span>
@@ -119,7 +123,7 @@ export default function PopularTestsPackages() {
 
                   <div className="flex items-end justify-between gap-3 border-t border-line px-4 py-3">
                     <div>
-                      <p className="mono text-lg font-semibold leading-none text-ink-900">
+                      <p className="mono text-lg font-semibold leading-none text-clinical-700">
                         Rs {item.price.toLocaleString("en-IN")}
                       </p>
                       <p className="mt-1 flex items-center gap-1.5">
@@ -133,7 +137,10 @@ export default function PopularTestsPackages() {
                         )}
                       </p>
                     </div>
-                    <Link href={href} className="btn-outline !px-3 !py-1.5 !text-[13px]">
+                    <Link
+                      href={href}
+                      className="btn-primary !px-3.5 !py-1.5 !text-[13px]"
+                    >
                       Book
                     </Link>
                   </div>
