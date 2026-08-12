@@ -5,34 +5,54 @@ const technologies = [
   {
     title: "Digital pathology",
     claim: "Slides scanned whole, read on screen",
+    tone: "clinical",
     points: ["Whole-slide imaging", "Remote second opinion", "Archived and retrievable"],
   },
   {
     title: "Molecular testing",
     claim: "DNA and RNA panels run in house",
+    tone: "assay",
     points: ["Infectious targets", "Oncology markers", "Clinician-ready reporting"],
   },
   {
     title: "Real-time PCR",
     claim: "High-sensitivity detection",
+    tone: "bloom",
     points: ["Pathogen identification", "Viral load monitoring", "Outbreak response"],
   },
   {
     title: "Automated processing",
     claim: "Fewer hands on every sample",
+    tone: "flag",
     points: ["Robotic aliquoting", "Barcode tracking", "Stable throughput"],
   },
   {
     title: "Sample tracking",
     claim: "Visible from collection to report",
+    tone: "assay",
     points: ["Scan points at each handover", "Status updates", "Location history"],
   },
   {
     title: "Assisted review",
     claim: "Software flags, pathologists decide",
+    tone: "bloom",
     points: ["Pattern recognition", "Priority queueing", "Nothing auto-released"],
   },
 ];
+
+const TECH_ICON_TONE = {
+  clinical: "bg-clinical-300/15 text-clinical-300 group-hover:bg-clinical-300/25",
+  assay: "bg-assay-400/15 text-assay-400 group-hover:bg-assay-400/25",
+  bloom: "bg-bloom-300/20 text-bloom-300 group-hover:bg-bloom-300/30",
+  flag: "bg-flag-300/20 text-flag-300 group-hover:bg-flag-300/30",
+};
+
+const TECH_DOT_TONE = {
+  clinical: "bg-clinical-300",
+  assay: "bg-assay-400",
+  bloom: "bg-bloom-300",
+  flag: "bg-flag-300",
+};
 
 function TechIcon({ index, className = "" }) {
   const icons = [
@@ -145,7 +165,9 @@ export default function LabTechnology() {
               key={tech.title}
               className="group rounded-lg border border-clinical-300/20 bg-white/[0.07] p-6 backdrop-blur-sm transition duration-300 hover:border-clinical-300/45 hover:bg-white/[0.12]"
             >
-              <span className="flex h-12 w-12 items-center justify-center rounded-md bg-clinical-300/15 text-clinical-300 transition-colors duration-300 group-hover:bg-assay-400/20 group-hover:text-assay-400">
+              <span
+                className={`flex h-12 w-12 items-center justify-center rounded-md transition-colors duration-300 ${TECH_ICON_TONE[tech.tone]}`}
+              >
                 <TechIcon index={idx} className="h-8 w-8" />
               </span>
 
@@ -160,7 +182,7 @@ export default function LabTechnology() {
                 {tech.points.map((point) => (
                   <li key={point} className="flex items-start gap-2">
                     <span
-                      className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-assay-400"
+                      className={`mt-1.5 h-1 w-1 shrink-0 rounded-full ${TECH_DOT_TONE[tech.tone]}`}
                       aria-hidden="true"
                     />
                     {point}

@@ -21,16 +21,19 @@ const accreditations = [
   {
     code: "NABL",
     title: "NABL accredited",
+    tone: "chip-clinical",
     desc: "National Accreditation Board for Testing and Calibration Laboratories — audited quality systems and documented methods.",
   },
   {
     code: "ISO 15189:2012",
     title: "Medical laboratory competence",
+    tone: "chip-assay",
     desc: "The international requirement set for quality and competence in medical laboratories.",
   },
   {
     code: "CAP",
     title: "CAP-aligned practice",
+    tone: "chip-bloom",
     desc: "Reporting and review benchmarked against College of American Pathologists standards.",
   },
 ];
@@ -132,7 +135,7 @@ export default function AboutPage() {
             <div className="mt-10 grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
               {accreditations.map((a) => (
                 <div key={a.code} className="bg-surface p-6">
-                  <span className="chip-assay">{a.code}</span>
+                  <span className={a.tone}>{a.code}</span>
                   <h3 className="mt-4 text-[0.9375rem] font-semibold text-ink-900">
                     {a.title}
                   </h3>

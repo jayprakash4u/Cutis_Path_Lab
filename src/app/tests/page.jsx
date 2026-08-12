@@ -10,6 +10,14 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { TestIconView } from "@/lib/testIcons";
 import { tests as allTests } from "@/data/staticData";
 import { diseaseCategories } from "@/data/landingData";
+import { categoryTone, categoryChipClass } from "@/lib/categoryTone";
+
+const TONE_TILE_BG = {
+  clinical: "bg-clinical-50",
+  assay: "bg-assay-100",
+  bloom: "bg-bloom-100",
+  flag: "bg-flag-100",
+};
 
 const CATEGORIES = [
   { id: "all", name: "All tests" },
@@ -25,6 +33,12 @@ const SORT_OPTIONS = [
   { value: "name", label: "A–Z" },
   { value: "price-low", label: "Price: low to high" },
   { value: "price-high", label: "Price: high to low" },
+];
+
+const FASTING_OPTIONS = [
+  { value: "all", label: "Fasting: any" },
+  { value: "required", label: "Fasting required" },
+  { value: "not-required", label: "No fasting" },
 ];
 
 const PAGE_SIZE = 30;
@@ -54,6 +68,7 @@ function TestsPageContent() {
   const [diseaseLabel, setDiseaseLabel] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [fastingFilter, setFastingFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const [selectedTests, setSelectedTests] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -135,6 +150,12 @@ function TestsPageContent() {
       );
     }
 
+    if (fastingFilter === "required") {
+      result = result.filter((test) => test.fastingRequired);
+    } else if (fastingFilter === "not-required") {
+      result = result.filter((test) => !test.fastingRequired);
+    }
+
     result.sort((a, b) => {
       if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "price-low") return a.price - b.price;
@@ -143,12 +164,12 @@ function TestsPageContent() {
     });
 
     return result;
-  }, [activeCategory, searchQuery, sortBy, testsWithIcons]);
+  }, [activeCategory, searchQuery, fastingFilter, sortBy, testsWithIcons]);
 
   // Reset to first page whenever filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [activeCategory, searchQuery, fastingFilter, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTests.length / PAGE_SIZE));
 
@@ -211,62 +232,61 @@ function TestsPageContent() {
             }
           />
 
-          {/* Category chips — phones and tablets */}
-          <div className="scrollbar-hide -mx-4 mt-7 overflow-x-auto px-4 lg:hidden">
-            <div className="flex w-max gap-2">
-              {CATEGORIES.map((category) => (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-[13px] font-medium transition ${
-                    activeCategory === category.id
-                      ? "bg-clinical-600 text-white"
-                      : "border border-line bg-surface text-ink-600"
-                  }`}
+          {/* Filter bar — search + category chips, top of page, every breakpoint */}
+          <div className="card mt-7 overflow-hidden">
+            <div className="flex flex-col gap-3 border-b border-line p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
+              <div className="relative w-full sm:max-w-xs">
+                <svg
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
-                  {category.name}
-                </button>
-              ))}
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search tests…"
+                  aria-label="Search tests"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded-md border border-line bg-paper py-2 pl-9 pr-3 text-sm text-ink-800 placeholder:text-ink-400 focus:border-clinical-500 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-clinical-100"
+                />
+              </div>
+              <div className="scrollbar-hide -mx-3 flex gap-2 overflow-x-auto px-3 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+                {CATEGORIES.map((category) => (
+                  <button
+                    key={category.id}
+                    type="button"
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-[13px] font-medium transition ${
+                      activeCategory === category.id
+                        ? "bg-clinical-600 text-white"
+                        : "border border-line bg-surface text-ink-600 hover:border-clinical-200 hover:text-clinical-700"
+                    }`}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+
+              <select
+                value={fastingFilter}
+                onChange={(e) => setFastingFilter(e.target.value)}
+                aria-label="Filter by fasting requirement"
+                className="cursor-pointer rounded-md border border-line bg-paper px-3 py-2 text-[13px] text-ink-700 focus:border-clinical-500 focus:outline-none sm:shrink-0"
+              >
+                {FASTING_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:gap-8">
-            {/* Filters */}
-            <aside className="hidden w-56 shrink-0 lg:block">
-              <div className="card sticky top-28 overflow-hidden">
-                <div className="border-b border-line px-4 py-3">
-                  <h2 className="label">Filters</h2>
-                </div>
-                <div className="border-b border-line p-3">
-                  <input
-                    type="text"
-                    placeholder="Search tests…"
-                    aria-label="Search tests"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink-800 placeholder:text-ink-400 focus:border-clinical-500 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-clinical-100"
-                  />
-                </div>
-                <div className="p-2">
-                  {CATEGORIES.map((category) => (
-                    <button
-                      key={category.id}
-                      type="button"
-                      onClick={() => setActiveCategory(category.id)}
-                      className={`block w-full rounded-md px-3 py-2 text-left text-[13px] font-medium transition ${
-                        activeCategory === category.id
-                          ? "bg-clinical-50 text-clinical-700"
-                          : "text-ink-600 hover:bg-paper"
-                      }`}
-                    >
-                      {category.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </aside>
-
+          <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:gap-8">
             {/* Results */}
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-surface px-4 py-2.5">
@@ -304,65 +324,90 @@ function TestsPageContent() {
                   </p>
                 </div>
               ) : (
-                <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {paginatedTests.map((item) => {
-                    const isSelected = Boolean(
-                      selectedTests.find((t) => t.id === item.id),
-                    );
-                    return (
-                      <li key={item.id}>
-                        <button
-                          type="button"
-                          onClick={() => toggleTest(item)}
-                          aria-pressed={isSelected}
-                          className={`flex w-full items-center gap-3 rounded-lg border bg-surface p-3 text-left transition ${
-                            isSelected
-                              ? "border-clinical-500 ring-1 ring-clinical-500"
-                              : "border-line hover:border-clinical-200 hover:shadow-2"
-                          }`}
-                        >
-                          <span
-                            className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md ${
-                              isSelected ? "bg-clinical-100" : "bg-paper"
-                            }`}
-                          >
-                            <TestIconView test={item} size={24} />
-                          </span>
-
-                          <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[13px] font-semibold text-ink-900">
-                              {item.text}
-                            </span>
-                            <span className="label mt-0.5 block">
-                              {item.category}
-                            </span>
-                          </span>
-
-                          <span className="flex shrink-0 flex-col items-end gap-1.5">
-                            <span className="mono text-[13px] font-semibold text-ink-900">
-                              Rs {item.price.toLocaleString("en-IN")}
-                            </span>
-                            <span
-                              className={`flex h-4 w-4 items-center justify-center rounded-xs border transition ${
-                                isSelected
-                                  ? "border-clinical-600 bg-clinical-600 text-white"
-                                  : "border-line-strong text-transparent"
+                <div className="mt-4 overflow-hidden rounded-lg border border-line bg-surface">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="border-b border-line bg-surface-sunk">
+                          <th className="w-11 px-3 py-2.5" scope="col">
+                            <span className="sr-only">Select</span>
+                          </th>
+                          <th className="label px-3 py-2.5" scope="col">Test</th>
+                          <th className="label px-3 py-2.5 text-right" scope="col">Price</th>
+                          <th className="label hidden px-3 py-2.5 sm:table-cell" scope="col">Category</th>
+                          <th className="label hidden px-3 py-2.5 md:table-cell" scope="col">Sample</th>
+                          <th className="label hidden px-3 py-2.5 lg:table-cell" scope="col">Fasting</th>
+                          <th className="label hidden px-3 py-2.5 lg:table-cell" scope="col">Report</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-line">
+                        {paginatedTests.map((item) => {
+                          const isSelected = Boolean(
+                            selectedTests.find((t) => t.id === item.id),
+                          );
+                          const tone = categoryTone(item.category);
+                          return (
+                            <tr
+                              key={item.id}
+                              onClick={() => toggleTest(item)}
+                              aria-selected={isSelected}
+                              className={`cursor-pointer transition-colors ${
+                                isSelected ? "bg-clinical-50" : "hover:bg-paper"
                               }`}
-                              aria-hidden="true"
                             >
-                              <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </span>
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                              <td className="px-3 py-2.5">
+                                <span
+                                  className={`flex h-4 w-4 items-center justify-center rounded-xs border transition ${
+                                    isSelected
+                                      ? "border-clinical-600 bg-clinical-600 text-white"
+                                      : "border-line-strong text-transparent"
+                                  }`}
+                                  aria-hidden="true"
+                                >
+                                  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                </span>
+                              </td>
+                              <td className="px-3 py-2.5">
+                                <div className="flex items-center gap-2.5">
+                                  <span
+                                    className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md ${TONE_TILE_BG[tone]}`}
+                                  >
+                                    <TestIconView test={item} size={18} />
+                                  </span>
+                                  <span className="truncate text-[13px] font-semibold text-ink-900">
+                                    {item.text}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="mono whitespace-nowrap px-3 py-2.5 text-right text-[13px] font-semibold text-ink-900">
+                                Rs {item.price.toLocaleString("en-IN")}
+                              </td>
+                              <td className="hidden px-3 py-2.5 sm:table-cell">
+                                <span className={categoryChipClass(item.category)}>
+                                  {item.category}
+                                </span>
+                              </td>
+                              <td className="hidden whitespace-nowrap px-3 py-2.5 text-[13px] text-ink-600 md:table-cell">
+                                {item.sampleType}
+                              </td>
+                              <td className="hidden whitespace-nowrap px-3 py-2.5 text-[13px] text-ink-600 lg:table-cell">
+                                {item.fastingRequired ? "Required" : "Not required"}
+                              </td>
+                              <td className="mono hidden whitespace-nowrap px-3 py-2.5 text-[12px] text-ink-600 lg:table-cell">
+                                {item.reportTime}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               )}
 
-              {filteredTests.length > PAGE_SIZE && (
+              {filteredTests.length > 0 && (
                 <nav
                   className="mt-6 flex flex-col items-center justify-between gap-3 rounded-md border border-line bg-surface px-4 py-3 sm:flex-row"
                   aria-label="Pagination"

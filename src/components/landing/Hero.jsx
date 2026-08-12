@@ -211,13 +211,17 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* Colour wash: cyan light from the right, teal lift at the base */}
+      {/* Colour wash: cyan light from the right, teal lift at the base, a violet lift behind the specimen card */}
       <div
         className="absolute -right-24 top-[-30%] h-[36rem] w-[36rem] rounded-full bg-clinical-500/35 blur-[120px]"
         aria-hidden="true"
       />
       <div
         className="absolute -left-32 bottom-[-40%] h-[30rem] w-[30rem] rounded-full bg-assay-600/25 blur-[130px]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute right-0 bottom-[-20%] h-[24rem] w-[24rem] rounded-full bg-bloom-600/25 blur-[130px]"
         aria-hidden="true"
       />
 

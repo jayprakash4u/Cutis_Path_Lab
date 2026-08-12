@@ -60,6 +60,14 @@
   --flag-300: 243 163 123; /* #F3A37B */
   --flag-100: 252 233 222; /* #FCE9DE */
 
+  /* Bloom — the fourth working colour. Referring clinicians, reviews,
+     specialities; anywhere the site needs a second accent besides
+     clinical blue so it doesn't read as a two-tone brochure. */
+  --bloom-700: 91 33 148; /* #5B2194 */
+  --bloom-600: 124 58 205; /* #7C3ACD */
+  --bloom-300: 196 173 232; /* #C4ADE8 */
+  --bloom-100: 237 229 250; /* #EDE5FA */
+
   /* Radii — modest. Precision reads more clinical than roundness. */
   --r-xs: 3px;
   --r-sm: 5px;
@@ -265,6 +273,10 @@
 
   .chip-flag {
     @apply chip bg-flag-100 text-flag-700;
+  }
+
+  .chip-bloom {
+    @apply chip bg-bloom-100 text-bloom-700;
   }
 
   .chip-quiet {

@@ -64,6 +64,12 @@ const config: Config = {
           600: t("--flag-600"),
           700: t("--flag-700"),
         },
+        bloom: {
+          100: t("--bloom-100"),
+          300: t("--bloom-300"),
+          600: t("--bloom-600"),
+          700: t("--bloom-700"),
+        },
         // `sky-*` is used across every interior page and the admin panel.
         // Remapping it onto the clinical ramp moves the whole site to the new
         // palette without touching those files.

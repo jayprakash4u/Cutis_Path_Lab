@@ -87,7 +87,9 @@ export default function PopularTestsPackages() {
                 <article
                   key={`${item.kind}-${item.id}`}
                   style={cardWidthStyle}
-                  className={`card card-hover flex flex-col ${cardClassName}`}
+                  className={`card card-hover flex flex-col border-t-[3px] ${
+                    item.kind === "package" ? "border-t-assay-600" : "border-t-clinical-600"
+                  } ${cardClassName}`}
                 >
                   <div className="border-b border-line px-4 py-3">
                     <div className="flex items-center justify-between gap-2">

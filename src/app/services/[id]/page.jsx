@@ -10,25 +10,32 @@ import { services } from "@/data/staticData";
 
 const WHAT_TO_EXPECT = [
   {
-    title: "Sample Collection",
+    title: "Sample collection",
     desc: "Comfortable collection at the lab or via home visit when available.",
   },
   {
-    title: "Laboratory Analysis",
+    title: "Laboratory analysis",
     desc: "Processed with calibrated equipment and validated protocols.",
   },
   {
-    title: "Clear Reports",
+    title: "Clear reporting",
     desc: "Results reviewed by specialists and delivered promptly.",
   },
 ];
 
 const HIGHLIGHTS = [
-  "Home collection available",
-  "Reports in 24–48 hours",
-  "Specialist reviewed",
-  "Certified laboratory",
+  { text: "Home collection available", tone: "clinical" },
+  { text: "Reports in 24–48 hours", tone: "assay" },
+  { text: "Specialist reviewed", tone: "bloom" },
+  { text: "Certified laboratory", tone: "flag" },
 ];
+
+const DOT_TONE = {
+  clinical: "bg-clinical-600",
+  assay: "bg-assay-600",
+  bloom: "bg-bloom-600",
+  flag: "bg-flag-600",
+};
 
 export default function ServiceDetailPage() {
   const params = useParams();
@@ -37,21 +44,16 @@ export default function ServiceDetailPage() {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen bg-paper">
         <Navbar />
-        <main className="flex-1 flex items-center justify-center px-6 pt-24">
-          <div className="text-center max-w-md">
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">
-              Service Not Found
-            </h1>
-            <p className="text-slate-600 mb-5">
+        <main className="pt-below-nav-tall">
+          <div className="shell py-20 text-center">
+            <h1 className="sec-title">Service not found</h1>
+            <p className="mt-2 text-sm text-ink-500">
               The service you are looking for does not exist or was removed.
             </p>
-            <Link
-              href="/services"
-              className="inline-flex px-5 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700"
-            >
-              Back to Services
+            <Link href="/services" className="btn-primary mt-6 inline-flex">
+              Back to services
             </Link>
           </div>
         </main>
@@ -67,137 +69,119 @@ export default function ServiceDetailPage() {
   const enquireHref = `/contact?service=${encodeURIComponent(service.name)}`;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-paper">
       <Navbar />
 
-      <main className="pt-16 sm:pt-20 lg:pt-[7.5rem]">
-        <section className="border-b border-slate-100 bg-white">
-          <div className="max-w-4xl mx-auto px-6 py-10 md:py-14">
+      <main className="pt-below-nav-tall pb-16">
+        <section className="border-b border-line bg-surface">
+          <div className="shell py-10 md:py-14">
             <Link
               href="/services"
-              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-sky-600 mb-8 transition-colors"
+              className="mb-8 inline-flex items-center gap-1.5 text-[13px] text-ink-500 transition-colors hover:text-clinical-700"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               All services
             </Link>
 
             <div className="flex items-start gap-4 md:gap-5">
-              <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-sky-50 flex items-center justify-center">
-                <IconComponent size={40} className="w-10 h-10" />
-              </div>
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-clinical-50 md:h-16 md:w-16">
+                <IconComponent size={36} className="h-9 w-9" />
+              </span>
               <div className="min-w-0 flex-1">
-                <h1 className="text-2xl md:text-4xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-2xl font-bold text-ink-900 md:text-3xl">
                   {service.name}
                 </h1>
-                <p className="mt-3 text-sm md:text-base text-slate-600 leading-relaxed max-w-2xl">
+                <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-600">
                   {service.description}
                 </p>
               </div>
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href={enquireHref}
-                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700 transition-colors"
-              >
-                Book / Enquire
+              <Link href={enquireHref} className="btn-primary">
+                Book / enquire
               </Link>
-              <a
-                href="tel:+9779825849435"
-                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:border-sky-500 hover:text-sky-700 transition-colors"
-              >
-                Call lab
+              <a href="tel:+9779825849435" className="btn-outline">
+                Call the lab
               </a>
             </div>
 
-            <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
+            <ul className="mono mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[11px] uppercase tracking-[0.12em] text-ink-500">
               {HIGHLIGHTS.map((item) => (
-                <li
-                  key={item}
-                  className="text-xs md:text-sm text-slate-500 flex items-center gap-1.5"
-                >
-                  <span className="text-sky-600" aria-hidden="true">
-                    ●
-                  </span>
-                  {item}
+                <li key={item.text} className="flex items-center gap-2">
+                  <span className={`h-1.5 w-1.5 rounded-full ${DOT_TONE[item.tone]}`} aria-hidden="true" />
+                  {item.text}
                 </li>
               ))}
             </ul>
           </div>
         </section>
 
-        <section className="bg-slate-50/80">
-          <div className="max-w-4xl mx-auto px-6 py-10 md:py-12 space-y-10">
+        <section className="section bg-paper">
+          <div className="shell max-w-3xl space-y-10">
             <div>
-              <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-3">
-                About this service
-              </h2>
-              <p className="text-sm md:text-base text-slate-600 leading-relaxed">
-                Our {service.name} service is delivered by trained laboratory professionals
-                using validated methods. Reports are reviewed before release so you and your
-                clinician get clear, reliable findings for diagnosis and follow-up care.
+              <p className="eyebrow">About this service</p>
+              <div className="mt-2.5 flex items-center gap-4">
+                <h2 className="sec-title">What it covers</h2>
+                <span className="sec-rule" aria-hidden="true" />
+              </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-ink-600">
+                Our {service.name} service is delivered by trained laboratory
+                professionals using validated methods. Reports are reviewed
+                before release so you and your clinician get clear, reliable
+                findings for diagnosis and follow-up care.
               </p>
             </div>
 
             <div>
-              <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-5">
-                What to expect
-              </h2>
-              <ol className="space-y-4">
+              <p className="eyebrow">Process</p>
+              <div className="mt-2.5 flex items-center gap-4">
+                <h2 className="sec-title">What to expect</h2>
+                <span className="sec-rule" aria-hidden="true" />
+              </div>
+              <ol className="mt-5 space-y-px overflow-hidden rounded-lg border border-line bg-line">
                 {WHAT_TO_EXPECT.map((item, idx) => (
-                  <li key={item.title} className="flex gap-4">
-                    <span className="shrink-0 w-8 h-8 rounded-full bg-sky-600 text-white text-sm font-bold flex items-center justify-center">
-                      {idx + 1}
+                  <li key={item.title} className="flex gap-4 bg-surface p-5">
+                    <span className="mono flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-clinical-100 text-sm font-bold text-clinical-700">
+                      {String(idx + 1).padStart(2, "0")}
                     </span>
                     <div>
-                      <p className="font-semibold text-slate-900 text-sm md:text-base">
+                      <p className="text-[0.9375rem] font-semibold text-ink-900">
                         {item.title}
                       </p>
-                      <p className="text-sm text-slate-500 mt-0.5">{item.desc}</p>
+                      <p className="mt-0.5 text-[13px] text-ink-500">{item.desc}</p>
                     </div>
                   </li>
                 ))}
               </ol>
             </div>
 
-            <div>
-              <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-3">
+            <div className="card border-t-[3px] border-t-bloom-600 p-5 sm:p-6">
+              <h2 className="text-[0.9375rem] font-semibold text-ink-900">
                 When to consider this service
               </h2>
-              <p className="text-sm md:text-base text-slate-600 leading-relaxed">
-                {service.name} is typically recommended based on clinical presentation, family
-                history, or as part of a diagnostic workup. Speak with your doctor to confirm
-                if this is appropriate for you.
+              <p className="mt-2 text-[13px] leading-relaxed text-ink-600">
+                {service.name} is typically recommended based on clinical
+                presentation, family history, or as part of a diagnostic
+                workup. Speak with your doctor to confirm if this is
+                appropriate for you.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="bg-white border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-6 py-10 md:py-12">
-            <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-6">
-              Related services
-            </h2>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+        <section className="section-tight border-t border-line bg-surface">
+          <div className="shell">
+            <p className="eyebrow">Explore more</p>
+            <div className="mt-2.5 flex items-center gap-4">
+              <h2 className="sec-title">Related services</h2>
+              <span className="sec-rule" aria-hidden="true" />
+            </div>
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
               {relatedServices.map((related) => (
-                <ServiceIconCard
-                  key={related.id}
-                  service={related}
-                  descriptionMax={48}
-                />
+                <ServiceIconCard key={related.id} service={related} descriptionMax={48} />
               ))}
             </div>
           </div>

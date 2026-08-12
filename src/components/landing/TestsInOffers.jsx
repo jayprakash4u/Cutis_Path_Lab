@@ -91,7 +91,7 @@ export default function TestsInOffers() {
                 <article
                   key={offer.id}
                   style={cardWidthStyle}
-                  className={`card card-hover flex flex-col ${cardClassName}`}
+                  className={`card card-hover flex flex-col border-t-[3px] border-t-flag-600 ${cardClassName}`}
                 >
                   <div className="flex items-start justify-between gap-2 border-b border-line px-4 py-3">
                     <div className="min-w-0">

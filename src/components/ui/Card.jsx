@@ -1,5 +1,7 @@
 "use client";
 
+import { categoryChipClass } from "@/lib/categoryTone";
+
 /** Contact / info blocks (contact page). */
 export const InfoCard = ({ title, content, icon = null, className = "" }) => {
   return (
@@ -50,7 +52,7 @@ export const PackageCard = ({
       className={`card card-hover flex flex-col overflow-hidden ${className}`}
     >
       <div className="border-b border-line px-4 py-3">
-        {badge && <span className="chip-clinical">{badge}</span>}
+        {badge && <span className={categoryChipClass(badge)}>{badge}</span>}
         <h3
           className={`line-clamp-2 text-sm font-semibold text-ink-900 ${
             badge ? "mt-2" : ""

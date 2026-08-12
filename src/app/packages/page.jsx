@@ -11,6 +11,7 @@ import PagePosterHero from "@/components/sections/PagePosterHero";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { PackageCard } from "@/components/ui";
 import { packages } from "@/data/landingData";
+import { categoryChipClass } from "@/lib/categoryTone";
 
 export default function PackagesPage() {
   const router = useRouter();
@@ -81,7 +82,9 @@ export default function PackagesPage() {
           >
             <header className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
               <div>
-                <span className="chip-clinical">{selectedPackage.category}</span>
+                <span className={categoryChipClass(selectedPackage.category)}>
+                  {selectedPackage.category}
+                </span>
                 <h2 className="mt-2.5 text-xl font-bold text-ink-900">
                   {selectedPackage.name}
                 </h2>

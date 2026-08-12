@@ -1,80 +1,79 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { tests } from "@/data/staticData";
-import Link from "next/link";
+import { categoryTone } from "@/lib/categoryTone";
+import { TestIconView } from "@/lib/testIcons";
 
-// Icon renderer using test-specific icons from staticData
-const TestIcon = ({ iconPath, className }) => {
-  if (!iconPath) {
-    return (
-      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-      </svg>
-    );
-  }
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-      <path d={iconPath} />
-    </svg>
-  );
+const TABS = [
+  { id: "overview", label: "Overview" },
+  { id: "details", label: "Test details" },
+  { id: "preparation", label: "Preparation" },
+];
+
+const TILE_BG = {
+  clinical: "bg-clinical-100 text-clinical-700",
+  assay: "bg-assay-100 text-assay-700",
+  bloom: "bg-bloom-100 text-bloom-700",
+  flag: "bg-flag-100 text-flag-700",
 };
 
-// Icon components
-const icons = {
-  flask: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
-  book: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17s4.5 10.747 10 10.747c5.5 0 10-4.754 10-10.747 0-5.002-4.5-10.747-10-10.747z" />
-    </svg>
-  ),
-  clock: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
-  check: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
-  info: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
+// Tailwind can't see classes built with template-literal interpolation
+// (`border-${tone}-600`), so every tone variant is spelled out literally here.
+const TONE_CLASSES = {
+  clinical: {
+    tab: "border-clinical-600 text-clinical-700",
+    borderT: "border-t-clinical-600",
+    text700: "text-clinical-700",
+    bgLight: "bg-clinical-50",
+    bg600: "bg-clinical-600",
+  },
+  assay: {
+    tab: "border-assay-600 text-assay-700",
+    borderT: "border-t-assay-600",
+    text700: "text-assay-700",
+    bgLight: "bg-assay-100",
+    bg600: "bg-assay-600",
+  },
+  bloom: {
+    tab: "border-bloom-600 text-bloom-700",
+    borderT: "border-t-bloom-600",
+    text700: "text-bloom-700",
+    bgLight: "bg-bloom-100",
+    bg600: "bg-bloom-600",
+  },
+  flag: {
+    tab: "border-flag-600 text-flag-700",
+    borderT: "border-t-flag-600",
+    text700: "text-flag-700",
+    bgLight: "bg-flag-100",
+    bg600: "bg-flag-600",
+  },
 };
 
 export default function TestDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Find the test
   const test = tests.find((t) => t.id === params.id);
 
   if (!test) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-paper">
         <Navbar />
-        <main className="pt-[80px] lg:pt-[88px]">
-          <div className="container mx-auto px-4 sm:px-6 py-20 text-center">
-            <h1 className="text-3xl font-bold text-slate-900 mb-4">Test Not Found</h1>
-            <p className="text-slate-600 mb-8">
-              The test you're looking for doesn't exist.
+        <main className="pt-below-nav-tall">
+          <div className="shell py-20 text-center">
+            <h1 className="sec-title">Test not found</h1>
+            <p className="mt-2 text-sm text-ink-500">
+              The test you are looking for does not exist.
             </p>
-            <Link href="/tests">
-              <button className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors">
-                Back to Tests
-              </button>
+            <Link href="/tests" className="btn-primary mt-6 inline-flex">
+              Back to tests
             </Link>
           </div>
         </main>
@@ -83,198 +82,154 @@ export default function TestDetailPage() {
     );
   }
 
+  const tone = categoryTone(test.category);
+  const toneClasses = TONE_CLASSES[tone];
   const discount = Math.round(
-    ((test.originalPrice - test.price) / test.originalPrice) * 100
+    ((test.originalPrice - test.price) / test.originalPrice) * 100,
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-paper">
       <Navbar />
-      <main className="pt-[80px] lg:pt-[88px]">
-        {/* Breadcrumb */}
-        <div className="bg-slate-50 border-b border-slate-200">
-          <div className="container mx-auto px-4 sm:px-6 py-4">
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Link href="/tests" className="hover:text-sky-600 transition-colors">
-                Tests
-              </Link>
-              <span className="text-slate-400">/</span>
-              <span className="text-slate-900 font-medium">{test.name}</span>
-            </div>
+      <main className="pt-below-nav-tall pb-16">
+        <div className="border-b border-line bg-surface">
+          <div className="shell flex items-center gap-2 py-4 text-[13px] text-ink-500">
+            <Link href="/tests" className="hover:text-clinical-700">
+              Tests
+            </Link>
+            <span aria-hidden="true">/</span>
+            <span className="font-medium text-ink-900">{test.name}</span>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Left Column - Test Information */}
+        <div className="shell py-10 lg:py-14">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
+            {/* Left column */}
             <div className="lg:col-span-2">
-              {/* Header */}
-              <div className="mb-8">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-sky-100 text-sky-700 mb-4">
-                      {test.category}
-                    </span>
-                    <h1 className="text-4xl font-bold text-slate-900">{test.name}</h1>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    {test.icon && (
-                      <div className="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center">
-                        <TestIcon iconPath={test.icon} className="w-10 h-10 text-sky-600" />
-                      </div>
-                    )}
-                    {test.popular && (
-                      <span className="text-4xl">⭐</span>
-                    )}
-                  </div>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className={`chip-${tone}`}>{test.category}</span>
+                  <h1 className="mt-3 text-2xl font-bold text-ink-900 sm:text-3xl">
+                    {test.name}
+                  </h1>
                 </div>
-                <p className="text-lg text-slate-600 leading-relaxed">
-                  {test.description}
-                </p>
+                <span
+                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-md ${TILE_BG[tone]}`}
+                >
+                  <TestIconView test={test} size={28} />
+                </span>
               </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-ink-600">
+                {test.description}
+              </p>
 
               {/* Tabs */}
-              <div className="mb-8 border-b border-slate-200">
-                <div className="flex gap-6">
-                  {[
-                    { id: "overview", label: "Overview" },
-                    { id: "details", label: "Test Details" },
-                    { id: "preparation", label: "Preparation" },
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`pb-4 font-semibold transition-all ${
-                        activeTab === tab.id
-                          ? "border-b-2 border-sky-600 text-sky-600"
-                          : "text-slate-600 hover:text-slate-900"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+              <div className="mt-8 flex gap-6 border-b border-line">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`-mb-px border-b-2 pb-3 text-[13px] font-semibold transition-colors ${
+                      activeTab === tab.id
+                        ? toneClasses.tab
+                        : "border-transparent text-ink-500 hover:text-ink-800"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
 
-              {/* Tab Content */}
-              <div>
+              <div className="mt-6">
                 {activeTab === "overview" && (
-                  <div className="space-y-6">
-                    <div className="bg-gradient-to-br from-sky-50 to-sky-100/50 rounded-2xl p-6 border border-sky-200">
-                      <h3 className="text-lg font-bold text-slate-900 mb-4">What is this test?</h3>
-                      <p className="text-slate-700 leading-relaxed">
-                        {test.description} This test provides essential information about your
-                        health status and helps healthcare professionals make informed decisions
-                        regarding your medical care.
+                  <div className="space-y-4">
+                    <div className={`card border-t-[3px] p-5 sm:p-6 ${toneClasses.borderT}`}>
+                      <h3 className="text-[0.9375rem] font-semibold text-ink-900">
+                        What this test measures
+                      </h3>
+                      <p className="mt-2 text-[13px] leading-relaxed text-ink-600">
+                        {test.description} Results are reported with a reference
+                        interval alongside the value, so it is clear where a
+                        result sits before your clinician reviews it.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <dl className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
                       {[
-                        { label: "Sample Type", value: test.sampleType, icon: "flask" },
-                        { label: "Fasting Required", value: test.fastingRequired ? "Yes" : "No", icon: "check" },
-                        { label: "Report Delivery Time", value: test.reportTime, icon: "clock" },
-                        { label: "Number of Parameters", value: test.parameters, icon: "book" },
-                      ].map((item, index) => (
-                        <div
-                          key={index}
-                          className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-all"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="text-sky-600">{icons[item.icon]}</div>
-                            <div className="flex-1">
-                              <p className="text-sm text-slate-600 font-medium mb-1">
-                                {item.label}
-                              </p>
-                              <p className="text-base font-semibold text-slate-900">
-                                {item.value}
-                              </p>
-                            </div>
-                          </div>
+                        ["Sample type", test.sampleType],
+                        ["Fasting required", test.fastingRequired ? "Yes" : "No"],
+                        ["Report delivery", test.reportTime],
+                        ["Parameters", test.parameters],
+                      ].map(([k, v]) => (
+                        <div key={k} className="bg-surface p-4">
+                          <dt className="label">{k}</dt>
+                          <dd className="mono mt-1.5 text-sm font-semibold text-ink-900">
+                            {v}
+                          </dd>
                         </div>
                       ))}
-                    </div>
+                    </dl>
                   </div>
                 )}
 
                 {activeTab === "details" && (
-                  <div className="space-y-6">
-                    <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                      <h3 className="text-lg font-bold text-slate-900 mb-4">Test Components</h3>
-                      <p className="text-slate-600 mb-4">
-                        This comprehensive test includes <span className="font-semibold text-sky-600">{test.parameters}</span> different parameters to provide a complete assessment.
+                  <div className="space-y-4">
+                    <div className="card p-5 sm:p-6">
+                      <h3 className="text-[0.9375rem] font-semibold text-ink-900">
+                        Test components
+                      </h3>
+                      <p className="mt-2 text-[13px] text-ink-600">
+                        This panel includes{" "}
+                        <span className={`font-semibold ${toneClasses.text700}`}>
+                          {test.parameters}
+                        </span>{" "}
+                        parameter{test.parameters > 1 ? "s" : ""} in a single
+                        run.
                       </p>
-                      <ul className="space-y-2 px-4 md:px-0">
-                        {[...Array(Math.min(test.parameters, 8))].map((_, i) => (
-                          <li key={i} className="flex items-center gap-3 text-slate-700 min-h-[44px]">
-                            <span className="w-2 h-2 rounded-full bg-sky-500 flex-shrink-0 mt-1"></span>
-                            Parameter {i + 1}
-                          </li>
-                        ))}
-                        {test.parameters > 8 && (
-                          <li className="text-slate-600 font-medium min-h-[44px]">
-                            + {test.parameters - 8} more parameters
-                          </li>
-                        )}
-                      </ul>
                     </div>
-
-                    <div className="bg-blue-50 rounded-2xl border border-blue-200 p-6 flex gap-4">
-                      <div className="text-blue-600 flex-shrink-0">{icons.info}</div>
-                      <div>
-                        <h4 className="font-semibold text-blue-900 mb-2">Clinical Significance</h4>
-                        <p className="text-blue-800">
-                          This test helps in early detection of various health conditions and
-                          monitoring of existing medical conditions. Regular testing is recommended
-                          as part of preventive healthcare.
-                        </p>
-                      </div>
+                    <div className="card border-l-[3px] border-l-clinical-600 p-5 sm:p-6">
+                      <h4 className="text-[0.9375rem] font-semibold text-ink-900">
+                        Clinical significance
+                      </h4>
+                      <p className="mt-2 text-[13px] leading-relaxed text-ink-600">
+                        This test supports early detection and ongoing
+                        monitoring of related conditions. Regular testing is
+                        recommended as part of preventive care where your
+                        clinician advises it.
+                      </p>
                     </div>
                   </div>
                 )}
 
                 {activeTab === "preparation" && (
-                  <div className="space-y-6">
-                    <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                      <h3 className="text-lg font-bold text-slate-900 mb-4">Pre-Test Preparation</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold text-slate-900 mb-2">Fasting Instructions</h4>
-                          <p className="text-slate-700">
-                            {test.fastingRequired
-                              ? "An 8-12 hour fast is required before this test. Please avoid food and beverages (except water) after midnight."
-                              : "No fasting is required for this test. You may eat and drink normally before your appointment."}
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-slate-900 mb-2">Sample Collection</h4>
-                          <p className="text-slate-700">
-                            A {test.sampleType.toLowerCase()} sample will be collected by our trained phlebotomist.
-                            Please wear comfortable clothing that allows easy access to your arms.
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-slate-900 mb-2">What to Bring</h4>
-                          <ul className="space-y-2 text-slate-700 px-4 md:px-0">
-                            <li className="flex items-center gap-2 min-h-[44px]">
-                              <span className="text-sky-600 flex-shrink-0">✓</span> Valid government-issued ID
-                            </li>
-                            <li className="flex items-center gap-2 min-h-[44px]">
-                              <span className="text-sky-600 flex-shrink-0">✓</span> Health insurance card (if applicable)
-                            </li>
-                            <li className="flex items-center gap-2 min-h-[44px]">
-                              <span className="text-sky-600 flex-shrink-0">✓</span> Any relevant medical records
-                            </li>
-                          </ul>
-                        </div>
+                  <div className="space-y-4">
+                    <div className="card p-5 sm:p-6">
+                      <h3 className="text-[0.9375rem] font-semibold text-ink-900">
+                        Before your appointment
+                      </h3>
+                      <div className="mt-3 space-y-3 text-[13px] leading-relaxed text-ink-600">
+                        <p>
+                          <span className="font-semibold text-ink-900">Fasting — </span>
+                          {test.fastingRequired
+                            ? "An 8–12 hour fast is required. Water is fine during that window."
+                            : "No fasting is required for this test."}
+                        </p>
+                        <p>
+                          <span className="font-semibold text-ink-900">Sample — </span>
+                          A {test.sampleType.toLowerCase()} sample is collected by
+                          a trained phlebotomist, at the lab or at your door.
+                        </p>
                       </div>
                     </div>
-
-                    <div className="bg-emerald-50 rounded-2xl border border-emerald-200 p-6">
-                      <h3 className="font-semibold text-emerald-900 mb-3">✓ Report Delivery</h3>
-                      <p className="text-emerald-800">
-                        Your detailed test report will be available within <span className="font-semibold">{test.reportTime}</span> and will be sent via email. You can also access it through your patient portal.
+                    <div className="card border-t-[3px] border-t-assay-600 p-5 sm:p-6">
+                      <span className="chip-assay">Report delivery</span>
+                      <p className="mt-2 text-[13px] leading-relaxed text-ink-600">
+                        Your report is delivered in{" "}
+                        <span className="font-semibold text-ink-900">
+                          {test.reportTime}
+                        </span>{" "}
+                        by email or WhatsApp.
                       </p>
                     </div>
                   </div>
@@ -282,122 +237,121 @@ export default function TestDetailPage() {
               </div>
             </div>
 
-            {/* Right Column - Booking Card */}
+            {/* Booking sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-sky-50 to-sky-100/50 rounded-2xl border border-sky-200 p-6 sticky top-[120px]">
-                {/* Price Section */}
-                <div className="mb-6 pb-6 border-b border-sky-200">
-                  <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-3xl font-bold text-sky-600">₹{test.price}</span>
-                    <span className="text-lg text-slate-500 line-through">₹{test.originalPrice}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
-                      Save ₹{test.originalPrice - test.price} ({discount}%)
+              <div className="card sticky top-28 overflow-hidden">
+                <div className={`border-b border-line px-5 py-3 ${toneClasses.bgLight}`}>
+                  <p className="label">Price</p>
+                </div>
+                <div className="p-5">
+                  <div className="flex items-baseline gap-2">
+                    <span className="mono text-2xl font-bold text-ink-900">
+                      Rs {test.price}
+                    </span>
+                    <span className="mono text-sm text-ink-400 line-through">
+                      Rs {test.originalPrice}
                     </span>
                   </div>
-                </div>
+                  <span className="chip-flag mt-2 inline-flex">
+                    Save {discount}%
+                  </span>
 
-                {/* Quantity Selector */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-slate-900 mb-3">
-                    Quantity
-                  </label>
-                  <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 text-sky-600 hover:bg-sky-50 transition-colors"
-                    >
-                      −
-                    </button>
-                    <span className="flex-1 text-center font-semibold text-slate-900">
-                      {quantity}
+                  <div className="mt-5 flex items-center justify-between rounded-md border border-line px-3 py-2">
+                    <span className="text-[13px] font-medium text-ink-700">
+                      Quantity
                     </span>
-                    <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 text-sky-600 hover:bg-sky-50 transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                {/* Total Price */}
-                <div className="mb-6 pb-6 border-b border-sky-200 bg-white rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-slate-600">Subtotal</span>
-                    <span className="font-semibold text-slate-900">
-                      ₹{(test.price * quantity).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm text-slate-600 mb-3">
-                    <span>Sample Collection Fee</span>
-                    <span>Free</span>
-                  </div>
-                  <div className="border-t border-slate-200 pt-3 flex justify-between items-center">
-                    <span className="font-semibold text-slate-900">Total</span>
-                    <span className="text-xl font-bold text-sky-600">
-                      ₹{(test.price * quantity).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-
-                {/* CTA Buttons */}
-                <div className="space-y-3">
-                  <button className="w-full bg-gradient-to-r from-sky-600 to-sky-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:from-sky-700 hover:to-sky-600 transition-all duration-300">
-                    Book This Test
-                  </button>
-                  <button className="w-full border-2 border-sky-600 text-sky-600 font-semibold py-3 rounded-lg hover:bg-sky-50 transition-colors">
-                    Add to Cart
-                  </button>
-                </div>
-
-                {/* Trust Badges */}
-                <div className="mt-6 space-y-3 pt-6 border-t border-sky-200">
-                  {[
-                    { icon: "✓", text: "ISO Certified Laboratory" },
-                    { icon: "✓", text: "Expert Phlebotomists" },
-                    { icon: "✓", text: "Fast & Accurate Results" },
-                  ].map((badge, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm text-slate-700">
-                      <span className="text-sky-600 font-bold">{badge.icon}</span>
-                      {badge.text}
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        className="flex h-7 w-7 items-center justify-center rounded-md border border-line text-ink-600 hover:border-clinical-500 hover:text-clinical-700"
+                      >
+                        −
+                      </button>
+                      <span className="mono w-5 text-center text-sm font-semibold text-ink-900">
+                        {quantity}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setQuantity((q) => q + 1)}
+                        className="flex h-7 w-7 items-center justify-center rounded-md border border-line text-ink-600 hover:border-clinical-500 hover:text-clinical-700"
+                      >
+                        +
+                      </button>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
+                    <span className="text-[13px] font-semibold text-ink-900">
+                      Total
+                    </span>
+                    <span className="mono text-lg font-bold text-ink-900">
+                      Rs {(test.price * quantity).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  <Link
+                    href={`/book?testIds=${encodeURIComponent(test.id)}`}
+                    className="btn-primary mt-5 w-full !py-3"
+                  >
+                    Book this test
+                  </Link>
+
+                  <ul className="mono mt-6 space-y-2 border-t border-line pt-5 text-[11px] uppercase tracking-[0.1em] text-ink-500">
+                    {["ISO certified laboratory", "Expert phlebotomists", "Fast, accurate results"].map(
+                      (item) => (
+                        <li key={item} className="flex items-center gap-2">
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${toneClasses.bg600}`}
+                            aria-hidden="true"
+                          />
+                          {item}
+                        </li>
+                      ),
+                    )}
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Related Tests Section */}
-        <div className="bg-slate-50 border-t border-slate-200 py-12 lg:py-16">
-          <div className="container mx-auto px-4 sm:px-6">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8">Related Tests</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {tests
-                .filter((t) => t.category === test.category && t.id !== test.id)
-                .slice(0, 3)
-                .map((relatedTest) => (
-                  <Link key={relatedTest.id} href={`/tests/${relatedTest.id}`}>
-                    <div className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-700 mb-4">
-                        {relatedTest.category}
-                      </span>
-                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-sky-600 transition-colors">
-                        {relatedTest.name}
-                      </h3>
-                      <p className="text-sm text-slate-600 mb-4">
-                        ₹{relatedTest.price}
-                      </p>
-                      <button className="text-sky-600 font-semibold text-sm hover:text-sky-700 transition-colors">
-                        View Details →
-                      </button>
-                    </div>
-                  </Link>
-                ))}
-            </div>
-          </div>
+          {/* Related tests */}
+          {(() => {
+            const related = tests
+              .filter((t) => t.category === test.category && t.id !== test.id)
+              .slice(0, 3);
+            if (related.length === 0) return null;
+            return (
+              <div className="mt-14 border-t border-line pt-10">
+                <h2 className="sec-title">Related tests</h2>
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  {related.map((relatedTest) => {
+                    const relatedTone = categoryTone(relatedTest.category);
+                    return (
+                      <Link
+                        key={relatedTest.id}
+                        href={`/tests/${relatedTest.id}`}
+                        className="card card-hover flex flex-col p-5"
+                      >
+                        <span className={`chip-${relatedTone}`}>
+                          {relatedTest.category}
+                        </span>
+                        <h3 className="mt-3 text-[0.9375rem] font-semibold text-ink-900">
+                          {relatedTest.name}
+                        </h3>
+                        <p className="mono mt-2 text-sm font-semibold text-ink-900">
+                          Rs {relatedTest.price}
+                        </p>
+                        <span className="mt-3 text-[13px] font-semibold text-clinical-700">
+                          View details →
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </main>
       <Footer />

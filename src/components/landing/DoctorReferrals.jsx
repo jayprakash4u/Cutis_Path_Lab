@@ -17,6 +17,18 @@ function initials(name) {
     .toUpperCase();
 }
 
+const REFERRAL_TONES = ["clinical", "assay", "bloom"];
+const AVATAR_TONE = {
+  clinical: "bg-clinical-100 text-clinical-700",
+  assay: "bg-assay-100 text-assay-700",
+  bloom: "bg-bloom-100 text-bloom-700",
+};
+const SPECIALTY_TONE = {
+  clinical: "text-clinical-700",
+  assay: "text-assay-700",
+  bloom: "text-bloom-700",
+};
+
 function RailButton({ direction, onClick, disabled = false }) {
   return (
     <button
@@ -84,34 +96,39 @@ export default function DoctorReferrals() {
             className={scrollClassName}
             style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {referrals.map((doctor) => (
-              <article
-                key={doctor.id}
-                style={cardWidthStyle}
-                className={`card card-hover flex h-full flex-col p-5 sm:p-6 ${cardClassName}`}
-              >
-                <div className="flex items-start gap-3.5">
-                  <span className="mono flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-clinical-50 text-sm font-semibold text-clinical-700">
-                    {initials(doctor.name)}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="text-[0.9375rem] font-semibold leading-tight text-ink-900">
-                      {doctor.name}
-                    </h3>
-                    <p className="mt-0.5 text-[13px] text-clinical-700">
-                      {doctor.specialization}
-                    </p>
-                    <p className="mt-0.5 text-xs text-ink-400">{doctor.hospital}</p>
+            {referrals.map((doctor, i) => {
+              const tone = REFERRAL_TONES[i % REFERRAL_TONES.length];
+              return (
+                <article
+                  key={doctor.id}
+                  style={cardWidthStyle}
+                  className={`card card-hover flex h-full flex-col p-5 sm:p-6 ${cardClassName}`}
+                >
+                  <div className="flex items-start gap-3.5">
+                    <span
+                      className={`mono flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-sm font-semibold ${AVATAR_TONE[tone]}`}
+                    >
+                      {initials(doctor.name)}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="text-[0.9375rem] font-semibold leading-tight text-ink-900">
+                        {doctor.name}
+                      </h3>
+                      <p className={`mt-0.5 text-[13px] ${SPECIALTY_TONE[tone]}`}>
+                        {doctor.specialization}
+                      </p>
+                      <p className="mt-0.5 text-xs text-ink-400">{doctor.hospital}</p>
+                    </div>
                   </div>
-                </div>
 
-                <blockquote className="mt-5 flex-1 border-t border-line pt-4 text-[13px] leading-relaxed text-ink-600">
-                  {doctor.quote}
-                </blockquote>
+                  <blockquote className="mt-5 flex-1 border-t border-line pt-4 text-[13px] leading-relaxed text-ink-600">
+                    {doctor.quote}
+                  </blockquote>
 
-                <p className="label mt-4">Referring since {doctor.since}</p>
-              </article>
-            ))}
+                  <p className="label mt-4">Referring since {doctor.since}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
 

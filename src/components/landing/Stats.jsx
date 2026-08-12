@@ -8,6 +8,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 const controls = [
   {
     title: "Pathologist review",
+    tone: "clinical",
     desc: "Every abnormal result is read by a consultant pathologist before it leaves the lab.",
     icon: (
       <path
@@ -20,6 +21,7 @@ const controls = [
   },
   {
     title: "Daily calibration",
+    tone: "assay",
     desc: "Analysers run internal quality controls each morning and are recalibrated against reference material.",
     icon: (
       <path
@@ -32,6 +34,7 @@ const controls = [
   },
   {
     title: "Tracked chain of custody",
+    tone: "bloom",
     desc: "Barcodes are applied at collection and scanned at every handover, so no sample is ever unaccounted for.",
     icon: (
       <path
@@ -44,6 +47,7 @@ const controls = [
   },
   {
     title: "Accredited methods",
+    tone: "flag",
     desc: "Testing follows NABL and ISO 15189 protocols, with documented procedures for each assay.",
     icon: (
       <path
@@ -89,16 +93,28 @@ export default function Stats() {
 
           {/* Hairline grid — the report's ruling, used structurally */}
           <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
-            {controls.map((c, i) => (
+            {controls.map((c) => (
               <div
                 key={c.title}
-                className="group bg-surface p-5 transition-colors duration-300 hover:bg-clinical-50 sm:p-6"
+                className={`group bg-surface p-5 transition-colors duration-300 sm:p-6 ${
+                  c.tone === "assay"
+                    ? "hover:bg-assay-100/40"
+                    : c.tone === "bloom"
+                      ? "hover:bg-bloom-100/50"
+                      : c.tone === "flag"
+                        ? "hover:bg-flag-100/50"
+                        : "hover:bg-clinical-50"
+                }`}
               >
                 <span
                   className={`flex h-10 w-10 items-center justify-center rounded-md ${
-                    i % 2 === 0
-                      ? "bg-clinical-100 text-clinical-700"
-                      : "bg-assay-100 text-assay-700"
+                    c.tone === "assay"
+                      ? "bg-assay-100 text-assay-700"
+                      : c.tone === "bloom"
+                        ? "bg-bloom-100 text-bloom-700"
+                        : c.tone === "flag"
+                          ? "bg-flag-100 text-flag-700"
+                          : "bg-clinical-100 text-clinical-700"
                   }`}
                 >
                   <svg

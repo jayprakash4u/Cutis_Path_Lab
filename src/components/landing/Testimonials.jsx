@@ -7,13 +7,20 @@ import {
   CAROUSEL_BREAKPOINTS,
 } from "@/lib/useFullCardCarousel";
 
-function Stars({ rating }) {
+const REVIEW_TONES = ["clinical", "assay", "bloom"];
+
+function Stars({ rating, tone = "clinical" }) {
+  const activeClass = {
+    clinical: "text-clinical-600",
+    assay: "text-assay-600",
+    bloom: "text-bloom-600",
+  }[tone];
   return (
     <div className="flex gap-0.5" aria-label={`${rating} out of 5`}>
       {[...Array(5)].map((_, i) => (
         <svg
           key={i}
-          className={`h-3.5 w-3.5 ${i < rating ? "text-clinical-600" : "text-line-strong"}`}
+          className={`h-3.5 w-3.5 ${i < rating ? activeClass : "text-line-strong"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
           aria-hidden="true"
@@ -92,28 +99,34 @@ export default function Testimonials() {
             className={scrollClassName}
             style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {testimonials.map((review) => (
-              <article
-                key={review.id}
-                style={cardWidthStyle}
-                className={cardClassName}
-              >
-                <div className="card card-hover flex h-full flex-col p-5 sm:p-6">
-                  <Stars rating={review.rating} />
+            {testimonials.map((review, i) => {
+              const tone = REVIEW_TONES[i % REVIEW_TONES.length];
+              return (
+                <article
+                  key={review.id}
+                  style={cardWidthStyle}
+                  className={cardClassName}
+                >
+                  <div
+                    className="card card-hover flex h-full flex-col border-t-[3px] p-5 sm:p-6"
+                    style={{ borderTopColor: `rgb(var(--${tone}-600))` }}
+                  >
+                    <Stars rating={review.rating} tone={tone} />
 
-                  <p className="mt-4 flex-1 text-[13px] leading-relaxed text-ink-600 sm:text-sm">
-                    {review.content}
-                  </p>
-
-                  <div className="mt-5 border-t border-line pt-4">
-                    <p className="text-[13px] font-semibold text-ink-900">
-                      {review.name}
+                    <p className="mt-4 flex-1 text-[13px] leading-relaxed text-ink-600 sm:text-sm">
+                      {review.content}
                     </p>
-                    <p className="label mt-1">{review.role}</p>
+
+                    <div className="mt-5 border-t border-line pt-4">
+                      <p className="text-[13px] font-semibold text-ink-900">
+                        {review.name}
+                      </p>
+                      <p className="label mt-1">{review.role}</p>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </div>
 

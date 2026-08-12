@@ -6,18 +6,21 @@ const credentials = [
   {
     body: "NABL accredited laboratory",
     standard: "NABL",
+    tone: "chip-clinical",
     detail:
       "National Accreditation Board recognition for medical testing — validated quality systems and audited procedures.",
   },
   {
     body: "Medical laboratory competence",
     standard: "ISO 15189:2012",
+    tone: "chip-assay",
     detail:
       "The international standard for calibration, method validation and consistency between runs.",
   },
   {
     body: "Pathology practice benchmark",
     standard: "CAP aligned",
+    tone: "chip-bloom",
     detail:
       "Reporting and review follow College of American Pathologists practice, including mandatory second reads.",
   },
@@ -72,7 +75,7 @@ export default function AboutUsSection() {
               {credentials.map((c) => (
                 <li key={c.standard} className="bg-surface p-5">
                   <div className="flex items-center gap-3">
-                    <span className="chip-assay">{c.standard}</span>
+                    <span className={c.tone}>{c.standard}</span>
                     <span className="sec-rule" aria-hidden="true" />
                   </div>
                   <h3 className="mt-3 text-[0.9375rem] font-semibold text-ink-900">
