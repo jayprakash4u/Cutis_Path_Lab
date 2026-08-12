@@ -2,20 +2,10 @@ import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { publicCatalogCache } from "@/lib/publicApiCache";
 import { requireAdmin } from "@/lib/adminAuth";
-import { numOrNull, replacePackageIncludes } from "@/lib/adminSql";
-import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { replacePackageIncludes, toNumOrNull } from "@/lib/adminSql";
+import { newId, safeLimit, sqlExec, sqlOne, sqlQuery } from "@/lib/mysql";
 
-function normalizePackage(row) {
-  let includes = row.includes;
-  if (typeof includes === "string") {
-    try {
-      includes = JSON.parse(includes);
-    } catch {
-      includes = [];
-    }
-  }
-  if (!Array.isArray(includes)) includes = [];
-
+function normalizePackage(row, includeNames) {
   return {
     id: row.id,
     code: row.code,
@@ -29,15 +19,13 @@ function normalizePackage(row) {
     reportsTime: row.reportsTime || "24-48 hrs",
     fasting: row.fasting || "10-12 hrs",
     sampleType: row.sampleType || "Blood",
-    includes: includes.map((item) =>
-      typeof item === "string" ? item : item.testName || item.name || "",
-    ),
-    includeItems: includes.map((item) => ({
-      testName: item.testName || item.name || "",
-      testId: item.testId || null,
-      price: item.price ?? null,
-      category: item.category || null,
-      code: item.code || null,
+    includes: includeNames.map((i) => i.testName),
+    includeItems: includeNames.map((i) => ({
+      testName: i.testName,
+      testId: i.testId || null,
+      price: i.price ?? null,
+      category: i.category || null,
+      code: i.code || null,
     })),
   };
 }
@@ -45,33 +33,50 @@ function normalizePackage(row) {
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const limitRaw = Number(searchParams.get("limit"));
-    const limit =
-      Number.isFinite(limitRaw) && limitRaw > 0
-        ? Math.min(Math.floor(limitRaw), 100)
-        : null;
-    const topClause = limit ? `TOP ${limit}` : "";
+    const limit = safeLimit(searchParams.get("limit"), 100);
+    const limitClause = limit ? `LIMIT ${limit}` : "";
 
-    const rows = await sqlJson(`
-      SELECT ${topClause} p.id, p.code, p.name, p.category, p.description,
-             CAST(p.price AS decimal(10,2)) AS price,
-             CAST(p.originalPrice AS decimal(10,2)) AS originalPrice,
-             p.imageUrl, p.reportsTime, p.fasting, p.sampleType,
-             (
-               SELECT pt.testName, pt.testId, pt.sortOrder
-               FROM dbo.PackageTest pt
-               WHERE pt.packageId = p.id
-               ORDER BY pt.sortOrder
-               FOR JSON PATH
-             ) AS includes
-      FROM dbo.Package p
-      ORDER BY TRY_CAST(p.id AS INT), p.name
-      FOR JSON PATH
-    `);
+    const packages = await sqlQuery(
+      `SELECT \`id\`, \`code\`, \`name\`, \`category\`, \`description\`, \`price\`,
+              \`originalPrice\`, \`imageUrl\`, \`reportsTime\`, \`fasting\`, \`sampleType\`
+         FROM \`Package\`
+        ORDER BY CAST(\`id\` AS UNSIGNED), \`name\`
+        ${limitClause}`,
+    );
 
-    const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
+    if (packages.length === 0) {
+      return NextResponse.json({ success: true, data: [] }, publicCatalogCache());
+    }
+
+    // One round trip for every package's includes, then group in JS.
+    const placeholders = packages.map(() => "?").join(", ");
+    const includeRows = await sqlQuery(
+      `SELECT pt.\`packageId\`, pt.\`testName\`, pt.\`testId\`, pt.\`sortOrder\`,
+              t.\`name\` AS linkedName, t.\`code\`, t.\`category\`, t.\`price\`
+         FROM \`PackageTest\` pt
+         LEFT JOIN \`Test\` t ON t.\`id\` = pt.\`testId\`
+        WHERE pt.\`packageId\` IN (${placeholders})
+        ORDER BY pt.\`sortOrder\``,
+      packages.map((p) => p.id),
+    );
+
+    const byPackage = new Map();
+    for (const row of includeRows) {
+      if (!byPackage.has(row.packageId)) byPackage.set(row.packageId, []);
+      byPackage.get(row.packageId).push({
+        testName: row.testName || row.linkedName || "",
+        testId: row.testId,
+        code: row.code,
+        category: row.category,
+        price: row.price,
+      });
+    }
+
     return NextResponse.json(
-      { success: true, data: list.map(normalizePackage) },
+      {
+        success: true,
+        data: packages.map((p) => normalizePackage(p, byPackage.get(p.id) || [])),
+      },
       publicCatalogCache(),
     );
   } catch (error) {
@@ -98,28 +103,39 @@ export async function POST(request) {
     }
 
     const id = String(body.id || newId()).trim();
-    const description = body.description ? String(body.description).trim() : null;
-    const originalPrice = body.originalPrice != null ? Number(body.originalPrice) : null;
-    const imageUrl = body.imageUrl || body.image || null;
-    const reportsTime = body.reportsTime || "24-48 hrs";
-    const fasting = body.fasting || "10-12 hrs";
-    const sampleType = body.sampleType || "Blood";
 
-    await sqlExec(`
-      IF EXISTS (SELECT 1 FROM dbo.Package WHERE id = ${escapeSql(id)} OR code = ${escapeSql(code)})
-      BEGIN
-        RAISERROR('Package code or id already exists', 16, 1);
-        RETURN;
-      END
-      INSERT INTO dbo.Package
-        (id, code, name, category, description, price, originalPrice, imageUrl, reportsTime, fasting, sampleType)
-      VALUES
-        (${escapeSql(id)}, ${escapeSql(code)}, ${escapeSql(name)}, ${escapeSql(category)},
-         ${description ? escapeSql(description) : "NULL"},
-         ${numOrNull(price)}, ${numOrNull(originalPrice)},
-         ${imageUrl ? escapeSql(String(imageUrl).trim()) : "NULL"},
-         ${escapeSql(reportsTime)}, ${escapeSql(fasting)}, ${escapeSql(sampleType)});
-    `);
+    const clash = await sqlOne(
+      "SELECT `id` FROM `Package` WHERE `id` = ? OR `code` = ? LIMIT 1",
+      [id, code],
+    );
+    if (clash) {
+      return NextResponse.json(
+        { success: false, message: "Package code or id already exists" },
+        { status: 409 },
+      );
+    }
+
+    const imageUrl = body.imageUrl || body.image || null;
+
+    await sqlExec(
+      `INSERT INTO \`Package\`
+         (\`id\`, \`code\`, \`name\`, \`category\`, \`description\`, \`price\`, \`originalPrice\`,
+          \`imageUrl\`, \`reportsTime\`, \`fasting\`, \`sampleType\`)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        code,
+        name,
+        category,
+        body.description ? String(body.description).trim() : null,
+        price,
+        toNumOrNull(body.originalPrice),
+        imageUrl ? String(imageUrl).trim() : null,
+        body.reportsTime || "24-48 hrs",
+        body.fasting || "10-12 hrs",
+        body.sampleType || "Blood",
+      ],
+    );
 
     if (body.includes) {
       await replacePackageIncludes(id, body.includes);

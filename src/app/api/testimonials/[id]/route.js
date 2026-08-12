@@ -1,26 +1,31 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr } from "@/lib/adminSql";
-import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { buildUpdate, toBit, toIntOr } from "@/lib/adminSql";
+import { sqlExec, sqlOne, toBool } from "@/lib/mysql";
 
 export async function GET(_request, { params }) {
   try {
     const { id } = await params;
-    const rows = await sqlJson(`
-      SELECT id, name, role, content, rating, imageUrl AS image, featured, isActive, sortOrder
-      FROM dbo.Testimonial
-      WHERE id = ${escapeSql(String(id || "").trim())}
-      FOR JSON PATH
-    `);
-    const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
-    if (list.length === 0) {
+
+    const row = await sqlOne(
+      `SELECT \`id\`, \`name\`, \`role\`, \`content\`, \`rating\`,
+              \`imageUrl\` AS \`image\`, \`featured\`, \`isActive\`, \`sortOrder\`
+         FROM \`Testimonial\` WHERE \`id\` = ? LIMIT 1`,
+      [String(id || "").trim()],
+    );
+
+    if (!row) {
       return NextResponse.json(
         { success: false, message: "Testimonial not found" },
         { status: 404 },
       );
     }
-    return NextResponse.json({ success: true, data: list[0] });
+
+    return NextResponse.json({
+      success: true,
+      data: { ...row, featured: toBool(row.featured), isActive: toBool(row.isActive) },
+    });
   } catch (error) {
     return apiErrorResponse(error, "Failed to load testimonial", 500);
   }
@@ -34,38 +39,45 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const testimonialId = String(id || "").trim();
     const body = await request.json();
-    const sets = [];
 
-    if (body.name != null) sets.push(`name = ${escapeSql(String(body.name).trim())}`);
+    const fields = {};
+    if (body.name != null) fields.name = String(body.name).trim();
     if (body.role !== undefined) {
-      const v = body.role ? String(body.role).trim() : null;
-      sets.push(`role = ${v ? escapeSql(v) : "NULL"}`);
+      fields.role = body.role ? String(body.role).trim() : null;
     }
-    if (body.content != null) sets.push(`content = ${escapeSql(String(body.content).trim())}`);
-    if (body.rating != null) sets.push(`rating = ${intOr(body.rating, 5)}`);
+    if (body.content != null) fields.content = String(body.content).trim();
+    if (body.rating != null) fields.rating = toIntOr(body.rating, 5);
     if (body.imageUrl !== undefined || body.image !== undefined) {
       const v = body.imageUrl || body.image;
-      sets.push(`imageUrl = ${v ? escapeSql(String(v).trim()) : "NULL"}`);
+      fields.imageUrl = v ? String(v).trim() : null;
     }
-    if (body.featured !== undefined) sets.push(`featured = ${bit(Boolean(body.featured))}`);
-    if (body.isActive !== undefined) sets.push(`isActive = ${bit(Boolean(body.isActive))}`);
-    if (body.sortOrder != null) sets.push(`sortOrder = ${intOr(body.sortOrder)}`);
+    if (body.featured !== undefined) fields.featured = toBit(body.featured);
+    if (body.isActive !== undefined) fields.isActive = toBit(body.isActive);
+    if (body.sortOrder != null) fields.sortOrder = toIntOr(body.sortOrder);
 
-    if (sets.length === 0) {
+    if (Object.keys(fields).length === 0) {
       return NextResponse.json(
         { success: false, message: "No fields to update" },
         { status: 400 },
       );
     }
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Testimonial WHERE id = ${escapeSql(testimonialId)})
-      BEGIN
-        RAISERROR('Testimonial not found', 16, 1);
-        RETURN;
-      END
-      UPDATE dbo.Testimonial SET ${sets.join(", ")} WHERE id = ${escapeSql(testimonialId)};
-    `);
+    const exists = await sqlOne(
+      "SELECT `id` FROM `Testimonial` WHERE `id` = ? LIMIT 1",
+      [testimonialId],
+    );
+    if (!exists) {
+      return NextResponse.json(
+        { success: false, message: "Testimonial not found" },
+        { status: 404 },
+      );
+    }
+
+    const { clause, params: values } = buildUpdate(fields);
+    await sqlExec(`UPDATE \`Testimonial\` SET ${clause} WHERE \`id\` = ?`, [
+      ...values,
+      testimonialId,
+    ]);
 
     return NextResponse.json({
       success: true,
@@ -84,14 +96,20 @@ export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
     const testimonialId = String(id || "").trim();
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Testimonial WHERE id = ${escapeSql(testimonialId)})
-      BEGIN
-        RAISERROR('Testimonial not found', 16, 1);
-        RETURN;
-      END
-      DELETE FROM dbo.Testimonial WHERE id = ${escapeSql(testimonialId)};
-    `);
+
+    const exists = await sqlOne(
+      "SELECT `id` FROM `Testimonial` WHERE `id` = ? LIMIT 1",
+      [testimonialId],
+    );
+    if (!exists) {
+      return NextResponse.json(
+        { success: false, message: "Testimonial not found" },
+        { status: 404 },
+      );
+    }
+
+    await sqlExec("DELETE FROM `Testimonial` WHERE `id` = ?", [testimonialId]);
+
     return NextResponse.json({
       success: true,
       message: "Testimonial deleted",

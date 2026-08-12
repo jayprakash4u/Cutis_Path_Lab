@@ -3,8 +3,8 @@ import { apiErrorResponse } from "@/lib/apiError";
 import { publicCatalogCache } from "@/lib/publicApiCache";
 import { resolveActiveFilter } from "@/lib/activeFilter";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr } from "@/lib/adminSql";
-import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { toBit, toIntOr } from "@/lib/adminSql";
+import { newId, safeLimit, sqlExec, sqlQuery, toBool } from "@/lib/mysql";
 
 export async function GET(request) {
   try {
@@ -12,32 +12,33 @@ export async function GET(request) {
     const { denied, activeOnly } = resolveActiveFilter(request, searchParams);
     if (denied) return denied;
 
-    const limitRaw = Number(searchParams.get("limit"));
-    const limit =
-      Number.isFinite(limitRaw) && limitRaw > 0
-        ? Math.min(Math.floor(limitRaw), 100)
-        : null;
+    const limit = safeLimit(searchParams.get("limit"), 100);
+    const limitClause = limit ? `LIMIT ${limit}` : "";
+    const whereClause = activeOnly ? "WHERE `isActive` = 1" : "";
 
-    let where = "1=1";
-    if (activeOnly) where += " AND isActive = 1";
-    const topClause = limit ? `TOP ${limit}` : "";
-
-    const rows = await sqlJson(`
-      SELECT ${topClause}
-        id, name, specialization, hospital, quote,
-        imageUrl AS image, isActive, sortOrder, createdAt
-      FROM dbo.ReferralDoctor
-      WHERE ${where}
-      ORDER BY sortOrder, name
-      FOR JSON PATH
-    `);
+    const rows = await sqlQuery(
+      `SELECT \`id\`, \`name\`, \`specialization\`, \`hospital\`, \`quote\`,
+              \`imageUrl\` AS \`image\`, \`isActive\`, \`sortOrder\`, \`createdAt\`
+         FROM \`ReferralDoctor\`
+         ${whereClause}
+        ORDER BY \`sortOrder\`, \`name\`
+        ${limitClause}`,
+    );
 
     return NextResponse.json(
-      { success: true, data: rows },
+      {
+        success: true,
+        data: rows.map((r) => ({ ...r, isActive: toBool(r.isActive) })),
+      },
       publicCatalogCache(),
     );
   } catch (error) {
-    return apiErrorResponse(error, "Failed to load referral doctors", 500, "GET /api/referrals");
+    return apiErrorResponse(
+      error,
+      "Failed to load referral doctors",
+      500,
+      "GET /api/referrals",
+    );
   }
 }
 
@@ -59,20 +60,23 @@ export async function POST(request) {
     }
 
     const id = String(body.id || newId()).trim();
-    const hospital = body.hospital ? String(body.hospital).trim() : null;
     const imageUrl = body.imageUrl || body.image || null;
 
-    await sqlExec(`
-      INSERT INTO dbo.ReferralDoctor
-        (id, name, specialization, hospital, quote, imageUrl, isActive, sortOrder)
-      VALUES
-        (${escapeSql(id)}, ${escapeSql(name)}, ${escapeSql(specialization)},
-         ${hospital ? escapeSql(hospital) : "NULL"},
-         ${escapeSql(quote)},
-         ${imageUrl ? escapeSql(String(imageUrl).trim()) : "NULL"},
-         ${bit(body.isActive !== false)},
-         ${intOr(body.sortOrder, 0)});
-    `);
+    await sqlExec(
+      `INSERT INTO \`ReferralDoctor\`
+         (\`id\`, \`name\`, \`specialization\`, \`hospital\`, \`quote\`, \`imageUrl\`, \`isActive\`, \`sortOrder\`)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        name,
+        specialization,
+        body.hospital ? String(body.hospital).trim() : null,
+        quote,
+        imageUrl ? String(imageUrl).trim() : null,
+        toBit(body.isActive !== false),
+        toIntOr(body.sortOrder, 0),
+      ],
+    );
 
     return NextResponse.json(
       { success: true, message: "Referral doctor added", data: { id } },
