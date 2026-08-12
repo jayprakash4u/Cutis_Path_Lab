@@ -128,9 +128,9 @@ export default function DoctorReferrals() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden bg-white py-6 sm:py-14 md:py-20">
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-5 sm:mb-10 md:mb-14">
+    <section className="section-y relative w-full overflow-hidden bg-white">
+      <div className="section-shell relative">
+        <div className="section-head">
           <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
             <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
               Our Referral Network

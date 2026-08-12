@@ -80,9 +80,10 @@ export default function AdminBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
 
-  const load = async () => {
-    setLoading(true);
-    setError("");
+  // `loading` starts true, so the first load already shows a skeleton; only
+  // explicit refreshes ask for another one.
+  const load = async ({ showSkeleton = false } = {}) => {
+    if (showSkeleton) setLoading(true);
     try {
       const json = await adminFetch("/api/bookings");
       setRows(json.data || []);

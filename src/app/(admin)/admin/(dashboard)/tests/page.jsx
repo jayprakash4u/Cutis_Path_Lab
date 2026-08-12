@@ -48,8 +48,10 @@ export default function AdminTestsPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  const load = async () => {
-    setLoading(true);
+  // `loading` starts true, so the first load already shows a skeleton; only
+  // explicit refreshes ask for another one.
+  const load = async ({ showSkeleton = false } = {}) => {
+    if (showSkeleton) setLoading(true);
     try {
       const json = await adminFetch("/api/tests");
       setRows(json.data || []);

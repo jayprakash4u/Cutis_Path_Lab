@@ -143,8 +143,8 @@ export default function BookTest() {
   };
 
   return (
-    <section id="book-test" className="py-6 sm:py-8 lg:py-10 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+    <section id="book-test" className="section-y bg-slate-50">
+      <div className="section-shell">
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center">
           {/* Left Side - Content & Image */}
           <div>

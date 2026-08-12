@@ -261,8 +261,8 @@ const StepCard = ({ borderColor, title, description, icon: Icon }) => (
 
 export default function HealthTips() {
   return (
-    <section className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-y bg-gradient-to-b from-slate-50 to-white">
+      <div className="section-shell">
         {/* Header */}
         <div className="mb-8 md:mb-10">
           <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">

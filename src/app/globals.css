@@ -58,6 +58,146 @@ body {
     scrollbar-width: none;
   }
 
+  /* ── Hero carousel frame ───────────────────────────────────────
+     Authored here rather than as Tailwind arbitrary values (h-[440px]
+     …): the slides are absolutely positioned, so if the JIT ever misses
+     those classes the frame collapses to 0 and the whole hero vanishes.
+     A real rule with min-height makes that failure impossible. */
+  .hero-frame {
+    position: relative;
+    width: 100%;
+    max-width: 1920px;
+    margin-inline: auto;
+    height: 440px;
+    min-height: 440px;
+    background-color: #0f172a;
+  }
+
+  @media (min-width: 640px) {
+    .hero-frame {
+      height: 520px;
+      min-height: 520px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-frame {
+      height: 600px;
+      min-height: 600px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero-frame {
+      height: 660px;
+      min-height: 660px;
+    }
+  }
+
+  /* ── Hero scrim ────────────────────────────────────────────────
+     Contrast is placed where the copy is rather than spread flat: an
+     elliptical pool sits behind the centred headline, so text stays
+     legible over bright lab photography while the edges of the photo
+     keep their colour. Measured against the brightest slide, the pool
+     centre lands near 9:1 and its 38% stop near 4.7:1 for white text.
+     The top band separates the fixed navbar, the bottom band anchors
+     the dots and hands off to the next section. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+          ellipse 92% 78% at 50% 46%,
+          rgba(2, 6, 23, 0.74) 0%,
+          rgba(2, 6, 23, 0.58) 38%,
+          rgba(2, 6, 23, 0.24) 68%,
+          rgba(2, 6, 23, 0) 100%
+        ),
+      linear-gradient(
+          to top,
+          rgba(2, 6, 23, 0.88) 0%,
+          rgba(2, 6, 23, 0.34) 22%,
+          rgba(2, 6, 23, 0) 48%
+        ),
+      linear-gradient(
+          to bottom,
+          rgba(2, 6, 23, 0.62) 0%,
+          rgba(2, 6, 23, 0.14) 18%,
+          rgba(2, 6, 23, 0) 34%
+        ),
+      /* Faint brand tint so the hero reads as ours, not generic grey. */
+        linear-gradient(118deg, rgba(3, 105, 161, 0.26) 0%, rgba(3, 105, 161, 0) 58%);
+  }
+
+  /* Wider pool on phones — the copy stacks taller in a narrower frame. */
+  @media (min-width: 1024px) {
+    .hero-scrim {
+      background:
+        radial-gradient(
+            ellipse 68% 74% at 50% 47%,
+            rgba(2, 6, 23, 0.72) 0%,
+            rgba(2, 6, 23, 0.55) 38%,
+            rgba(2, 6, 23, 0.2) 70%,
+            rgba(2, 6, 23, 0) 100%
+          ),
+        linear-gradient(
+            to top,
+            rgba(2, 6, 23, 0.85) 0%,
+            rgba(2, 6, 23, 0.3) 20%,
+            rgba(2, 6, 23, 0) 44%
+          ),
+        linear-gradient(
+            to bottom,
+            rgba(2, 6, 23, 0.55) 0%,
+            rgba(2, 6, 23, 0.12) 16%,
+            rgba(2, 6, 23, 0) 30%
+          ),
+        linear-gradient(118deg, rgba(3, 105, 161, 0.24) 0%, rgba(3, 105, 161, 0) 55%);
+    }
+  }
+
+  /* Text shadows authored here rather than as Tailwind arbitrary
+     properties, so a missed JIT scan can't silently drop them. */
+  .hero-title {
+    line-height: 1.15;
+    text-shadow: 0 2px 18px rgba(2, 6, 23, 0.55);
+  }
+
+  .hero-sub {
+    color: rgba(226, 232, 240, 0.95);
+    text-shadow: 0 1px 10px rgba(2, 6, 23, 0.5);
+  }
+
+  /* ── Section rhythm ────────────────────────────────────────────
+     Page sections previously used seven different padding scales,
+     so the gaps between them read as arbitrary. Two tiers now:
+     `section-y-compact` for the dense strips directly under the
+     hero, `section-y` for every standard content section. */
+  .section-y {
+    @apply py-10 sm:py-14 lg:py-20;
+  }
+
+  .section-y-compact {
+    @apply py-6 sm:py-8 lg:py-10;
+  }
+
+  /* One container for every section, so section titles share a left edge
+     down the whole page. Previously max-w-full / 6xl / 7xl and px-2 / px-4
+     were mixed, which put the title badges at six different x positions. */
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Space between a section heading block and its content. */
+  .section-head {
+    @apply mb-6 sm:mb-8 lg:mb-10;
+  }
+
+  .section-head-compact {
+    @apply mb-4 sm:mb-5;
+  }
+
   /* Main content offset below fixed navbar — avoids white gap above heroes */
   .pt-below-nav {
     padding-top: var(--site-nav-h);

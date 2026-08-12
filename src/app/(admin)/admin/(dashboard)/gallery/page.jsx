@@ -33,8 +33,10 @@ export default function AdminGalleryPage() {
   const [previewUrl, setPreviewUrl] = useState("");
   const fileInputRef = useRef(null);
 
-  const load = async () => {
-    setLoading(true);
+  // `loading` starts true, so the first load already shows a skeleton; only
+  // explicit refreshes ask for another one.
+  const load = async ({ showSkeleton = false } = {}) => {
+    if (showSkeleton) setLoading(true);
     try {
       const json = await adminFetch("/api/gallery?active=false");
       setRows(json.data || []);

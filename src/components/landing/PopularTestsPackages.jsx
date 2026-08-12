@@ -107,16 +107,19 @@ export default function PopularTestsPackages() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-sky-50 to-white py-6 shadow-lg shadow-slate-200/50 sm:py-8 md:py-10 lg:py-12">
-      <div className="absolute left-0 top-0 z-10">
-        <div className="rounded-tr-xl rounded-bl-xl bg-sky-600 px-3 py-1.5 sm:rounded-tr-2xl sm:rounded-bl-2xl sm:px-4 sm:py-2">
-          <h2 className="text-sm font-bold text-white sm:text-base md:text-lg">
-            Popular Tests & Packages
-          </h2>
+    <section className="section-y relative bg-gradient-to-br from-sky-50 to-white shadow-lg shadow-slate-200/50">
+      <div className="section-shell">
+        <div className="section-head-compact">
+          <div className="mb-3 inline-block rounded-tr-xl rounded-bl-xl bg-sky-600 px-3 py-1.5 sm:rounded-tr-2xl sm:rounded-bl-2xl sm:px-4 sm:py-2">
+            <h2 className="text-sm font-bold text-white sm:text-base md:text-lg">
+              Popular Tests &amp; Packages
+            </h2>
+          </div>
+          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+            The tests and health packages patients book most, with reporting
+            time and fasting details up front.
+          </p>
         </div>
-      </div>
-
-      <div className="max-w-full pt-12">
         <div className="relative sm:px-10 md:px-12 lg:px-14">
           <button
             type="button"

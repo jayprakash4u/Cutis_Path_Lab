@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 
 const FOCUSABLE =
@@ -24,13 +24,8 @@ export default function AdminModal({
 }) {
   const panelRef = useRef(null);
   const restoreFocusRef = useRef(null);
-  const [mounted, setMounted] = useState(false);
   const titleId = useId();
   const descId = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const close = useCallback(() => {
     if (onClose) onClose();
@@ -88,7 +83,8 @@ export default function AdminModal({
     };
   }, [open, close]);
 
-  if (!mounted || !open) return null;
+  // `document` is absent during SSR; the dialog is client-only by nature.
+  if (!open || typeof document === "undefined") return null;
 
   const maxWidth = { sm: "28rem", md: "36rem", lg: "48rem", xl: "62rem" }[size] || "48rem";
 

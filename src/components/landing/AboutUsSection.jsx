@@ -87,7 +87,7 @@ function DotPattern({ className = "" }) {
 
 export default function AboutUsSection() {
   return (
-    <section className="relative overflow-x-hidden bg-white py-10 sm:py-14 md:py-20">
+    <section className="section-y relative overflow-x-hidden bg-white">
       <div
         className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-sky-100/60 blur-3xl"
         aria-hidden
@@ -97,7 +97,7 @@ export default function AboutUsSection() {
         aria-hidden
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="section-shell relative">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
           {/* Left — image collage */}
           <div className="relative mx-auto w-full max-w-lg overflow-visible pb-14 sm:pb-16 md:pb-20 lg:max-w-none">

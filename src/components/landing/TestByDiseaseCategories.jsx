@@ -21,16 +21,18 @@ export default function TestByDiseaseCategories() {
   const scrollRef = useRef(null);
 
   return (
-    <section className="py-8 sm:py-10 lg:py-12 bg-slate-50 relative shadow-lg shadow-slate-200/50">
-      <div className="absolute top-0 left-0">
-        <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-          <h2 className="text-lg md:text-xl font-bold text-white">
-            Test by Disease Categories
-          </h2>
+    <section className="section-y bg-slate-50 relative shadow-lg shadow-slate-200/50">
+      <div className="section-shell">
+        <div className="section-head-compact">
+          <div className="mb-3 inline-block bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
+            <h2 className="text-lg md:text-xl font-bold text-white">
+              Test by Disease Categories
+            </h2>
+          </div>
+          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+            Pick a condition to see the tests doctors commonly order for it.
+          </p>
         </div>
-      </div>
-
-      <div className="w-full pt-12">
         <div 
           ref={scrollRef}
           style={{

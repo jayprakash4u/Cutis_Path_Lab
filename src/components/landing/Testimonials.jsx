@@ -89,7 +89,7 @@ export default function Reviews() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-sky-50/60 via-white to-slate-50 py-6 sm:py-14 md:py-20">
+    <section className="section-y relative w-full overflow-hidden bg-gradient-to-b from-sky-50/60 via-white to-slate-50">
       <div
         className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-sky-200/35 blur-3xl"
         aria-hidden="true"
@@ -99,8 +99,8 @@ export default function Reviews() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-5 sm:mb-10 md:mb-12">
+      <div className="section-shell relative">
+        <div className="section-head">
           <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
             <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
               What Our Patients Say

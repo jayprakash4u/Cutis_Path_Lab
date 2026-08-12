@@ -80,15 +80,7 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      await load();
-      if (cancelled) return;
-    })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    load();
   }, []);
 
   const confirm = async (booking) => {

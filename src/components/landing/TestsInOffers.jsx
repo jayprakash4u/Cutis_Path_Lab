@@ -52,9 +52,9 @@ export default function TestsInOffers() {
   const bookHref = (test) => `/book-offer/${encodeURIComponent(test.id)}`;
 
   return (
-    <section className="relative bg-white py-4 sm:py-6 lg:py-8">
-      <div className="mx-auto max-w-full px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="relative mb-3 sm:mb-4 md:mb-6">
+    <section className="section-y-compact relative bg-white">
+      <div className="section-shell">
+        <div className="section-head-compact relative">
           <div className="absolute top-0">
             <div className="rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
               <h2 className="text-lg font-bold text-white md:text-xl">Special Offers</h2>

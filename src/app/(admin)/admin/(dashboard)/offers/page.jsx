@@ -46,8 +46,10 @@ export default function AdminOffersPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  const load = async () => {
-    setLoading(true);
+  // `loading` starts true, so the first load already shows a skeleton; only
+  // explicit refreshes ask for another one.
+  const load = async ({ showSkeleton = false } = {}) => {
+    if (showSkeleton) setLoading(true);
     try {
       const json = await adminFetch("/api/offers?active=false");
       setRows(json.data || []);
