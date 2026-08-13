@@ -101,12 +101,12 @@ export default function Reviews() {
 
       <div className="section-shell relative">
         <div className="section-head">
-          <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
+          <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
+            <h2 className="t-badge font-bold text-white">
               What Our Patients Say
             </h2>
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
+          <p className="max-w-2xl t-lead text-slate-600">
             Real feedback from patients, physicians, and partners who trust our
             laboratory every day.
           </p>
@@ -146,7 +146,7 @@ export default function Reviews() {
                       <div className="flex h-full flex-col rounded-2xl border-b-4 border-b-[#FF6B6B] bg-white px-3 py-4 shadow-md sm:px-5 sm:py-6 md:px-6 md:py-7">
                         <Stars rating={review.rating} />
 
-                        <p className="mb-4 line-clamp-4 flex-1 text-xs leading-snug text-slate-600 sm:mb-6 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed">
+                        <p className="mb-4 line-clamp-4 flex-1 text-xs leading-snug text-slate-600 sm:mb-6 sm:line-clamp-none  sm:leading-relaxed">
                           &ldquo;{review.content}&rdquo;
                         </p>
 

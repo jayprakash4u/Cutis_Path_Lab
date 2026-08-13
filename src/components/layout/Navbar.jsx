@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { BuildingIcon, LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon } from "./NavIcons";
+import { LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon } from "./NavIcons";
 import { tests } from "@/data/staticData";
 
 const navLinks = [
@@ -20,8 +20,17 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Elevate the header once the page scrolls under it
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // ── Search state ─────────────────────────────────────────────────
   const [searchQuery, setSearchQuery] = useState("");
@@ -223,7 +232,7 @@ export default function Navbar() {
               }`}
             >
               <span
-                className={`flex-shrink-0 w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-bold ${
+                className={`flex-shrink-0 w-7 h-7 rounded-xl flex items-center justify-center t-caption font-bold ${
                   item.type === "test"
                     ? "bg-sky-100 text-sky-700"
                     : "bg-[#FF6B6B]/15 text-[#FF6B6B]"
@@ -260,42 +269,67 @@ export default function Navbar() {
     <div className="fixed left-0 right-0 top-0 z-50 transition-all duration-300">
 
 {/* TOP BAR — desktop utility strip only */}
-      <div className="hidden lg:block bg-sky-600 text-white py-1.5 border-b border-sky-700">
+      <div className="hidden border-b border-sky-800/40 bg-gradient-to-r from-sky-700 via-sky-600 to-sky-700 text-white lg:block">
         <div className="w-full px-6">
-          <div className="flex items-center justify-between gap-4 text-sm font-medium">
-            <div className="flex items-center flex-wrap gap-4 lg:gap-6">
-              <span className="font-semibold tracking-wide flex items-center gap-1.5">
-                <BuildingIcon size={16} className="text-white" />
-                Cutis Lab Path
-              </span>
-              <span className="opacity-80">|</span>
-              <span className="flex items-center gap-1.5">
-                <LocationIcon size={16} className="text-white" />
+          <div className="flex items-center justify-between gap-4 py-2">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 t-meta">
+              <span className="flex items-center gap-1.5 text-white/85">
+                <LocationIcon size={15} className="text-white/85" />
                 Kathmandu, Bagmati, Nepal
               </span>
-              <span className="opacity-80">|</span>
-              <a href="tel:+9779825849435" className="flex items-center gap-1.5 hover:text-sky-100">
-                <PhoneIcon size={16} className="text-white" />
+              <span className="h-3 w-px bg-white/25" aria-hidden="true" />
+              <a
+                href="tel:+9779825849435"
+                className="flex items-center gap-1.5 text-white/85 transition-colors hover:text-white"
+              >
+                <PhoneIcon size={15} className="text-white/85" />
                 +977-9825849435
               </a>
-              <span className="opacity-80">|</span>
-              <a href="mailto:cutislabpath@gmail.com" className="flex items-center gap-1.5 hover:text-sky-100">
-                <EmailIcon size={16} className="text-white" />
+              <span className="h-3 w-px bg-white/25" aria-hidden="true" />
+              <a
+                href="mailto:cutislabpath@gmail.com"
+                className="flex items-center gap-1.5 text-white/85 transition-colors hover:text-white"
+              >
+                <EmailIcon size={15} className="text-white/85" />
                 cutislabpath@gmail.com
               </a>
             </div>
-            <div className="flex items-center gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <FacebookIcon size={18} />
+            <div className="flex items-center gap-2">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/85 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 hover:text-white"
+              >
+                <FacebookIcon size={14} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <InstagramIcon size={18} />
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/85 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 hover:text-white"
+              >
+                <InstagramIcon size={14} />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <TwitterIcon size={18} />
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/85 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 hover:text-white"
+              >
+                <TwitterIcon size={14} />
               </a>
-              <a href="https://wa.me/9779825849435" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <WhatsAppIcon size={18} />
+              <a
+                href="https://wa.me/9779825849435"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/85 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#25D366] hover:text-white"
+              >
+                <WhatsAppIcon size={14} accent={false} />
               </a>
             </div>
           </div>
@@ -303,12 +337,22 @@ export default function Navbar() {
       </div>
 
       {/* MAIN NAVBAR */}
-      <nav className="bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-[0_4px_24px_rgba(2,132,199,0.06)] relative z-[60]">
+      <nav
+        className={`relative z-[60] border-b bg-white/95 backdrop-blur-md transition-shadow duration-300 ${
+          scrolled
+            ? "border-sky-200 shadow-[0_8px_28px_rgba(2,132,199,0.12)]"
+            : "border-sky-100 shadow-[0_4px_24px_rgba(2,132,199,0.06)]"
+        }`}
+      >
         <div className="w-full px-4 sm:px-6 relative z-[70]">
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0" onClick={closeMobileMenu}>
+            <Link
+              href="/"
+              className="flex items-center shrink-0 transition-transform duration-200 hover:scale-[1.03]"
+              onClick={closeMobileMenu}
+            >
               <Image
                 src="/images/cutis.png"
                 alt="CUTIS Lab"
@@ -321,22 +365,28 @@ export default function Navbar() {
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center gap-1 ml-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-4 py-2.5 text-base font-medium rounded-lg transition relative ${
-                    pathname === link.href
-                      ? "text-sky-600"
-                      : "text-slate-800 hover:text-sky-600"
-                  }`}
-                >
-                  {link.label}
-                  {pathname === link.href && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-[#FF6B6B] rounded-full"></span>
-                  )}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const active = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`group relative px-4 py-2.5 text-base font-medium rounded-lg transition-colors duration-200 ${
+                      active
+                        ? "text-sky-600"
+                        : "text-slate-700 hover:text-sky-600 hover:bg-sky-50/80"
+                    }`}
+                  >
+                    {link.label}
+                    <span
+                      className={`absolute bottom-1 left-1/2 h-0.5 -translate-x-1/2 rounded-full bg-[#FF6B6B] transition-all duration-300 ${
+                        active ? "w-6" : "w-0 group-hover:w-6"
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </Link>
+                );
+              })}
             </div>
 
              {/* Desktop Right */}
@@ -349,24 +399,24 @@ export default function Navbar() {
                     onChange={handleSearchChange}
                     onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
                     onKeyDown={searchKeyDown}
-                    className="w-64 px-4 py-2 pr-12 text-slate-900 border border-sky-300 rounded-lg bg-white focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                    className="w-64 rounded-full border border-sky-200 bg-sky-50/50 px-4 py-2 pr-11 text-slate-900 transition-colors focus:border-sky-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-sky-100"
                   />
-                  <div className="absolute right-0 top-0 bottom-0 w-9 bg-[#FF6B6B] rounded-lg flex items-center justify-center pointer-events-none">
-                    <SearchIcon size={16} className="text-white" />
+                  <div className="pointer-events-none absolute right-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#FF6B6B]">
+                    <SearchIcon size={15} className="text-white" />
                   </div>
                   {renderSearchResults()}
                 </div>
 
               <Link
                 href="/book"
-                className="px-5 py-2 bg-sky-600 text-white rounded-lg text-base font-semibold hover:bg-sky-700 transition shadow-md hover:shadow-lg"
+                className="rounded-lg bg-gradient-to-r from-sky-600 to-sky-500 px-5 py-2 text-base font-semibold text-white shadow-md shadow-sky-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:from-sky-700 hover:to-sky-600 hover:shadow-lg hover:shadow-sky-500/35"
               >
                 Book Test
               </Link>
 
               <Link
                 href="/download-report"
-                className="px-5 py-2 bg-transparent border-b-2 border-b-[#FF6B6B] rounded-lg text-base font-semibold text-[#FF6B6B] hover:bg-red-50 transition"
+                className="rounded-lg border-2 border-[#FF6B6B]/70 bg-transparent px-5 py-2 text-base font-semibold text-[#FF6B6B] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#FF6B6B] hover:bg-red-50"
               >
                 Report
               </Link>
@@ -381,7 +431,7 @@ export default function Navbar() {
                   setMobileSearchOpen((v) => !v);
                   setIsOpen(false);
                 }}
-                className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
+                className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-200 active:scale-95 ${
                   mobileSearchOpen
                     ? "border-sky-400 bg-sky-50 text-sky-700"
                     : "border-slate-200 bg-white text-slate-600"
@@ -393,7 +443,7 @@ export default function Navbar() {
               </button>
               <button
                 type="button"
-                className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200 active:scale-95 ${
                   isOpen
                     ? "bg-slate-900 text-white"
                     : "bg-sky-600 text-white hover:bg-sky-700"
@@ -468,7 +518,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={closeMobileMenu}
-                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-colors ${
+                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 t-body font-semibold transition-colors ${
                         active
                           ? "bg-sky-50 text-sky-700"
                           : "text-slate-800 active:bg-slate-50"
@@ -514,118 +564,16 @@ export default function Navbar() {
 
         </nav>
 
-      {/* BOTTOM NAV — phones & tablets only (hidden once desktop nav shows) */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-100 bg-white/95 backdrop-blur-md shadow-[0_-8px_30px_rgba(15,23,42,0.06)] pb-[env(safe-area-inset-bottom)]">
-        <div className="flex items-end justify-around h-[4.25rem] px-1">
-          {[
-            {
-              href: "/",
-              label: "Home",
-              icon: (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              ),
-            },
-            {
-              href: "/services",
-              label: "Services",
-              icon: (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              ),
-            },
-          ].map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors ${
-                  active ? "text-sky-600" : "text-slate-400"
-                }`}
-              >
-                <span
-                  className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-colors ${
-                    active ? "bg-sky-50" : ""
-                  }`}
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    {item.icon}
-                  </svg>
-                </span>
-                <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
-                <span
-                  className={`h-0.5 w-4 rounded-full transition-colors ${
-                    active ? "bg-[#FF6B6B]" : "bg-transparent"
-                  }`}
-                />
-              </Link>
-            );
-          })}
-
-          <Link href="/book" className="flex flex-1 flex-col items-center justify-center -mt-5">
-            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-sky-600 text-white shadow-[0_8px_20px_rgba(2,132,199,0.35)] ring-4 ring-white">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-            </span>
-            <span className="mt-1.5 text-[10px] font-bold text-sky-700">Book</span>
-          </Link>
-
-          {[
-            {
-              href: "/tests",
-              label: "Tests",
-              icon: (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              ),
-            },
-            {
-              href: "/packages",
-              label: "Packages",
-              icon: (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              ),
-            },
-          ].map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors ${
-                  active ? "text-sky-600" : "text-slate-400"
-                }`}
-              >
-                <span
-                  className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-colors ${
-                    active ? "bg-sky-50" : ""
-                  }`}
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    {item.icon}
-                  </svg>
-                </span>
-                <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
-                <span
-                  className={`h-0.5 w-4 rounded-full transition-colors ${
-                    active ? "bg-[#FF6B6B]" : "bg-transparent"
-                  }`}
-                />
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
       {/* Floating WhatsApp — phone only */}
       <a
         href="https://wa.me/9779861848382"
-        className="sm:hidden fixed bottom-[5.5rem] right-3 z-40"
+        className="sm:hidden fixed bottom-4 right-3 z-40"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp support"
       >
         <div className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
-          <WhatsAppIcon size={22} className="text-white" />
+          <WhatsAppIcon size={24} className="text-white" accent={false} />
         </div>
       </a>
     </div>

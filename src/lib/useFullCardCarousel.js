@@ -14,10 +14,13 @@ export const CAROUSEL_BREAKPOINTS = {
     { minWidth: 640, cards: 2 },
     { minWidth: 0, cards: 1 },
   ],
+  // NOTE: these minWidths are matched against the carousel's own container
+  // width, not the window width. The container tops out near 1100px
+  // (max-w-7xl minus the section and carousel padding), so a threshold
+  // above that can never match.
   lab: [
-    { minWidth: 1200, cards: 4 },
-    { minWidth: 900, cards: 3 },
-    { minWidth: 640, cards: 2 },
+    { minWidth: 1000, cards: 2.5 },
+    { minWidth: 620, cards: 1.5 },
     { minWidth: 0, cards: 1 },
   ],
   testimonials: [
@@ -37,6 +40,7 @@ export function useFullCardCarousel({
   const viewportRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(1);
+  const [stepCards, setStepCards] = useState(1);
   const [cardWidth, setCardWidth] = useState(null);
   const scrollAmountRef = useRef(0);
   const prevCardsPerViewRef = useRef(1);
@@ -60,9 +64,22 @@ export function useFullCardCarousel({
     if (viewportWidth === 0) return;
 
     const targetCards = getCardsForWidth(viewportWidth);
-    const gapTotal = gap * (targetCards - 1);
+
+    // A fractional count (e.g. 2.5) deliberately shows a partial card as a
+    // scroll affordance. That changes two things: 2.5 cards have 2 visible
+    // gaps rather than 1.5, and a slide advances by whole cards so the row
+    // never drifts out of alignment. Integer counts keep their original math.
+    const isFractional = !Number.isInteger(targetCards);
+    const visibleGaps = isFractional
+      ? Math.floor(targetCards)
+      : targetCards - 1;
+    const step = isFractional ? Math.floor(targetCards) : targetCards;
+
+    const gapTotal = gap * visibleGaps;
     const nextCardWidth = Math.floor((viewportWidth - gapTotal) / targetCards);
-    const pageWidth = nextCardWidth * targetCards + gapTotal;
+    const pageWidth = isFractional
+      ? step * (nextCardWidth + gap)
+      : nextCardWidth * targetCards + gapTotal;
 
     if (targetCards !== prevCardsPerViewRef.current) {
       prevCardsPerViewRef.current = targetCards;
@@ -71,6 +88,7 @@ export function useFullCardCarousel({
     }
 
     setCardsPerView(targetCards);
+    setStepCards(step);
     setCardWidth(nextCardWidth);
     scrollAmountRef.current = pageWidth;
 
@@ -98,7 +116,9 @@ export function useFullCardCarousel({
     };
   }, [recalc]);
 
-  const totalDots = Math.max(1, Math.ceil(itemCount / cardsPerView));
+  // Dots track how far a slide advances, which is the whole-card step —
+  // not the fractional number of cards on screen.
+  const totalDots = Math.max(1, Math.ceil(itemCount / stepCards));
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;

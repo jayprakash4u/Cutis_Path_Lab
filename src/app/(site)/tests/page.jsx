@@ -224,7 +224,7 @@ function TestsPageContent() {
           height={654}
         />
 
-        <div className="min-h-screen bg-slate-50 pb-20 lg:pb-0">
+        <div className="min-h-screen bg-slate-50">
           <div className="container mx-auto px-2 sm:px-6 py-4 sm:py-8">
             {diseaseSlug && (
               <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sky-100 bg-white px-4 py-3 shadow-sm">
@@ -534,7 +534,7 @@ function TestsPageContent() {
         </div>
 
         {selectedTests.length > 0 && (
-          <div className="lg:hidden fixed bottom-[4.75rem] left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-[60] px-3 py-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-[60] px-3 py-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-slate-600">
                 {selectedTests.length} test{selectedTests.length > 1 ? "s" : ""} selected

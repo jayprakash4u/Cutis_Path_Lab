@@ -289,7 +289,7 @@ export default function BookTest() {
                   <p className="font-medium text-slate-900 text-xs sm:text-sm">
                     Quick Results
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="t-caption text-slate-500">
                     Results within 24 hours
                   </p>
                 </div>
@@ -356,7 +356,7 @@ export default function BookTest() {
                   <p className="font-medium text-slate-900 text-xs sm:text-sm">
                     Home Sample Collection
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="t-caption text-slate-500">
                     We come to your doorstep
                   </p>
                 </div>
@@ -407,7 +407,7 @@ export default function BookTest() {
                   <p className="font-medium text-slate-900 text-xs sm:text-sm">
                     NABL Accredited
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="t-caption text-slate-500">
                     ISO certified lab
                   </p>
                 </div>

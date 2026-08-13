@@ -121,10 +121,10 @@ export default function Hero() {
             <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
             NABL-accredited diagnostics
           </p>
-          <h1 className="hero-title mb-3 max-w-3xl text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
+          <h1 className="t-display hero-title mb-3 max-w-3xl font-bold text-white">
             Your Trusted Partner in <span className="text-sky-400">Health</span>
           </h1>
-          <p className="hero-sub mb-7 max-w-xl text-sm leading-relaxed sm:text-base md:text-lg">
+          <p className="t-lead hero-sub mb-7 max-w-xl">
             Accurate diagnostics delivered with speed &amp; precision
           </p>
           <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-3">

@@ -19,6 +19,8 @@ export default function TestsInOffers() {
     handleScroll,
     scroll,
     scrollToDot,
+    canScrollLeft,
+    canScrollRight,
     gap,
   } = useFullCardCarousel({
     gap: 12,
@@ -52,27 +54,42 @@ export default function TestsInOffers() {
   const bookHref = (test) => `/book-offer/${encodeURIComponent(test.id)}`;
 
   return (
-    <section className="section-y-compact relative bg-white">
-      <div className="section-shell">
-        <div className="section-head-compact relative">
-          <div className="absolute top-0">
-            <div className="rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-              <h2 className="text-lg font-bold text-white md:text-xl">Special Offers</h2>
-            </div>
-          </div>
-          <div className="pt-12">
-            <h2 className="text-lg font-bold text-slate-900 sm:text-xl md:text-2xl">
-              Flat 25-33% OFF On Lab Tests
-            </h2>
-            <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">Free home collection</p>
-          </div>
+    <section className="section-y-compact relative overflow-x-hidden bg-gradient-to-b from-sky-50/70 via-white to-white">
+      <div
+        className="pointer-events-none absolute -left-16 -top-10 h-56 w-56 rounded-full bg-sky-100/60 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-16 bottom-0 h-56 w-56 rounded-full bg-[#FF6B6B]/10 blur-3xl"
+        aria-hidden="true"
+      />
+
+      <div className="section-shell relative">
+        <div className="section-head-compact">
+          <span className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
+            <span className="t-badge font-bold text-white">Special Offers</span>
+          </span>
+          <h2 className="t-h2 font-bold text-slate-900">
+            Flat 25-33% <span className="text-[#FF6B6B]">OFF</span> On Lab Tests
+          </h2>
+          <p className="mt-1.5 flex items-center gap-1.5 t-caption font-medium text-slate-500">
+            <svg className="h-3.5 w-3.5 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12.75l2.25 2.25L15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Free home sample collection
+          </p>
         </div>
 
         <div className="relative sm:px-10 md:px-12">
           <button
             type="button"
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-2 border-slate-300 bg-white text-slate-600 shadow-lg transition-all duration-300 hover:border-sky-500 hover:bg-sky-600 hover:text-white sm:flex md:h-10 md:w-10"
+            disabled={!canScrollLeft}
+            className={`absolute left-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border shadow-md transition-all duration-300 sm:flex md:h-10 md:w-10 ${
+              canScrollLeft
+                ? "border-slate-200 bg-white text-slate-500 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg"
+                : "cursor-not-allowed border-slate-100 bg-white text-slate-300 opacity-50"
+            }`}
             aria-label="Scroll left"
           >
             <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,10 +105,12 @@ export default function TestsInOffers() {
               style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {loading && (
-                <p className="px-4 py-6 text-sm text-slate-500">Loading offers…</p>
+                <p className="w-full px-4 py-8 text-center text-sm text-slate-500">Loading offers…</p>
               )}
               {!loading && offerTests.length === 0 && (
-                <p className="px-4 py-6 text-sm text-slate-500">No offers available right now.</p>
+                <p className="w-full px-4 py-8 text-center text-sm text-slate-500">
+                  No offers available right now.
+                </p>
               )}
               {!loading &&
                 offerTests.map((test) => (
@@ -99,53 +118,60 @@ export default function TestsInOffers() {
                     key={test.id}
                     data-offer-card
                     style={cardWidthStyle}
-                    className={`flex cursor-pointer flex-col rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md ${cardClassName}`}
+                    className={`group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-lg ${cardClassName}`}
                   >
-                    <div className="rounded-t-lg bg-[#FF6B6B] px-3 py-1.5 sm:py-1">
-                      <h3 className="truncate text-center text-xs font-semibold text-white sm:text-sm">
+                    <span className="absolute right-2 top-2 z-10 rounded-full bg-white px-2 py-0.5 t-caption font-extrabold text-[#FF6B6B] shadow-md ring-1 ring-black/5 sm:right-2.5 sm:top-2.5">
+                      {test.discount}% OFF
+                    </span>
+
+                    <div className="bg-[#FF6B6B] px-3 py-2 pr-16 sm:px-3.5 sm:py-2.5 sm:pr-20">
+                      <span className="mb-1 inline-block rounded-full bg-white/20 px-1.5 py-0.5 t-caption font-medium text-white">
+                        {test.category}
+                      </span>
+                      <h3 className="truncate t-caption font-bold text-white sm:text-sm">
                         {test.name}
                       </h3>
                     </div>
 
-                    <div className="flex flex-1 flex-col p-1.5 sm:p-2">
-                      <div className="mb-1 flex items-center justify-between">
-                        <span className="rounded-full bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-[#FF6B6B] sm:px-2 sm:text-xs">
-                          {test.category}
-                        </span>
-                        <span className="rounded-full bg-sky-50 px-1.5 py-0.5 text-[10px] font-bold text-sky-600 sm:px-2 sm:text-xs">
-                          {test.discount}% OFF
-                        </span>
-                      </div>
-
-                      <div className="mb-2 space-y-0.5">
-                        <div className="text-[9px] text-slate-500 sm:text-xs">
+                    <div className="flex flex-1 flex-col p-2.5 sm:p-3">
+                      <div className="mb-2 space-y-1">
+                        <div className="flex items-center gap-1 t-caption text-slate-500">
+                          <svg className="h-3 w-3 shrink-0 text-sky-600 sm:h-3.5 sm:w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                          </svg>
                           <span className="hidden sm:inline">Reports: </span>
                           {test.reportsTime}
                         </div>
-                        <div className="text-[9px] text-slate-500 sm:text-xs">
+                        <div className="flex items-center gap-1 t-caption text-slate-500">
+                          <svg className="h-3 w-3 shrink-0 text-sky-600 sm:h-3.5 sm:w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
                           <span className="hidden sm:inline">Fasting: </span>
                           {test.fasting}
                         </div>
-                        <div className="text-[9px] text-slate-500 sm:text-xs">
+                        <div className="flex items-center gap-1 t-caption text-slate-500">
+                          <svg className="h-3 w-3 shrink-0 text-sky-600 sm:h-3.5 sm:w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                          </svg>
                           <span className="hidden sm:inline">Sample: </span>
                           {test.sampleType}
                         </div>
                       </div>
 
-                      <div className="my-1 border-t border-sky-300 sm:my-2" />
+                      <div className="my-1.5 border-t border-dashed border-slate-300 sm:my-2" />
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <span className="text-xs font-bold text-sky-600 sm:text-base">
+                      <div className="mt-auto flex items-center justify-between gap-2">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-sm font-bold text-sky-700 sm:text-base">
                             ₹{test.discountedPrice}
                           </span>
-                          <span className="text-[9px] text-slate-400 line-through sm:text-xs">
+                          <span className="t-caption text-slate-400 line-through">
                             ₹{test.originalPrice}
                           </span>
                         </div>
                         <Link
                           href={bookHref(test)}
-                          className="rounded-md bg-sky-600 px-2 py-1 text-center text-[10px] font-semibold text-white transition-all hover:bg-sky-700 sm:px-3 sm:text-xs"
+                          className="shrink-0 rounded-lg bg-sky-600 px-2.5 py-1.5 text-center t-caption font-semibold text-white transition-colors hover:bg-sky-700 sm:px-3"
                         >
                           Book
                         </Link>
@@ -159,7 +185,12 @@ export default function TestsInOffers() {
           <button
             type="button"
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-2 border-slate-300 bg-white text-slate-600 shadow-lg transition-all duration-300 hover:border-sky-500 hover:bg-sky-600 hover:text-white sm:flex md:h-10 md:w-10"
+            disabled={!canScrollRight}
+            className={`absolute right-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border shadow-md transition-all duration-300 sm:flex md:h-10 md:w-10 ${
+              canScrollRight
+                ? "border-slate-200 bg-white text-slate-500 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg"
+                : "cursor-not-allowed border-slate-100 bg-white text-slate-300 opacity-50"
+            }`}
             aria-label="Scroll right"
           >
             <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +204,12 @@ export default function TestsInOffers() {
             <button
               type="button"
               onClick={() => scroll("left")}
-              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-slate-300 bg-white text-slate-600 shadow sm:hidden"
+              disabled={!canScrollLeft}
+              className={`flex h-9 w-9 items-center justify-center rounded-full border shadow sm:hidden ${
+                canScrollLeft
+                  ? "border-slate-200 bg-white text-slate-500"
+                  : "cursor-not-allowed border-slate-100 text-slate-300 opacity-50"
+              }`}
               aria-label="Scroll left"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,7 +232,12 @@ export default function TestsInOffers() {
             <button
               type="button"
               onClick={() => scroll("right")}
-              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-slate-300 bg-white text-slate-600 shadow sm:hidden"
+              disabled={!canScrollRight}
+              className={`flex h-9 w-9 items-center justify-center rounded-full border shadow sm:hidden ${
+                canScrollRight
+                  ? "border-slate-200 bg-white text-slate-500"
+                  : "cursor-not-allowed border-slate-100 text-slate-300 opacity-50"
+              }`}
               aria-label="Scroll right"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -26,9 +26,9 @@ function DoctorCardMobile({ doctor }) {
           </div>
 
           <div className="min-w-0 flex-1 pt-0.5">
-            <h3 className="text-[15px] font-bold leading-tight text-slate-900">{doctor.name}</h3>
+            <h3 className="t-body font-bold leading-tight text-slate-900">{doctor.name}</h3>
             <p className="mt-0.5 text-xs font-semibold text-sky-600">{doctor.specialization}</p>
-            <p className="mt-0.5 text-[11px] leading-snug text-slate-500">{doctor.hospital}</p>
+            <p className="mt-0.5 t-caption leading-snug text-slate-500">{doctor.hospital}</p>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ function DoctorCardDesktop({ doctor }) {
           {doctor.specialization}
           {doctor.hospital ? `, ${doctor.hospital}` : ""}
         </p>
-        <p className="text-sm leading-relaxed text-slate-600 md:text-[15px]">&ldquo;{doctor.quote}&rdquo;</p>
+        <p className="text-sm leading-relaxed text-slate-600 ">&ldquo;{doctor.quote}&rdquo;</p>
       </div>
     </div>
   );
@@ -131,12 +131,12 @@ export default function DoctorReferrals() {
     <section className="section-y relative w-full overflow-hidden bg-white">
       <div className="section-shell relative">
         <div className="section-head">
-          <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
+          <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
+            <h2 className="t-badge font-bold text-white">
               Our Referral Network
             </h2>
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
+          <p className="max-w-2xl t-lead text-slate-600">
             Trusted specialists across specialties who partner with Cutis Path
             Lab for accurate diagnostics and patient care.
           </p>

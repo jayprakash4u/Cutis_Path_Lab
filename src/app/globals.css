@@ -58,6 +58,96 @@ body {
     scrollbar-width: none;
   }
 
+  /* ── Type scale ────────────────────────────────────────────────
+     One source of truth for every text role on the site. Roles are
+     named for the job, not the value, so changing the scale never
+     means hunting `text-lg md:text-xl` across dozens of files.
+
+     The floor is 0.75rem / 12px. The page previously shipped 9px and
+     10px text, which is below a comfortably readable size on a phone. */
+
+  .t-display {
+    font-size: 1.75rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .t-h2 {
+    font-size: 1.25rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .t-badge {
+    font-size: 1rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .t-h3 {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .t-lead {
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .t-body {
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .t-meta {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .t-caption {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 640px) {
+    .t-display {
+      font-size: 2.25rem;
+    }
+    .t-h2 {
+      font-size: 1.5rem;
+    }
+    .t-badge {
+      font-size: 1.125rem;
+    }
+    .t-h3 {
+      font-size: 1.125rem;
+    }
+    .t-lead {
+      font-size: 1rem;
+    }
+    .t-body {
+      font-size: 1rem;
+    }
+    .t-meta {
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .t-display {
+      font-size: 3rem;
+    }
+    .t-h2 {
+      font-size: 1.875rem;
+    }
+    .t-badge {
+      font-size: 1.25rem;
+    }
+    .t-lead {
+      font-size: 1.125rem;
+    }
+  }
+
   /* ── Hero carousel frame ───────────────────────────────────────
      Authored here rather than as Tailwind arbitrary values (h-[440px]
      …): the slides are absolutely positioned, so if the JIT ever misses
@@ -167,6 +257,29 @@ body {
   .hero-sub {
     color: rgba(226, 232, 240, 0.95);
     text-shadow: 0 1px 10px rgba(2, 6, 23, 0.5);
+  }
+
+  /* ── Lab technology card ───────────────────────────────────────
+     Authored here rather than as a Tailwind arbitrary value
+     (min-h-[420px] …) — the same JIT reliability problem that once
+     collapsed the hero frame applies to any bracketed size. The
+     min-height sets the card's floor; content longer than that grows
+     the card, and `h-full` keeps every card in a row matched to the
+     tallest one so the row reads as a single band. */
+  .tech-card {
+    min-height: 340px;
+  }
+
+  @media (min-width: 640px) {
+    .tech-card {
+      min-height: 420px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .tech-card {
+      min-height: 470px;
+    }
   }
 
   /* ── Section rhythm ────────────────────────────────────────────

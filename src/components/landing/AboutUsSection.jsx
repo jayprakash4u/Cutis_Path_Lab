@@ -100,7 +100,7 @@ export default function AboutUsSection() {
       <div className="section-shell relative">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
           {/* Left — image collage */}
-          <div className="relative mx-auto w-full max-w-lg overflow-visible pb-14 sm:pb-16 md:pb-20 lg:max-w-none">
+          <div className="relative mx-auto w-full max-w-lg overflow-visible pb-14 sm:pb-16 md:pb-20 lg:max-w-md">
             <DotPattern className="absolute -left-2 top-0 z-0 sm:-left-4 sm:top-2" />
 
             <div className="relative z-10 ml-4 overflow-visible sm:ml-10">
@@ -131,17 +131,17 @@ export default function AboutUsSection() {
 
           {/* Right — content */}
           <div>
-            <div className="mb-6 sm:mb-8">
+            <div className="section-head">
               <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-                <span className="text-sm font-bold text-white sm:text-base">About Us</span>
+                <span className="t-badge font-bold text-white">About Us</span>
               </div>
 
-              <h2 className="max-w-md text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              <h2 className="t-h2 max-w-md font-bold text-slate-900">
                 Advanced Technology.{" "}
                 <span className="text-sky-600">Trusted Teams.</span>
               </h2>
 
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-600 sm:text-base">
+              <p className="mt-3 max-w-md t-lead text-slate-600">
                 Accurate diagnostics, accredited quality, and patient-first care at Cutis Path Lab.
               </p>
             </div>
@@ -156,7 +156,7 @@ export default function AboutUsSection() {
                   </div>
                   <div>
                     {item.tag && (
-                      <span className="mb-1 inline-block rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600 sm:text-[11px]">
+                      <span className="mb-1 inline-block rounded-md bg-slate-100 px-2 py-0.5 t-caption font-bold uppercase tracking-wide text-slate-600 sm:t-caption">
                         {item.tag}
                       </span>
                     )}
