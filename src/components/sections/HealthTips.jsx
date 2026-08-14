@@ -261,16 +261,16 @@ const StepCard = ({ borderColor, title, description, icon: Icon }) => (
 
 export default function HealthTips() {
   return (
-    <section className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-y bg-gradient-to-b from-slate-50 to-white">
+      <div className="section-shell">
         {/* Header */}
-        <div className="mb-8 md:mb-10">
+        <div className="section-head">
           <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-lg font-bold text-white md:text-xl">
+            <h2 className="t-badge font-bold text-white">
               Pre-Checkup Tips
             </h2>
           </div>
-          <p className="max-w-xl text-sm leading-relaxed text-slate-500 md:text-base">
+          <p className="max-w-xl t-lead text-slate-500">
             Follow these guidelines before your health checkup for accurate
             results
           </p>

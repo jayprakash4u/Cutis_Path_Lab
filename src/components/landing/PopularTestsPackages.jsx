@@ -107,16 +107,19 @@ export default function PopularTestsPackages() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-sky-50 to-white py-6 shadow-lg shadow-slate-200/50 sm:py-8 md:py-10 lg:py-12">
-      <div className="absolute left-0 top-0 z-10">
-        <div className="rounded-tr-xl rounded-bl-xl bg-sky-600 px-3 py-1.5 sm:rounded-tr-2xl sm:rounded-bl-2xl sm:px-4 sm:py-2">
-          <h2 className="text-sm font-bold text-white sm:text-base md:text-lg">
-            Popular Tests & Packages
-          </h2>
+    <section className="section-y relative bg-gradient-to-br from-sky-50 to-white shadow-lg shadow-slate-200/50">
+      <div className="section-shell">
+        <div className="section-head">
+          <div className="mb-3 inline-block rounded-tr-xl rounded-bl-xl bg-sky-600 px-3 py-1.5 sm:rounded-tr-2xl sm:rounded-bl-2xl sm:px-4 sm:py-2">
+            <h2 className="t-badge font-bold text-white">
+              Popular Tests &amp; Packages
+            </h2>
+          </div>
+          <p className="max-w-2xl t-lead text-slate-600">
+            The tests and health packages patients book most, with reporting
+            time and fasting details up front.
+          </p>
         </div>
-      </div>
-
-      <div className="max-w-full pt-12">
         <div className="relative sm:px-10 md:px-12 lg:px-14">
           <button
             type="button"
@@ -163,31 +166,31 @@ export default function PopularTestsPackages() {
                       className={`flex flex-col overflow-hidden rounded-xl bg-white shadow-sm sm:rounded-2xl ${cardClassName}`}
                     >
                       <div className="flex min-h-[24px] items-center justify-between gap-2 bg-[#FF6B6B] px-2 py-1 sm:min-h-[28px] sm:px-3 md:min-h-[32px] md:px-4">
-                        <h3 className="w-full truncate text-[10px] font-semibold text-white sm:text-xs md:text-sm">
+                        <h3 className="w-full truncate t-caption font-semibold text-white sm:text-xs md:text-sm">
                           {item.name}
                         </h3>
-                        <span className="shrink-0 rounded bg-white/20 px-1.5 py-0.5 text-[9px] font-medium text-white sm:text-[10px]">
+                        <span className="shrink-0 rounded bg-white/20 px-1.5 py-0.5 t-caption font-medium text-white sm:t-caption">
                           {item.kind === "package" ? "Package" : "Test"}
                         </span>
                       </div>
 
                       <div className="flex flex-1 flex-col p-2 sm:p-3 md:p-5">
                         <div className="mb-2 flex flex-col gap-1 sm:mb-3 sm:gap-2">
-                          <span className="flex items-center gap-1 text-[10px] text-slate-500 sm:text-xs">
+                          <span className="flex items-center gap-1 t-caption text-slate-500 sm:text-xs">
                             <svg className="h-3 w-3 text-sky-600 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             <span className="hidden sm:inline">Reports: </span>
                             {item.reportsTime}
                           </span>
-                          <span className="flex items-center gap-1 text-[10px] text-slate-500 sm:text-xs">
+                          <span className="flex items-center gap-1 t-caption text-slate-500 sm:text-xs">
                             <svg className="h-3 w-3 text-sky-600 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span className="hidden sm:inline">Fasting: </span>
                             {item.fasting}
                           </span>
-                          <span className="flex items-center gap-1 text-[10px] text-slate-500 sm:text-xs">
+                          <span className="flex items-center gap-1 t-caption text-slate-500 sm:text-xs">
                             <svg className="h-3 w-3 text-sky-600 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                             </svg>
@@ -203,13 +206,13 @@ export default function PopularTestsPackages() {
                                 ₹{item.price}
                               </span>
                               {item.originalPrice && (
-                                <span className="text-[10px] text-slate-500 line-through sm:text-xs">
+                                <span className="t-caption text-slate-500 line-through sm:text-xs">
                                   ₹{item.originalPrice}
                                 </span>
                               )}
                             </div>
                             {discount > 0 && (
-                              <span className="text-[10px] font-semibold text-green-600 sm:text-xs">
+                              <span className="t-caption font-semibold text-green-600 sm:text-xs">
                                 {discount}% OFF
                               </span>
                             )}
@@ -217,7 +220,7 @@ export default function PopularTestsPackages() {
                           <button
                             type="button"
                             onClick={() => handleBook(item)}
-                            className="rounded-lg bg-sky-600 px-2 py-1 text-[10px] font-medium text-white transition-colors hover:bg-sky-700 sm:px-3 sm:py-2 sm:text-xs md:px-4 md:text-sm"
+                            className="rounded-lg bg-sky-600 px-2 py-1 t-caption font-medium text-white transition-colors hover:bg-sky-700 sm:px-3 sm:py-2 sm:text-xs md:px-4 md:text-sm"
                           >
                             Book
                           </button>

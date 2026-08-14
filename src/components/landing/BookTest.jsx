@@ -143,8 +143,8 @@ export default function BookTest() {
   };
 
   return (
-    <section id="book-test" className="py-6 sm:py-8 lg:py-10 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+    <section id="book-test" className="section-y bg-slate-50">
+      <div className="section-shell">
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center">
           {/* Left Side - Content & Image */}
           <div>
@@ -289,7 +289,7 @@ export default function BookTest() {
                   <p className="font-medium text-slate-900 text-xs sm:text-sm">
                     Quick Results
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="t-caption text-slate-500">
                     Results within 24 hours
                   </p>
                 </div>
@@ -356,7 +356,7 @@ export default function BookTest() {
                   <p className="font-medium text-slate-900 text-xs sm:text-sm">
                     Home Sample Collection
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="t-caption text-slate-500">
                     We come to your doorstep
                   </p>
                 </div>
@@ -407,7 +407,7 @@ export default function BookTest() {
                   <p className="font-medium text-slate-900 text-xs sm:text-sm">
                     NABL Accredited
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="t-caption text-slate-500">
                     ISO certified lab
                   </p>
                 </div>

@@ -3,8 +3,8 @@ import { apiErrorResponse } from "@/lib/apiError";
 import { publicCatalogCache } from "@/lib/publicApiCache";
 import { resolveActiveFilter } from "@/lib/activeFilter";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr } from "@/lib/adminSql";
-import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { toBit, toIntOr } from "@/lib/adminSql";
+import { newId, safeLimit, sqlExec, sqlQuery, toBool } from "@/lib/mysql";
 
 export async function GET(request) {
   try {
@@ -13,28 +13,32 @@ export async function GET(request) {
     if (denied) return denied;
 
     const featured = searchParams.get("featured");
-    const limitRaw = Number(searchParams.get("limit"));
-    const limit =
-      Number.isFinite(limitRaw) && limitRaw > 0
-        ? Math.min(Math.floor(limitRaw), 100)
-        : null;
+    const limit = safeLimit(searchParams.get("limit"), 100);
+    const limitClause = limit ? `LIMIT ${limit}` : "";
 
-    let where = "1=1";
-    if (activeOnly) where += " AND isActive = 1";
-    if (featured === "true") where += " AND featured = 1";
-    const topClause = limit ? `TOP ${limit}` : "";
+    const where = [];
+    if (activeOnly) where.push("`isActive` = 1");
+    if (featured === "true") where.push("`featured` = 1");
+    const whereClause = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
-    const rows = await sqlJson(`
-      SELECT ${topClause} id, name, role, content, rating,
-             imageUrl AS image, featured, isActive, sortOrder
-      FROM dbo.Testimonial
-      WHERE ${where}
-      ORDER BY sortOrder, name
-      FOR JSON PATH
-    `);
+    const rows = await sqlQuery(
+      `SELECT \`id\`, \`name\`, \`role\`, \`content\`, \`rating\`,
+              \`imageUrl\` AS \`image\`, \`featured\`, \`isActive\`, \`sortOrder\`
+         FROM \`Testimonial\`
+         ${whereClause}
+        ORDER BY \`sortOrder\`, \`name\`
+        ${limitClause}`,
+    );
 
     return NextResponse.json(
-      { success: true, data: rows },
+      {
+        success: true,
+        data: rows.map((r) => ({
+          ...r,
+          featured: toBool(r.featured),
+          isActive: toBool(r.isActive),
+        })),
+      },
       publicCatalogCache(),
     );
   } catch (error) {
@@ -50,6 +54,7 @@ export async function POST(request) {
     const body = await request.json();
     const name = String(body.name || "").trim();
     const content = String(body.content || "").trim();
+
     if (!name || !content) {
       return NextResponse.json(
         { success: false, message: "name and content are required" },
@@ -58,23 +63,24 @@ export async function POST(request) {
     }
 
     const id = String(body.id || newId()).trim();
-    const role = body.role ? String(body.role).trim() : null;
-    const rating = Number.isFinite(Number(body.rating)) ? Number(body.rating) : 5;
     const imageUrl = body.imageUrl || body.image || null;
 
-    await sqlExec(`
-      INSERT INTO dbo.Testimonial
-        (id, name, role, content, rating, imageUrl, featured, isActive, sortOrder)
-      VALUES
-        (${escapeSql(id)}, ${escapeSql(name)},
-         ${role ? escapeSql(role) : "NULL"},
-         ${escapeSql(content)},
-         ${intOr(rating, 5)},
-         ${imageUrl ? escapeSql(String(imageUrl).trim()) : "NULL"},
-         ${bit(body.featured !== false)},
-         ${bit(body.isActive !== false)},
-         ${intOr(body.sortOrder, 0)});
-    `);
+    await sqlExec(
+      `INSERT INTO \`Testimonial\`
+         (\`id\`, \`name\`, \`role\`, \`content\`, \`rating\`, \`imageUrl\`, \`featured\`, \`isActive\`, \`sortOrder\`)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        name,
+        body.role ? String(body.role).trim() : null,
+        content,
+        toIntOr(body.rating, 5),
+        imageUrl ? String(imageUrl).trim() : null,
+        toBit(body.featured !== false),
+        toBit(body.isActive !== false),
+        toIntOr(body.sortOrder, 0),
+      ],
+    );
 
     return NextResponse.json(
       { success: true, message: "Testimonial created", data: { id } },

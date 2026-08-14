@@ -58,7 +58,7 @@ function FooterLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="text-[11px] text-slate-400 transition-colors hover:text-white sm:text-sm"
+      className="t-caption text-slate-400 transition-colors hover:text-white sm:text-sm"
     >
       {children}
     </Link>
@@ -107,7 +107,7 @@ export default function Footer() {
 
           <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 sm:mt-5 sm:gap-4">
             <div>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-sky-400">
+              <h3 className="t-caption font-semibold uppercase tracking-[0.12em] text-sky-400">
                 Explore
               </h3>
               <ul className="mt-1.5 space-y-1 sm:mt-2.5 sm:space-y-1.5">
@@ -119,7 +119,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-sky-400">
+              <h3 className="t-caption font-semibold uppercase tracking-[0.12em] text-sky-400">
                 Company
               </h3>
               <ul className="mt-1.5 space-y-1 sm:mt-2.5 sm:space-y-1.5">
@@ -132,7 +132,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-3 space-y-1 border-t border-slate-800/80 pt-3 text-[11px] leading-snug text-slate-400 sm:mt-5 sm:space-y-1.5 sm:pt-4 sm:text-sm">
+          <div className="mt-3 space-y-1 border-t border-slate-800/80 pt-3 t-caption leading-snug text-slate-400 sm:mt-5 sm:space-y-1.5 sm:pt-4 sm:text-sm">
             <p className="line-clamp-2">{contact.address}</p>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <a href={contact.phoneHref} className="hover:text-white">
@@ -148,7 +148,7 @@ export default function Footer() {
             <p className="text-slate-500">{contact.hours}</p>
           </div>
 
-          <p className="mt-2.5 border-t border-slate-800/80 pt-2.5 text-center text-[10px] text-slate-500 sm:mt-4 sm:pt-3 sm:text-xs">
+          <p className="mt-2.5 border-t border-slate-800/80 pt-2.5 text-center t-caption text-slate-500 sm:mt-4 sm:pt-3 sm:text-xs">
             © {new Date().getFullYear()} Cutis Path Lab · Kathmandu, Nepal
           </p>
         </div>

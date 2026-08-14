@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { resolveActiveFilter } from "@/lib/activeFilter";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr } from "@/lib/adminSql";
-import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { toBit, toIntOr } from "@/lib/adminSql";
+import { newId, safeLimit, sqlExec, sqlQuery, toBool } from "@/lib/mysql";
 
 export async function GET(request) {
   try {
@@ -11,26 +11,23 @@ export async function GET(request) {
     const { denied, activeOnly } = resolveActiveFilter(request, searchParams);
     if (denied) return denied;
 
-    const limitRaw = Number(searchParams.get("limit"));
-    const limit =
-      Number.isFinite(limitRaw) && limitRaw > 0
-        ? Math.min(Math.floor(limitRaw), 200)
-        : null;
+    const limit = safeLimit(searchParams.get("limit"), 200);
+    const limitClause = limit ? `LIMIT ${limit}` : "";
+    const whereClause = activeOnly ? "WHERE `isActive` = 1" : "";
 
-    let where = "1=1";
-    if (activeOnly) where += " AND isActive = 1";
-    const topClause = limit ? `TOP ${limit}` : "";
+    const rows = await sqlQuery(
+      `SELECT \`id\`, \`title\`, \`caption\`, \`imageUrl\` AS \`image\`, \`altText\`,
+              \`isActive\`, \`sortOrder\`, \`createdAt\`
+         FROM \`GalleryImage\`
+         ${whereClause}
+        ORDER BY \`sortOrder\`, \`createdAt\` DESC
+        ${limitClause}`,
+    );
 
-    const rows = await sqlJson(`
-      SELECT ${topClause}
-        id, title, caption, imageUrl AS image, altText, isActive, sortOrder, createdAt
-      FROM dbo.GalleryImage
-      WHERE ${where}
-      ORDER BY sortOrder, createdAt DESC
-      FOR JSON PATH
-    `);
-
-    return NextResponse.json({ success: true, data: rows });
+    return NextResponse.json({
+      success: true,
+      data: rows.map((r) => ({ ...r, isActive: toBool(r.isActive) })),
+    });
   } catch (error) {
     return apiErrorResponse(error, "Failed to load gallery", 500);
   }
@@ -43,6 +40,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const imageUrl = String(body.imageUrl || body.image || "").trim();
+
     if (!imageUrl) {
       return NextResponse.json(
         { success: false, message: "imageUrl is required" },
@@ -51,22 +49,21 @@ export async function POST(request) {
     }
 
     const id = String(body.id || newId()).trim();
-    const title = body.title ? String(body.title).trim() : null;
-    const caption = body.caption ? String(body.caption).trim() : null;
-    const altText = body.altText ? String(body.altText).trim() : null;
 
-    await sqlExec(`
-      INSERT INTO dbo.GalleryImage
-        (id, title, caption, imageUrl, altText, isActive, sortOrder)
-      VALUES
-        (${escapeSql(id)},
-         ${title ? escapeSql(title) : "NULL"},
-         ${caption ? escapeSql(caption) : "NULL"},
-         ${escapeSql(imageUrl)},
-         ${altText ? escapeSql(altText) : "NULL"},
-         ${bit(body.isActive !== false)},
-         ${intOr(body.sortOrder, 0)});
-    `);
+    await sqlExec(
+      `INSERT INTO \`GalleryImage\`
+         (\`id\`, \`title\`, \`caption\`, \`imageUrl\`, \`altText\`, \`isActive\`, \`sortOrder\`)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        body.title ? String(body.title).trim() : null,
+        body.caption ? String(body.caption).trim() : null,
+        imageUrl,
+        body.altText ? String(body.altText).trim() : null,
+        toBit(body.isActive !== false),
+        toIntOr(body.sortOrder, 0),
+      ],
+    );
 
     return NextResponse.json(
       { success: true, message: "Gallery image added", data: { id } },

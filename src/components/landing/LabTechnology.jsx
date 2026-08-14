@@ -195,14 +195,14 @@ export default function LabTechnology() {
     scrollToDot,
     gap,
   } = useFullCardCarousel({
-    gap: 24,
+    gap: 28,
     breakpoints: CAROUSEL_BREAKPOINTS.lab,
     itemCount: technologies.length,
     deps: [technologies.length],
   });
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-sky-50 via-white to-slate-50 py-8 sm:py-14 md:py-20">
+    <section className="section-y relative w-full overflow-hidden bg-gradient-to-b from-sky-50 via-white to-slate-50">
       <div
         className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl"
         aria-hidden="true"
@@ -212,14 +212,14 @@ export default function LabTechnology() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 sm:mb-10 md:mb-12">
-          <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2 sm:mb-4">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
+      <div className="section-shell relative">
+        <div className="section-head">
+          <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
+            <h2 className="t-badge font-bold text-white">
               Our Lab Technology
             </h2>
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
+          <p className="max-w-2xl t-lead text-slate-600">
             Modern diagnostics powered by precision instruments, digital
             workflows, and trusted laboratory science.
           </p>
@@ -229,7 +229,7 @@ export default function LabTechnology() {
           <button
             type="button"
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg sm:flex md:h-11 md:w-11"
+            className="absolute left-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg sm:flex md:h-12 md:w-12"
             aria-label="Previous"
           >
             <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,7 +237,7 @@ export default function LabTechnology() {
             </svg>
           </button>
 
-          <div ref={viewportRef} className="w-full overflow-hidden py-2 sm:py-6">
+          <div ref={viewportRef} className="w-full overflow-hidden py-4 sm:py-8 lg:py-10">
             <div
               ref={scrollRef}
               onScroll={handleScroll}
@@ -255,31 +255,31 @@ export default function LabTechnology() {
                   style={cardWidthStyle}
                   className={`relative ${cardClassName}`}
                 >
-                <div className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200/80 transition-shadow duration-300 hover:shadow-lg">
-                  <div className="relative bg-[#FF6B6B] px-4 pb-5 pt-4 sm:px-5 sm:pb-7 sm:pt-5">
-                    <h3 className="pr-12 text-sm font-bold leading-tight text-white sm:pr-16 sm:text-lg">
+                <div className="tech-card flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200/80 transition-shadow duration-300 hover:shadow-lg">
+                  <div className="relative shrink-0 bg-[#FF6B6B] px-5 pb-6 pt-5 sm:px-7 sm:pb-9 sm:pt-7">
+                    <h3 className="pr-14 text-base font-bold leading-tight text-white sm:pr-20 sm:text-2xl">
                       {tech.title}
                     </h3>
-                    <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 sm:mt-1.5 sm:gap-x-3">
-                      <span className="text-sm font-semibold text-white sm:text-base">
+                    <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 sm:mt-2 sm:gap-x-3">
+                      <span className="text-base font-semibold text-white sm:text-lg">
                         {tech.highlight}
                       </span>
-                      <span className="text-[10px] text-white/80 sm:text-xs">{tech.support}</span>
+                      <span className="t-meta text-white/80 sm:text-sm">{tech.support}</span>
                     </div>
 
                     <Link
                       href="/services"
-                      className="absolute bottom-0 right-3 flex h-12 w-12 translate-y-1/2 items-center justify-center rounded-xl border-2 border-sky-600 bg-white shadow-md transition-transform hover:scale-105 sm:right-4 sm:h-16 sm:w-16 sm:rounded-2xl"
+                      className="absolute bottom-0 right-4 flex h-14 w-14 translate-y-1/2 items-center justify-center rounded-xl border-2 border-sky-600 bg-white shadow-md transition-transform hover:scale-105 sm:right-5 sm:h-20 sm:w-20 sm:rounded-2xl"
                       aria-label={`${tech.title} — view services`}
                     >
-                      <div className="h-8 w-8 sm:h-11 sm:w-11">
+                      <div className="h-9 w-9 sm:h-14 sm:w-14">
                         <TechIcon index={idx} />
                       </div>
                     </Link>
                   </div>
 
-                  <div className="max-h-[140px] overflow-y-auto px-3 pb-4 pt-6 text-[11px] text-slate-700 sm:max-h-[220px] sm:px-5 sm:pb-5 sm:pt-10 sm:text-sm [scrollbar-width:thin]">
-                    <ul className="space-y-3">
+                  <div className="flex-1 px-4 pb-5 pt-8 t-body text-slate-700 sm:px-7 sm:pb-8 sm:pt-14 sm:text-base">
+                    <ul className="space-y-4 sm:space-y-5">
                       {tech.features.map((group) => (
                         <li key={group.label}>
                           <p className="font-medium text-slate-800">
@@ -287,10 +287,10 @@ export default function LabTechnology() {
                             {group.label}
                           </p>
                           {group.items?.length > 0 && (
-                            <ul className="mt-1.5 space-y-1 pl-4 text-slate-600">
+                            <ul className="mt-2 space-y-1.5 pl-4 text-slate-600">
                               {group.items.map((item) => (
                                 <li key={item} className="flex gap-2">
-                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
+                                  <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky-500" />
                                   <span>{item}</span>
                                 </li>
                               ))}
@@ -309,7 +309,7 @@ export default function LabTechnology() {
           <button
             type="button"
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg sm:flex md:h-11 md:w-11"
+            className="absolute right-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg sm:flex md:h-12 md:w-12"
             aria-label="Next"
           >
             <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -318,7 +318,7 @@ export default function LabTechnology() {
           </button>
         </div>
 
-        <div className="mt-4 flex items-center justify-center gap-3 sm:mt-6">
+        <div className="mt-5 flex items-center justify-center gap-3 sm:mt-8">
           <button
             type="button"
             onClick={() => scroll("left")}
