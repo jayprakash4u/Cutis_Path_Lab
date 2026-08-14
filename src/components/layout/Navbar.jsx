@@ -8,14 +8,35 @@ import { LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, Twitte
 import { tests } from "@/data/staticData";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
-  { href: "/tests", label: "Our Tests" },
-  { href: "/packages", label: "Packages" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/about", label: "About Us" },
-  { href: "/contact", label: "Contact Us" },
+  { href: "/", label: "Home", icon: "home" },
+  { href: "/services", label: "Services", icon: "flask" },
+  { href: "/tests", label: "Our Tests", icon: "clipboard" },
+  { href: "/packages", label: "Packages", icon: "box" },
+  { href: "/gallery", label: "Gallery", icon: "image" },
+  { href: "/about", label: "About Us", icon: "info" },
+  { href: "/contact", label: "Contact Us", icon: "chat" },
 ];
+
+const NAV_ICON_PATHS = {
+  home: "M3 11.5 12 4l9 7.5M5.5 10v9a1 1 0 001 1H10v-5.5a1 1 0 011-1h2a1 1 0 011 1V20h3.5a1 1 0 001-1v-9",
+  flask:
+    "M9.5 3.5h5M10 4v5.5L5.75 17a1.5 1.5 0 001.3 2.25h9.9a1.5 1.5 0 001.3-2.25L14 9.5V4M8.5 14.5h7",
+  clipboard:
+    "M9 4.5h6a1 1 0 011 1V6h1.5a1 1 0 011 1v12a1 1 0 01-1 1h-11a1 1 0 01-1-1V7a1 1 0 011-1H8v-.5a1 1 0 011-1zM9 12l2 2 4-4",
+  box: "M3.5 8.5 12 4l8.5 4.5L12 13 3.5 8.5zM3.5 8.5V16L12 20.5M20.5 8.5V16L12 20.5M12 13v7.5",
+  image:
+    "M4.5 5h15a1 1 0 011 1v12a1 1 0 01-1 1h-15a1 1 0 01-1-1V6a1 1 0 011-1zM8 10.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM4 17l5.5-5.5a1.5 1.5 0 012.12 0L15 15M15 15l1.88-1.88a1.5 1.5 0 012.12 0L20.5 15.5",
+  info: "M12 3.5a8.5 8.5 0 100 17 8.5 8.5 0 000-17zM12 11v5.5M12 8.25v.01",
+  chat: "M4.5 5.5h15a1 1 0 011 1v9a1 1 0 01-1 1H10l-4.5 4v-4H4.5a1 1 0 01-1-1v-9a1 1 0 011-1z",
+};
+
+function NavLinkIcon({ id, className = "" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={NAV_ICON_PATHS[id]} />
+    </svg>
+  );
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -494,75 +515,199 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile / tablet menu — drops under header; hamburger stays clickable */}
-        {isOpen && (
-          <>
+        </nav>
+
+      {/*
+        Mobile / tablet menu — a right-side slide-in drawer. It lives outside
+        <nav> on purpose: the nav's backdrop-blur establishes a containing
+        block for fixed descendants, which would pin the drawer under the
+        header instead of letting it cover the full viewport height.
+      */}
+      <button
+        type="button"
+        tabIndex={isOpen ? 0 : -1}
+        aria-hidden={!isOpen}
+        className={`lg:hidden fixed inset-0 z-[85] bg-slate-900/55 backdrop-blur-[2px] transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        aria-label="Close menu"
+        onClick={closeMobileMenu}
+      />
+
+      <aside
+        id="mobile-nav-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        className={`lg:hidden fixed inset-y-0 right-0 z-[90] flex h-dvh w-[84%] max-w-[360px] flex-col bg-white shadow-[-12px_0_40px_rgba(15,23,42,0.22)] transition-transform duration-300 ease-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {/* Header */}
+        <div className="relative shrink-0 overflow-hidden bg-gradient-to-br from-sky-600 via-sky-600 to-sky-500 px-5 pb-5 pt-[max(1.1rem,env(safe-area-inset-top))]">
+          <div
+            className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -left-6 bottom-0 h-20 w-20 rounded-full bg-[#FF6B6B]/20 blur-xl"
+            aria-hidden="true"
+          />
+          <div className="relative flex items-center justify-between gap-3">
+            <Link href="/" onClick={closeMobileMenu} className="flex items-center rounded-lg bg-white/95 px-2.5 py-1.5 shadow-sm">
+              <Image
+                src="/images/cutis.png"
+                alt="CUTIS Lab"
+                width={120}
+                height={45}
+                className="h-auto w-[100px]"
+              />
+            </Link>
             <button
               type="button"
-              className="lg:hidden fixed inset-x-0 top-14 sm:top-16 bottom-0 z-[55] bg-slate-900/35"
-              aria-label="Close menu"
               onClick={closeMobileMenu}
-            />
-            <div
-              id="mobile-nav-panel"
-              className="lg:hidden absolute left-0 right-0 top-full z-[65] border-t border-slate-100 bg-white shadow-xl max-h-[min(72vh,calc(100dvh-8.5rem))] overflow-y-auto"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Site menu"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white transition-colors active:scale-95 active:bg-white/25"
+              aria-label="Close menu"
             >
-              <nav className="px-3 py-2">
-                {navLinks.map((link) => {
-                  const active = pathname === link.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={closeMobileMenu}
-                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 t-body font-semibold transition-colors ${
-                        active
-                          ? "bg-sky-50 text-sky-700"
-                          : "text-slate-800 active:bg-slate-50"
-                      }`}
-                    >
-                      <span>{link.label}</span>
-                      {active && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B6B]" aria-hidden />
-                      )}
-                    </Link>
-                  );
-                })}
-              </nav>
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <p className="relative mt-3 t-caption font-medium text-white/85">
+            Trusted diagnostics, transparent results.
+          </p>
+        </div>
 
-              <div className="px-4 pb-5 pt-2 space-y-2.5 border-t border-slate-100">
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          <nav className="px-3 py-3">
+            {navLinks.map((link) => {
+              const active = pathname === link.href;
+              return (
                 <Link
-                  href="/book"
+                  key={link.href}
+                  href={link.href}
                   onClick={closeMobileMenu}
-                  className="flex items-center justify-center w-full rounded-xl bg-sky-600 py-3 text-sm font-bold text-white"
+                  className={`group mb-1 flex items-center gap-3 rounded-xl px-3 py-3 t-body font-semibold transition-colors ${
+                    active
+                      ? "bg-sky-50 text-sky-700"
+                      : "text-slate-700 active:bg-slate-50"
+                  }`}
                 >
-                  Book a Test
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                      active
+                        ? "bg-sky-600 text-white"
+                        : "bg-slate-100 text-slate-500 group-active:bg-sky-100 group-active:text-sky-600"
+                    }`}
+                  >
+                    <NavLinkIcon id={link.icon} className="h-[18px] w-[18px]" />
+                  </span>
+                  <span className="flex-1">{link.label}</span>
+                  {active ? (
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]" aria-hidden />
+                  ) : (
+                    <svg className="h-4 w-4 shrink-0 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  )}
                 </Link>
-                <div className="grid grid-cols-2 gap-2.5">
-                  <Link
-                    href="/download-report"
-                    onClick={closeMobileMenu}
-                    className="flex items-center justify-center rounded-xl border border-[#FF6B6B]/50 py-2.5 text-sm font-semibold text-[#FF6B6B]"
-                  >
-                    Report
-                  </Link>
-                  <a
-                    href="tel:+9779825849435"
-                    className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
-                  >
-                    <PhoneIcon size={16} />
-                    Call
-                  </a>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+              );
+            })}
+          </nav>
 
-        </nav>
+          <div className="space-y-2.5 border-t border-slate-100 px-4 pb-4 pt-3">
+            <Link
+              href="/book"
+              onClick={closeMobileMenu}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-sky-500 py-3 text-sm font-bold text-white shadow-md shadow-sky-500/25"
+            >
+              Book a Test
+            </Link>
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                href="/download-report"
+                onClick={closeMobileMenu}
+                className="flex items-center justify-center rounded-xl border border-[#FF6B6B]/50 py-2.5 text-sm font-semibold text-[#FF6B6B]"
+              >
+                Report
+              </Link>
+              <a
+                href="tel:+9779825849435"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
+              >
+                <PhoneIcon size={16} />
+                Call
+              </a>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100 px-4 py-4">
+            <p className="mb-2.5 t-caption font-bold uppercase tracking-wider text-slate-400">
+              Get in touch
+            </p>
+            <ul className="space-y-2.5 t-body text-slate-600">
+              <li className="flex items-start gap-2.5">
+                <LocationIcon size={16} className="mt-0.5 shrink-0 text-sky-600" />
+                Kathmandu, Bagmati, Nepal
+              </li>
+              <li>
+                <a href="tel:+9779825849435" className="flex items-center gap-2.5">
+                  <PhoneIcon size={16} className="shrink-0 text-sky-600" />
+                  +977-9825849435
+                </a>
+              </li>
+              <li>
+                <a href="mailto:cutislabpath@gmail.com" className="flex items-center gap-2.5 break-all">
+                  <EmailIcon size={16} className="shrink-0 text-sky-600" />
+                  cutislabpath@gmail.com
+                </a>
+              </li>
+            </ul>
+
+            <div className="mt-4 flex items-center gap-2">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-50 text-sky-600 transition-colors active:bg-sky-100"
+              >
+                <FacebookIcon size={16} />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-50 text-sky-600 transition-colors active:bg-sky-100"
+              >
+                <InstagramIcon size={16} />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-50 text-sky-600 transition-colors active:bg-sky-100"
+              >
+                <TwitterIcon size={16} />
+              </a>
+              <a
+                href="https://wa.me/9779825849435"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#25D366]/10 text-[#25D366] transition-colors active:bg-[#25D366]/20"
+              >
+                <WhatsAppIcon size={16} accent={false} />
+              </a>
+            </div>
+          </div>
+
+          <div className="h-[env(safe-area-inset-bottom)]" aria-hidden="true" />
+        </div>
+      </aside>
 
       {/* Floating WhatsApp — phone only */}
       <a

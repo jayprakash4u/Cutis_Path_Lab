@@ -6,7 +6,7 @@
     "dev": "next dev",
     "dev:webpack": "next dev --webpack",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3056",
     "lint": "eslint .",
     "db:init": "node scripts/init-mysql.mjs",
     "db:seed": "node scripts/seed-mysql.mjs",
