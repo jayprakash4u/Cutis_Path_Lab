@@ -1,16 +1,29 @@
 "use client";
 
-/** Contact / info blocks (contact page). */
+/**
+ * Contact / info blocks (contact page).
+ * Pass `href` for details that should be actionable — a phone number or an
+ * email — and the whole card becomes the tap target.
+ */
 export const InfoCard = ({
   title,
   content,
   icon = null,
+  href = null,
   className = "",
 }) => {
+  const Wrapper = href ? "a" : "div";
+  const linkProps = href
+    ? {
+        href,
+        className: `flex items-start gap-4 p-5 bg-slate-50 rounded-xl transition-colors hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 ${className}`,
+      }
+    : {
+        className: `flex items-start gap-4 p-5 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors ${className}`,
+      };
+
   return (
-    <div
-      className={`flex items-start gap-4 p-5 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors ${className}`}
-    >
+    <Wrapper {...linkProps}>
       {icon && (
         <div className="w-12 h-12 bg-sky-600 rounded-xl flex items-center justify-center flex-shrink-0">
           {icon}
@@ -18,9 +31,11 @@ export const InfoCard = ({
       )}
       <div className="flex-1">
         <h3 className="text-body-bold text-slate-900 mb-1">{title}</h3>
-        <p className="text-small text-slate-600">{content}</p>
+        <p className={`text-small ${href ? "text-sky-700" : "text-slate-600"}`}>
+          {content}
+        </p>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 

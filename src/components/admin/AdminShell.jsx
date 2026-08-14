@@ -17,6 +17,8 @@ const icons = {
   testimonials: "M20 14a2 2 0 01-2 2H8l-4 4V6a2 2 0 012-2h12a2 2 0 012 2v8z",
   referrals: "M17 20v-1.5a3.5 3.5 0 00-3.5-3.5h-5A3.5 3.5 0 005 18.5V20M11 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM19 11h.01M17 8.5h4",
   gallery: "M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1zM3 16l5-4 4 3 3-2 6 4M8.5 9.5h.01",
+  contact: "M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1zM3.5 7l8.5 6 8.5-6",
+  about: "M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 7.5h.01",
 };
 
 function NavIcon({ name }) {
@@ -52,6 +54,8 @@ const NAV_GROUPS = [
       { href: "/admin/testimonials", label: "Testimonials", icon: "testimonials" },
       { href: "/admin/referrals", label: "Referral network", icon: "referrals" },
       { href: "/admin/gallery", label: "Gallery", icon: "gallery" },
+      { href: "/admin/about", label: "About page", icon: "about" },
+      { href: "/admin/contact", label: "Contact page", icon: "contact" },
     ],
   },
 ];

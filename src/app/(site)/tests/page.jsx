@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import PagePosterHero from "@/components/sections/PagePosterHero";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 import { TestIconView } from "@/lib/testIcons";
 
 const CATEGORIES = [
@@ -217,11 +217,19 @@ function TestsPageContent() {
     <div className="min-h-screen bg-white">
       <Navbar />
       <main className="pt-below-nav-tall">
-        <PagePosterHero
-          src="/images/posters/tests-hero.png"
-          alt="Cutis Path Lab Tests"
-          width={6667}
-          height={654}
+        <PageHeroBand
+          image="/images/posters/tests-hero.png"
+          crumbs={
+            diseaseSlug
+              ? [
+                  { label: "Home", href: "/" },
+                  { label: "Tests", href: "/tests" },
+                  { label: diseaseLabel || diseaseSlug },
+                ]
+              : [{ label: "Home", href: "/" }, { label: "Tests" }]
+          }
+          title={diseaseSlug ? diseaseLabel || diseaseSlug : "Diagnostic Tests"}
+          tagline="Browse our full range of lab tests with transparent pricing and free home sample collection."
         />
 
         <div className="min-h-screen bg-slate-50">

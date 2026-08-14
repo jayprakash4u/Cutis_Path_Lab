@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 
 export default function GalleryPage() {
   const [images, setImages] = useState([]);
@@ -53,19 +54,15 @@ export default function GalleryPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <main className="pt-[72px] lg:pt-[88px]">
-        <section className="bg-gradient-to-br from-sky-50 via-white to-slate-50 py-8 sm:py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-2 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-              <h1 className="text-lg font-bold text-white sm:text-xl md:text-2xl">Gallery</h1>
-            </div>
-            <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-              A glimpse of our lab, team, and facilities at Cutis Path Lab.
-            </p>
-          </div>
-        </section>
+      <main className="pt-below-nav">
+        <PageHeroBand
+          image="/images/posters/cutis-poster.png"
+          crumbs={[{ label: "Home", href: "/" }, { label: "Gallery" }]}
+          title="Gallery"
+          tagline="A glimpse of our lab, team, and facilities at Cutis Path Lab."
+        />
 
-        <section className="pb-12 sm:pb-16">
+        <section className="py-8 sm:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             {loading && (
               <p className="py-12 text-center text-sm text-slate-500">Loading gallery…</p>

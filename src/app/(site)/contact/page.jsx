@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 // ========== LAYOUT COMPONENTS ==========
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import PagePosterHero from "@/components/sections/PagePosterHero";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 
 // ========== UI COMPONENTS ==========
 import { InfoCard } from "@/components/ui";
@@ -36,12 +36,50 @@ const CONTACT_TABS = [
 ];
 
 /**
+ * Social profiles — official brand marks on each platform's own brand colour.
+ * Paths are the standard single-colour glyphs on a 24×24 grid; Instagram uses
+ * its corner-anchored gradient rather than a flat fill.
+ */
+const SOCIAL_LINKS = [
+  {
+    name: "Facebook",
+    urlField: "facebookUrl",
+    background: "#1877F2",
+    path: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z",
+  },
+  {
+    name: "Instagram",
+    urlField: "instagramUrl",
+    background:
+      "radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
+    path: "M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.846-10.405a1.441 1.441 0 0 1-2.881 0 1.441 1.441 0 0 1 2.881 0z",
+  },
+  {
+    name: "WhatsApp",
+    urlField: "whatsappUrl",
+    background: "#25D366",
+    path: "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z",
+  },
+  {
+    name: "X",
+    urlField: "xUrl",
+    background: "#000000",
+    path: "M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z",
+  },
+  {
+    name: "LinkedIn",
+    urlField: "linkedinUrl",
+    background: "#0A66C2",
+    path: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z",
+  },
+];
+
+/**
  * Quick contact options displayed in banner
  */
 const QUICK_CONTACTS = [
   {
     title: "Emergency Hotline",
-    desc: "24/7 emergency laboratory services",
     icon: (
       <svg
         width="60"
@@ -88,7 +126,6 @@ const QUICK_CONTACTS = [
         />
       </svg>
     ),
-    value: "+977 986-1848382",
     highlight: true,
   },
   {
@@ -139,11 +176,10 @@ const QUICK_CONTACTS = [
         />
       </svg>
     ),
-    value: "+977 986-1848382",
   },
   {
-    title: "Toll-Free",
-    desc: "Free call from anywhere",
+    title: "Email",
+    desc: "We reply the same working day",
     icon: (
       <svg
         width="60"
@@ -160,126 +196,43 @@ const QUICK_CONTACTS = [
           stroke="#0284c7"
           strokeWidth="2"
         />
-        <path
-          d="M30 60 Q30 34 60 34 Q90 34 90 60"
-          fill="none"
-          stroke="#0284c7"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
         <rect
-          x="24"
-          y="56"
-          width="14"
-          height="22"
-          rx="7"
+          x="26"
+          y="40"
+          width="68"
+          height="46"
+          rx="6"
           fill="#bae6fd"
           stroke="#0284c7"
-          strokeWidth="2.2"
-        />
-        <rect
-          x="27"
-          y="60"
-          width="8"
-          height="14"
-          rx="4"
-          fill="#0284c7"
-          opacity="0.4"
-        />
-        <rect
-          x="82"
-          y="56"
-          width="14"
-          height="22"
-          rx="7"
-          fill="#bae6fd"
-          stroke="#0284c7"
-          strokeWidth="2.2"
-        />
-        <rect
-          x="85"
-          y="60"
-          width="8"
-          height="14"
-          rx="4"
-          fill="#0284c7"
-          opacity="0.4"
+          strokeWidth="2.4"
         />
         <path
-          d="M38 76 Q38 88 60 88 Q82 88 82 76"
+          d="M26 46 L60 68 L94 46"
           fill="none"
           stroke="#0284c7"
-          strokeWidth="2.5"
+          strokeWidth="2.4"
           strokeLinecap="round"
+          strokeLinejoin="round"
         />
-        <line
-          x1="60"
-          y1="88"
-          x2="60"
-          y2="96"
+        <path
+          d="M26 84 L50 64"
+          fill="none"
           stroke="#0284c7"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <circle
-          cx="60"
-          cy="98"
-          r="5"
-          fill="#FF6B6B"
-          stroke="#fff"
-          strokeWidth="1.5"
-        />
-        <line
-          x1="57"
-          y1="98"
-          x2="63"
-          y2="98"
-          stroke="#fff"
           strokeWidth="1.8"
           strokeLinecap="round"
+          opacity="0.6"
         />
-        <rect x="44" y="54" width="32" height="16" rx="8" fill="#FF6B6B" />
-        <text
-          x="60"
-          y="65"
-          textAnchor="middle"
-          fontSize="9"
-          fontWeight="800"
-          fill="#fff"
-          fontFamily="Arial,sans-serif"
-          letterSpacing="1"
-        >
-          FREE
-        </text>
+        <path
+          d="M94 84 L70 64"
+          fill="none"
+          stroke="#0284c7"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          opacity="0.6"
+        />
+        <circle cx="88" cy="38" r="10" fill="#FF6B6B" stroke="#fff" strokeWidth="2" />
       </svg>
     ),
-    value: "1800-LIFELINE",
-  },
-];
-
-/**
- * FAQ data for FAQ section
- */
-const FAQS = [
-  {
-    question: "What are your laboratory operating hours?",
-    answer:
-      "Our main laboratory is open Monday through Friday from 7:00 AM to 10:00 PM, and Saturday through Sunday from 8:00 AM to 8:00 PM. Emergency services are available 24/7.",
-  },
-  {
-    question: "How do I book an appointment?",
-    answer:
-      "You can book an appointment through our online booking system, by calling our hotline, or by visiting our facility directly. We also offer home sample collection services.",
-  },
-  {
-    question: "How long does it take to get test results?",
-    answer:
-      "Most routine test results are available within 24-48 hours. Specialized tests may take 3-7 days. We provide results via email, patient portal, or in-person pickup.",
-  },
-  {
-    question: "Do you accept insurance?",
-    answer:
-      "Yes, we work with major insurance providers. Please check with your insurance company for coverage details or contact our billing department for more information.",
   },
 ];
 
@@ -295,13 +248,6 @@ const CONTENT = {
       "We are here to help. Reach out to us for any questions or support.",
   },
 
-  // Contact info cards
-  CONTACT_INFO: {
-    LOCATION: "Mid-Baneshwor, Opposite to Ratna Rajya School",
-    PHONE: "+977 986-1848382",
-    HOURS: "Sat - Thu 10:00 - 18:00",
-    EMAIL: "info@cutispathlab.com",
-  },
 
   // Form titles for each tab
   FORM_TITLES: {
@@ -360,6 +306,72 @@ function ContactPageContent() {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState({ type: "", text: "" });
   const [fieldErrors, setFieldErrors] = useState({});
+
+  // Admin-managed contact details. Until they arrive (or if the request
+  // fails) the constants below act as the fallback, so the page never
+  // renders blank.
+  const [site, setSite] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadSiteContact() {
+      try {
+        const res = await fetch("/api/site-contact");
+        const json = await res.json();
+        if (!cancelled && json.success && json.data) setSite(json.data);
+      } catch {
+        // keep the static fallback
+      }
+    }
+    loadSiteContact();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Every value below comes from the SiteContact / ContactFaq tables, edited
+  // at /admin/contact. Nothing is hard-coded here — a blank field in the admin
+  // form simply hides that element rather than falling back to stale copy.
+  const info = {
+    LOCATION: site?.location || "",
+    PHONE: site?.phone || "",
+    HOURS: site?.hours || "",
+    EMAIL: site?.email || "",
+  };
+  const telHref = info.PHONE ? `tel:${info.PHONE.replace(/[^\d+]/g, "")}` : null;
+  const waNumber = (site?.whatsapp || "").replace(/\D/g, "");
+
+  const quickContacts = QUICK_CONTACTS.map((item) => {
+    if (item.title === "Emergency Hotline") {
+      return {
+        ...item,
+        value: info.PHONE,
+        href: telHref,
+        desc: site?.emergencyNote || "",
+      };
+    }
+    if (item.title === "WhatsApp") {
+      return {
+        ...item,
+        value: info.PHONE,
+        href: waNumber ? `https://wa.me/${waNumber}` : null,
+      };
+    }
+    return {
+      ...item,
+      value: info.EMAIL,
+      href: info.EMAIL ? `mailto:${info.EMAIL}` : null,
+    };
+  }).filter((item) => Boolean(item.href));
+
+  // A social icon only renders when the admin has supplied a URL for it.
+  const socials = SOCIAL_LINKS.map((social) => ({
+    ...social,
+    href: site?.[social.urlField] || null,
+  })).filter((social) => Boolean(social.href));
+
+  const faqs = Array.isArray(site?.faqs) ? site.faqs : [];
+  const mapSrc = site?.mapEmbedUrl || null;
 
   useEffect(() => {
     const service = searchParams.get("service")?.trim();
@@ -494,34 +506,38 @@ function ContactPageContent() {
     <>
       <Navbar />
       <main className="pt-below-nav">
-        <PagePosterHero
-          src="/images/6psd.png"
-          alt="Contact Us"
-          width={6667}
-          height={579}
+        <PageHeroBand
+          image="/images/6psd.png"
+          crumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+          title="Contact Us"
+          tagline="Reach the lab by phone, email or the form below — we usually reply the same day."
         />
 
         {/* Quick Contact Banner - from QUICK_CONTACTS */}
         <section className="py-4 lg:py-8 bg-white">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-6">
-              {QUICK_CONTACTS.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 lg:gap-4 p-2 lg:p-4 rounded-lg lg:rounded-xl bg-slate-50"
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3 lg:gap-6">
+              {quickContacts.map((item) => (
+                <a
+                  key={item.title}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-xl p-3 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 lg:gap-4 lg:p-4 ${
+                    item.highlight
+                      ? "bg-sky-50 ring-1 ring-sky-200 hover:bg-sky-100"
+                      : "bg-slate-50 hover:bg-sky-50"
+                  }`}
                 >
-                  <div className="w-8 lg:w-12 h-8 lg:h-12 rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 bg-sky-100">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-sky-100 lg:h-12 lg:w-12 [&>svg]:h-8 [&>svg]:w-8 lg:[&>svg]:h-9 lg:[&>svg]:w-9">
                     {item.icon}
                   </div>
-                  <div>
-                    <p className="text-[10px] lg:text-sm text-slate-500">
-                      {item.title}
-                    </p>
-                    <p className="text-xs lg:text-sm font-semibold text-slate-900">
+                  <div className="min-w-0">
+                    <p className="t-caption text-slate-500">{item.title}</p>
+                    <p className="truncate t-meta font-semibold text-slate-900">
                       {item.value}
                     </p>
+                    <p className="t-caption text-slate-500">{item.desc}</p>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
@@ -534,10 +550,38 @@ function ContactPageContent() {
               {/* Contact Form - title changes based on activeTab */}
               <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
                 <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
-                  <h2 className="text-sm lg:text-xl font-bold text-white">
+                  <h2 className="t-h3 font-bold text-white lg:t-h2">
                     {CONTENT.FORM_TITLES[activeTab]}
                   </h2>
                 </div>
+
+                {/* What is this about? Picks the form mode. */}
+                <div
+                  role="tablist"
+                  aria-label="What is your message about?"
+                  className="flex flex-wrap gap-2 border-b border-slate-200 px-4 pt-4 lg:px-10 lg:pt-6"
+                >
+                  {CONTACT_TABS.map((tab) => {
+                    const selected = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={selected}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`rounded-lg px-3 py-1.5 t-caption font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 lg:px-4 lg:py-2 lg:t-meta ${
+                          selected
+                            ? "bg-sky-600 text-white"
+                            : "bg-white text-slate-600 hover:bg-sky-50 hover:text-sky-700"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
                 <form
                   onSubmit={handleSubmit}
                   noValidate
@@ -725,7 +769,7 @@ function ContactPageContent() {
                 </form>
               </div>
 
-              {/* Contact Info - from CONTENT.CONTACT_INFO */}
+              {/* Contact Info — from the SiteContact table (/admin/contact) */}
               <div className="space-y-4 lg:space-y-8 w-full">
                 <div className="bg-sky-600 w-full px-4 lg:px-6 py-1.5 lg:py-2 rounded-tr-xl">
                   <h2 className="text-sm lg:text-xl font-bold text-white">
@@ -737,7 +781,7 @@ function ContactPageContent() {
                 <div className="space-y-4">
                   <InfoCard
                     title="Our Location"
-                    content={CONTENT.CONTACT_INFO.LOCATION}
+                    content={info.LOCATION}
                     icon={
                       <svg
                         width="40"
@@ -811,7 +855,8 @@ function ContactPageContent() {
                   />
                   <InfoCard
                     title="Phone"
-                    content={CONTENT.CONTACT_INFO.PHONE}
+                    content={info.PHONE}
+                    href={telHref}
                     icon={
                       <svg
                         width="40"
@@ -855,7 +900,7 @@ function ContactPageContent() {
                   />
                   <InfoCard
                     title="Working Hours"
-                    content={CONTENT.CONTACT_INFO.HOURS}
+                    content={info.HOURS}
                     icon={
                       <svg
                         width="40"
@@ -1012,7 +1057,8 @@ function ContactPageContent() {
                   />
                   <InfoCard
                     title="Email"
-                    content={CONTENT.CONTACT_INFO.EMAIL}
+                    content={info.EMAIL}
+                    href={`mailto:${info.EMAIL}`}
                     icon={
                       <svg
                         width="40"
@@ -1091,166 +1137,36 @@ function ContactPageContent() {
                   <h3 className="font-semibold text-slate-900 mb-4">
                     Follow Us
                   </h3>
-                  <div className="flex gap-3">
-                    {[
-                      {
-                        name: "facebook",
-                        icon: (
+                  <ul className="flex flex-wrap gap-3">
+                    {socials.map((social) => (
+                      <li key={social.name}>
+                        <a
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ background: social.background }}
+                          className="flex h-11 w-11 items-center justify-center rounded-xl text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                        >
+                          <span className="sr-only">{social.name}</span>
                           <svg
-                            width="40"
-                            height="40"
-                            viewBox="0 0 60 60"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            aria-hidden="true"
                           >
-                            <rect
-                              x="4"
-                              y="4"
-                              width="52"
-                              height="52"
-                              rx="10"
-                              fill="#0284c7"
-                            />
-                            <path
-                              d="M34 18 L30 18 Q24 18 24 24 L24 28 L19 28 L19 35 L24 35 L24 54 L32 54 L32 35 L37 35 L38 28 L32 28 L32 24 Q32 22 34 22 L38 22 Z"
-                              fill="#fff"
-                            />
-                            <path
-                              d="M34 18 L30 18 Q24 18 24 24 L24 28 L19 28 L19 35 L24 35 L24 54 L32 54 L32 35 L37 35 L38 28 L32 28 L32 24 Q32 22 34 22 L38 22 Z"
-                              fill="#FF6B6B"
-                              opacity="0.25"
-                            />
+                            <path d={social.path} />
                           </svg>
-                        ),
-                      },
-                      {
-                        name: "instagram",
-                        icon: (
-                          <svg
-                            width="40"
-                            height="40"
-                            viewBox="0 0 60 60"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <rect
-                              x="4"
-                              y="4"
-                              width="52"
-                              height="52"
-                              rx="14"
-                              fill="#0284c7"
-                            />
-                            <rect
-                              x="14"
-                              y="14"
-                              width="32"
-                              height="32"
-                              rx="10"
-                              fill="none"
-                              stroke="#fff"
-                              stroke-width="3"
-                            />
-                            <circle
-                              cx="30"
-                              cy="30"
-                              r="8"
-                              fill="none"
-                              stroke="#FF6B6B"
-                              stroke-width="3"
-                            />
-                            <circle cx="30" cy="30" r="4" fill="#FF6B6B" />
-                            <circle cx="43" cy="17" r="3" fill="#FF6B6B" />
-                            <circle cx="43" cy="17" r="1.5" fill="#fff" />
-                          </svg>
-                        ),
-                      },
-                      {
-                        name: "linkedin",
-                        icon: (
-                          <svg
-                            width="40"
-                            height="40"
-                            viewBox="0 0 60 60"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <rect
-                              x="4"
-                              y="4"
-                              width="52"
-                              height="52"
-                              rx="10"
-                              fill="#0284c7"
-                            />
-                            <rect
-                              x="13"
-                              y="22"
-                              width="8"
-                              height="24"
-                              rx="2"
-                              fill="#fff"
-                            />
-                            <circle cx="17" cy="15" r="5" fill="#FF6B6B" />
-                            <circle cx="17" cy="15" r="3" fill="#fff" />
-                            <path
-                              d="M25 26 L25 46 L33 46 L33 34 Q33 28 38 28 Q43 28 43 34 L43 46 L51 46 L51 33 Q51 22 40 22 Q35 22 33 26 L33 22 L25 22 Z"
-                              fill="#fff"
-                            />
-                          </svg>
-                        ),
-                      },
-                      {
-                        name: "twitter",
-                        icon: (
-                          <svg
-                            width="40"
-                            height="40"
-                            viewBox="0 0 60 60"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <rect
-                              x="4"
-                              y="4"
-                              width="52"
-                              height="52"
-                              rx="10"
-                              fill="#0284c7"
-                            />
-                            <path
-                              d="M12 12 L26 32 L12 48 L18 48 L29 36 L39 48 L48 48 L33.5 27.5 L47 12 L41 12 L27.5 23.5 L19 12 Z"
-                              fill="#fff"
-                              stroke="#fff"
-                              stroke-width="0.5"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M12 12 L26 32 L12 48 L18 48 L29 36 L39 48 L48 48 L33.5 27.5 L47 12 L41 12 L27.5 23.5 L19 12 Z"
-                              fill="#FF6B6B"
-                              opacity="0.3"
-                            />
-                          </svg>
-                        ),
-                      },
-                    ].map((social) => (
-                      <a
-                        key={social.name}
-                        href="#"
-                        className="w-10 h-10 flex items-center justify-center hover:opacity-80 transition-opacity"
-                      >
-                        <span className="sr-only">{social.name}</span>
-                        {social.icon}
-                      </a>
+                        </a>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* FAQ Section - from FAQS */}
+        {/* FAQ Section — from the ContactFaq table (/admin/contact) */}
         <section className="py-8 lg:py-24 bg-slate-50">
           <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="text-center mb-6 lg:mb-12">
@@ -1260,25 +1176,30 @@ function ContactPageContent() {
             </div>
 
             <div className="space-y-4">
-              {FAQS.map((faq, index) => (
+              {faqs.map((faq, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-xl border border-slate-200 overflow-hidden"
                 >
                   <button
+                    type="button"
+                    aria-expanded={expandedFaq === index}
+                    aria-controls={`faq-answer-${index}`}
+                    id={`faq-question-${index}`}
                     onClick={() =>
                       setExpandedFaq(expandedFaq === index ? null : index)
                     }
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
+                    className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-500"
                   >
-                    <span className="font-medium text-slate-900">
+                    <span className="t-body font-medium text-slate-900">
                       {faq.question}
                     </span>
                     <svg
-                      className={`w-5 h-5 text-slate-500 transition-transform ${expandedFaq === index ? "rotate-180" : ""}`}
+                      className={`h-5 w-5 flex-shrink-0 text-slate-500 transition-transform ${expandedFaq === index ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      aria-hidden="true"
                     >
                       <path
                         strokeLinecap="round"
@@ -1289,8 +1210,13 @@ function ContactPageContent() {
                     </svg>
                   </button>
                   {expandedFaq === index && (
-                    <div className="px-6 pb-4">
-                      <p className="text-slate-600">{faq.answer}</p>
+                    <div
+                      id={`faq-answer-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-question-${index}`}
+                      className="px-6 pb-4"
+                    >
+                      <p className="t-body text-slate-600">{faq.answer}</p>
                     </div>
                   )}
                 </div>
@@ -1299,7 +1225,8 @@ function ContactPageContent() {
           </div>
         </section>
 
-        {/* Map Section */}
+        {/* Map Section — only when an embed URL is set in admin */}
+        {mapSrc && (
         <section className="w-full">
           <div className="bg-sky-600 px-4 lg:px-6 py-2 lg:py-3 w-full text-left">
             <h2 className="text-sm lg:text-xl font-bold text-white">
@@ -1307,16 +1234,18 @@ function ContactPageContent() {
             </h2>
           </div>
           <iframe
+            title="Cutis Path Lab location on Google Maps"
             width="100%"
-            height="250 lg:400"
+            height="400"
             frameBorder="0"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.8907380419406!2d85.32390742346914!3d27.71922847096282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19a3778e0001%3A0x1234567890!2sMid-Baneshwor!5e0!3m2!1sen!2snp!4v1234567890"
+            src={mapSrc}
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="w-full"
+            className="block h-[250px] w-full lg:h-[400px]"
           ></iframe>
         </section>
+        )}
       </main>
       <Footer />
     </>

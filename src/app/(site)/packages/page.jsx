@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import PagePosterHero from "@/components/sections/PagePosterHero";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 import { PackageCard } from "@/components/ui";
 
 export default function PackagesPage() {
@@ -54,36 +54,14 @@ export default function PackagesPage() {
       <Navbar />
 
       <main className="pt-below-nav-tall">
-        <PagePosterHero
-          src="/images/posters/packages-poster.png"
-          alt="Cutis Path Lab Packages"
-          width={6667}
-          height={654}
+        <PageHeroBand
+          image="/images/posters/packages-poster.png"
+          crumbs={[{ label: "Home", href: "/" }, { label: "Packages" }]}
+          title="Health Packages"
+          tagline="Comprehensive pathology and diagnostic packages at bundled pricing, with free home sample collection."
         />
 
-        <section className="py-4 lg:py-8 px-4 lg:px-19 bg-white">
-          <div className="max-w-7xl mx-auto px-3 lg:px-6">
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 border-t border-[#FF6B6B] z-0"></div>
-                <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
-                  <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
-                    Our Packages
-                  </h2>
-                </div>
-              </div>
-
-              <div className="px-4 lg:px-8 pb-4 lg:pb-8">
-                <p className="text-slate-600 text-xs lg:text-sm leading-relaxed">
-                  We offer comprehensive pathology and diagnostic packages including blood
-                  tests, urine tests, histopathology, genetic testing, and more.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="pb-8 lg:pb-12">
+        <section className="py-6 lg:py-10">
           <div className="max-w-7xl mx-auto px-3 lg:px-8">
             {loading && (
               <p className="text-center text-slate-500 py-12 text-sm">Loading packages…</p>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 import { tests } from "@/data/staticData";
 import Link from "next/link";
 
@@ -65,7 +66,7 @@ export default function TestDetailPage() {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />
-        <main className="pt-[80px] lg:pt-[88px]">
+        <main className="pt-below-nav">
           <div className="container mx-auto px-4 sm:px-6 py-20 text-center">
             <h1 className="text-3xl font-bold text-slate-900 mb-4">Test Not Found</h1>
             <p className="text-slate-600 mb-8">
@@ -90,19 +91,17 @@ export default function TestDetailPage() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="pt-[80px] lg:pt-[88px]">
-        {/* Breadcrumb */}
-        <div className="bg-slate-50 border-b border-slate-200">
-          <div className="container mx-auto px-4 sm:px-6 py-4">
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Link href="/tests" className="hover:text-sky-600 transition-colors">
-                Tests
-              </Link>
-              <span className="text-slate-400">/</span>
-              <span className="text-slate-900 font-medium">{test.name}</span>
-            </div>
-          </div>
-        </div>
+      <main className="pt-below-nav">
+        <PageHeroBand
+          image="/images/posters/tests-hero.png"
+          crumbs={[
+            { label: "Home", href: "/" },
+            { label: "Tests", href: "/tests" },
+            { label: test.name },
+          ]}
+          title={test.name}
+          tagline={test.category}
+        />
 
         {/* Main Content */}
         <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16">
@@ -113,10 +112,9 @@ export default function TestDetailPage() {
               <div className="mb-8">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-sky-100 text-sky-700 mb-4">
+                    <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-sky-100 text-sky-700">
                       {test.category}
                     </span>
-                    <h1 className="text-4xl font-bold text-slate-900">{test.name}</h1>
                   </div>
                   <div className="flex items-center gap-4">
                     {test.icon && (

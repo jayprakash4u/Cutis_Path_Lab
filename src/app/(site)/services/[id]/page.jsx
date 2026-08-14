@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ServiceIconCard from "@/components/sections/ServiceIconCard";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 import { resolveServiceIcon } from "@/lib/serviceIcons";
 import { services } from "@/data/staticData";
 
@@ -70,72 +71,55 @@ export default function ServiceDetailPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <main className="pt-16 sm:pt-20 lg:pt-[7.5rem]">
-        <section className="border-b border-slate-100 bg-white">
-          <div className="max-w-4xl mx-auto px-6 py-10 md:py-14">
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-sky-600 mb-8 transition-colors"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              All services
-            </Link>
+      <main className="pt-below-nav">
+        <PageHeroBand
+          image="/images/services-poster.png"
+          crumbs={[
+            { label: "Home", href: "/" },
+            { label: "Services", href: "/services" },
+            { label: service.name },
+          ]}
+          title={service.name}
+          tagline={service.description}
+        />
 
+        <section className="border-b border-slate-100 bg-white">
+          <div className="max-w-4xl mx-auto px-6 py-8 md:py-10">
             <div className="flex items-start gap-4 md:gap-5">
               <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-sky-50 flex items-center justify-center">
                 <IconComponent size={40} className="w-10 h-10" />
               </div>
               <div className="min-w-0 flex-1">
-                <h1 className="text-2xl md:text-4xl font-bold text-slate-900 tracking-tight">
-                  {service.name}
-                </h1>
-                <p className="mt-3 text-sm md:text-base text-slate-600 leading-relaxed max-w-2xl">
-                  {service.description}
-                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Link
+                    href={enquireHref}
+                    className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700 transition-colors"
+                  >
+                    Book / Enquire
+                  </Link>
+                  <a
+                    href="tel:+9779825849435"
+                    className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:border-sky-500 hover:text-sky-700 transition-colors"
+                  >
+                    Call lab
+                  </a>
+                </div>
+
+                <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+                  {HIGHLIGHTS.map((item) => (
+                    <li
+                      key={item}
+                      className="text-xs md:text-sm text-slate-500 flex items-center gap-1.5"
+                    >
+                      <span className="text-sky-600" aria-hidden="true">
+                        ●
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href={enquireHref}
-                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700 transition-colors"
-              >
-                Book / Enquire
-              </Link>
-              <a
-                href="tel:+9779825849435"
-                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:border-sky-500 hover:text-sky-700 transition-colors"
-              >
-                Call lab
-              </a>
-            </div>
-
-            <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
-              {HIGHLIGHTS.map((item) => (
-                <li
-                  key={item}
-                  className="text-xs md:text-sm text-slate-500 flex items-center gap-1.5"
-                >
-                  <span className="text-sky-600" aria-hidden="true">
-                    ●
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 

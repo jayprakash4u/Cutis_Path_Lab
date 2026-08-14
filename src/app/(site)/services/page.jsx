@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ServicesGrid from "@/components/sections/ServicesGrid";
-import PagePosterHero from "@/components/sections/PagePosterHero";
+import PageHeroBand from "@/components/sections/PageHeroBand";
 import { services } from "@/data/staticData";
 
 const CATEGORIES = [
@@ -80,11 +80,11 @@ export default function ServicesPage() {
       <Navbar />
 
       <main className="pt-below-nav">
-        <PagePosterHero
-          src="/images/services-poster.png"
-          alt="Cutis Path Lab Services"
-          width={6667}
-          height={579}
+        <PageHeroBand
+          image="/images/services-poster.png"
+          crumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
+          title="Our Services"
+          tagline="Specialist pathology, genetics and imaging services delivered by a certified laboratory."
         />
 
         <section className="bg-white border-b border-slate-100">

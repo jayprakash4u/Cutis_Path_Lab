@@ -8,11 +8,12 @@
   --bg-card: #0d1525;
   --bg-elevated: #131d33;
 
-  /* Fixed navbar height (match Navbar.jsx h-14 / h-16 / lg topbar+nav) */
-  --site-nav-h: 3.5rem;
-  --site-nav-h-sm: 4rem;
-  --site-nav-h-lg: 5.5rem;
-  --site-nav-h-lg-tall: 6.875rem;
+  /* Fixed navbar height (match Navbar.jsx h-14 / h-16 / lg topbar+nav)
+     lg = topbar (py-2 + h-7 + border = 45px) + nav (h-20 + border = 81px) = 126px */
+  --site-nav-h: 3.5625rem;
+  --site-nav-h-sm: 4.0625rem;
+  --site-nav-h-lg: 7.875rem;
+  --site-nav-h-lg-tall: 7.875rem;
 
   /* Text Colors */
   --text-primary: #f1f5f9;
