@@ -13,6 +13,7 @@ const navLinks = [
   { href: "/tests", label: "Our Tests" },
   { href: "/packages", label: "Packages" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
 ];
@@ -261,7 +262,7 @@ export default function Navbar() {
 
 {/* TOP BAR — desktop utility strip only */}
       <div className="hidden lg:block bg-sky-600 text-white py-1.5 border-b border-sky-700">
-        <div className="w-full px-6">
+        <div className="mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4 text-sm font-medium">
             <div className="flex items-center flex-wrap gap-4 lg:gap-6">
               <span className="font-semibold tracking-wide flex items-center gap-1.5">
@@ -304,7 +305,9 @@ export default function Navbar() {
 
       {/* MAIN NAVBAR */}
       <nav className="bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-[0_4px_24px_rgba(2,132,199,0.06)] relative z-[60]">
-        <div className="w-full px-4 sm:px-6 relative z-[70]">
+        {/* Same shell as every page section, so the logo lines up with the
+            content below it instead of sitting against the viewport edge. */}
+        <div className="relative z-[70] mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
 
             {/* Logo */}
@@ -356,13 +359,6 @@ export default function Navbar() {
                   </div>
                   {renderSearchResults()}
                 </div>
-
-              <Link
-                href="/book"
-                className="px-5 py-2 bg-sky-600 text-white rounded-lg text-base font-semibold hover:bg-sky-700 transition shadow-md hover:shadow-lg"
-              >
-                Book Test
-              </Link>
 
               <Link
                 href="/download-report"
@@ -484,13 +480,6 @@ export default function Navbar() {
               </nav>
 
               <div className="px-4 pb-5 pt-2 space-y-2.5 border-t border-slate-100">
-                <Link
-                  href="/book"
-                  onClick={closeMobileMenu}
-                  className="flex items-center justify-center w-full rounded-xl bg-sky-600 py-3 text-sm font-bold text-white"
-                >
-                  Book a Test
-                </Link>
                 <div className="grid grid-cols-2 gap-2.5">
                   <Link
                     href="/download-report"

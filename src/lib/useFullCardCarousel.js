@@ -56,8 +56,22 @@ export function useFullCardCarousel({
   const [cardsPerView, setCardsPerView] = useState(1);
   const [cardWidth, setCardWidth] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  // Measured from the track itself rather than inferred from activeIndex — a
+  // stale index renders the arrows `disabled`, so a click does nothing at all.
+  const [edges, setEdges] = useState({ atStart: true, atEnd: false });
   const scrollAmountRef = useRef(0);
   const prevCardsPerViewRef = useRef(1);
+
+  const measureEdges = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setEdges({
+      atStart: el.scrollLeft <= 1,
+      // No overflow at all means there is nowhere to go in either direction.
+      atEnd: maxScroll <= 1 || el.scrollLeft >= maxScroll - 1,
+    });
+  }, []);
 
   const getCardsForWidth = useCallback(
     (width) => {
@@ -107,12 +121,17 @@ export function useFullCardCarousel({
     if (container.scrollLeft > maxScroll) {
       container.scrollLeft = maxScroll;
     }
-  }, [gap, getCardsForWidth, peekRatio]);
+
+    measureEdges();
+  }, [gap, getCardsForWidth, peekRatio, measureEdges]);
 
   useEffect(() => {
     recalc();
   }, [recalc, ...deps]);
 
+  // `...deps` matters here: carousels that load data render "Loading…" first,
+  // so on the initial pass viewportRef is null and there is nothing to observe.
+  // Without re-running when the data arrives, the observer never attaches.
   useEffect(() => {
     const onResize = () => recalc();
     window.addEventListener("resize", onResize);
@@ -125,13 +144,16 @@ export function useFullCardCarousel({
       window.removeEventListener("resize", onResize);
       if (ro) ro.disconnect();
     };
-  }, [recalc]);
+  }, [recalc, ...deps]);
 
   const totalDots = Math.max(1, Math.ceil(itemCount / cardsPerView));
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
-    if (!el || !scrollAmountRef.current) return;
+    if (!el) return;
+
+    measureEdges();
+    if (!scrollAmountRef.current) return;
 
     // With a peek the track stops before the last card can reach the left
     // edge, so rounding never reaches the final index. Treat "scrolled to the
@@ -151,7 +173,7 @@ export function useFullCardCarousel({
 
     const page = Math.round(el.scrollLeft / scrollAmountRef.current);
     setActiveIndex(Math.min(Math.max(page, 0), totalDots - 1));
-  }, [cardsPerView, cardWidth, gap, totalDots]);
+  }, [cardsPerView, cardWidth, gap, totalDots, measureEdges]);
 
   const scroll = useCallback((direction) => {
     const el = scrollRef.current;
@@ -237,12 +259,12 @@ export function useFullCardCarousel({
   const scrollClassName =
     cardsPerView === 1
       ? "scrollbar-hide flex w-full overflow-x-auto scroll-smooth snap-x snap-mandatory"
-      : "scrollbar-hide flex w-full overflow-x-hidden scroll-smooth";
+      : "scrollbar-hide flex w-full overflow-x-auto scroll-smooth";
 
   const cardClassName = cardsPerView === 1 ? "shrink-0 snap-start" : "shrink-0";
 
-  const canScrollLeft = activeIndex > 0;
-  const canScrollRight = activeIndex < totalDots - 1;
+  const canScrollLeft = !edges.atStart;
+  const canScrollRight = !edges.atEnd;
 
   return {
     scrollRef,

@@ -2,37 +2,32 @@ import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { publicCatalogCache } from "@/lib/publicApiCache";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr, numOrNull } from "@/lib/adminSql";
-import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { toBit, toIntOr } from "@/lib/adminSql";
+import { newId, safeLimit, sqlExec, sqlQuery, toBool } from "@/lib/mysql";
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const activeOnly = searchParams.get("active") !== "false";
-    const limitRaw = Number(searchParams.get("limit"));
-    const limit =
-      Number.isFinite(limitRaw) && limitRaw > 0
-        ? Math.min(Math.floor(limitRaw), 100)
-        : null;
+    const limit = safeLimit(searchParams.get("limit"), 100);
+    const limitClause = limit ? `LIMIT ${limit}` : "";
+    const whereClause = activeOnly ? "WHERE `isActive` = 1" : "";
 
-    let where = "1=1";
-    if (activeOnly) where += " AND isActive = 1";
-    const topClause = limit ? `TOP ${limit}` : "";
-
-    const offers = await sqlJson(`
-      SELECT ${topClause} id, name, category,
-             CAST(originalPrice AS decimal(10,2)) AS originalPrice,
-             CAST(discountedPrice AS decimal(10,2)) AS discountedPrice,
-             discountPercent AS discount, isActive,
-             reportsTime, fasting, sampleType, packageId, testId, sortOrder
-      FROM dbo.Offer
-      WHERE ${where}
-      ORDER BY sortOrder, name
-      FOR JSON PATH
-    `);
+    const rows = await sqlQuery(
+      `SELECT \`id\`, \`name\`, \`category\`, \`originalPrice\`, \`discountedPrice\`,
+              \`discountPercent\` AS \`discount\`, \`isActive\`,
+              \`reportsTime\`, \`fasting\`, \`sampleType\`, \`packageId\`, \`testId\`, \`sortOrder\`
+         FROM \`Offer\`
+         ${whereClause}
+        ORDER BY \`sortOrder\`, \`name\`
+        ${limitClause}`,
+    );
 
     return NextResponse.json(
-      { success: true, data: offers },
+      {
+        success: true,
+        data: rows.map((r) => ({ ...r, isActive: toBool(r.isActive) })),
+      },
       publicCatalogCache(),
     );
   } catch (error) {
@@ -51,7 +46,12 @@ export async function POST(request) {
     const originalPrice = Number(body.originalPrice);
     const discountedPrice = Number(body.discountedPrice);
 
-    if (!name || !category || !Number.isFinite(originalPrice) || !Number.isFinite(discountedPrice)) {
+    if (
+      !name ||
+      !category ||
+      !Number.isFinite(originalPrice) ||
+      !Number.isFinite(discountedPrice)
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -68,21 +68,27 @@ export async function POST(request) {
         : Math.round(((originalPrice - discountedPrice) / originalPrice) * 100);
     if (!Number.isFinite(discount)) discount = 0;
 
-    await sqlExec(`
-      INSERT INTO dbo.Offer
-        (id, name, category, originalPrice, discountedPrice, discountPercent,
-         reportsTime, fasting, sampleType, packageId, testId, isActive, sortOrder)
-      VALUES
-        (${escapeSql(id)}, ${escapeSql(name)}, ${escapeSql(category)},
-         ${numOrNull(originalPrice)}, ${numOrNull(discountedPrice)}, ${intOr(discount)},
-         ${escapeSql(body.reportsTime || "24 hrs")},
-         ${escapeSql(body.fasting || "10-12 hrs")},
-         ${escapeSql(body.sampleType || "Blood")},
-         ${body.packageId ? escapeSql(String(body.packageId).trim()) : "NULL"},
-         ${body.testId ? escapeSql(String(body.testId).trim()) : "NULL"},
-         ${bit(body.isActive !== false)},
-         ${intOr(body.sortOrder, 0)});
-    `);
+    await sqlExec(
+      `INSERT INTO \`Offer\`
+         (\`id\`, \`name\`, \`category\`, \`originalPrice\`, \`discountedPrice\`, \`discountPercent\`,
+          \`reportsTime\`, \`fasting\`, \`sampleType\`, \`packageId\`, \`testId\`, \`isActive\`, \`sortOrder\`)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        name,
+        category,
+        originalPrice,
+        discountedPrice,
+        toIntOr(discount),
+        body.reportsTime || "24 hrs",
+        body.fasting || "10-12 hrs",
+        body.sampleType || "Blood",
+        body.packageId ? String(body.packageId).trim() : null,
+        body.testId ? String(body.testId).trim() : null,
+        toBit(body.isActive !== false),
+        toIntOr(body.sortOrder, 0),
+      ],
+    );
 
     return NextResponse.json(
       { success: true, message: "Offer created", data: { id } },

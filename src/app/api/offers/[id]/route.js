@@ -1,31 +1,33 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr, numOrNull } from "@/lib/adminSql";
-import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { buildUpdate, toBit, toIntOr, toNumOrNull } from "@/lib/adminSql";
+import { sqlExec, sqlOne, toBool } from "@/lib/mysql";
 
 export async function GET(_request, { params }) {
   try {
     const { id } = await params;
     const offerId = String(id || "").trim();
-    const rows = await sqlJson(`
-      SELECT id, name, category,
-             CAST(originalPrice AS decimal(10,2)) AS originalPrice,
-             CAST(discountedPrice AS decimal(10,2)) AS discountedPrice,
-             discountPercent AS discount, isActive,
-             reportsTime, fasting, sampleType, packageId, testId, sortOrder
-      FROM dbo.Offer
-      WHERE id = ${escapeSql(offerId)}
-      FOR JSON PATH
-    `);
-    const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
-    if (list.length === 0) {
+
+    const row = await sqlOne(
+      `SELECT \`id\`, \`name\`, \`category\`, \`originalPrice\`, \`discountedPrice\`,
+              \`discountPercent\` AS \`discount\`, \`isActive\`,
+              \`reportsTime\`, \`fasting\`, \`sampleType\`, \`packageId\`, \`testId\`, \`sortOrder\`
+         FROM \`Offer\` WHERE \`id\` = ? LIMIT 1`,
+      [offerId],
+    );
+
+    if (!row) {
       return NextResponse.json(
         { success: false, message: "Offer not found" },
         { status: 404 },
       );
     }
-    return NextResponse.json({ success: true, data: list[0] });
+
+    return NextResponse.json({
+      success: true,
+      data: { ...row, isActive: toBool(row.isActive) },
+    });
   } catch (error) {
     return apiErrorResponse(error, "Failed to load offer", 500);
   }
@@ -39,57 +41,56 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const offerId = String(id || "").trim();
     const body = await request.json();
-    const sets = [];
 
-    if (body.name != null) sets.push(`name = ${escapeSql(String(body.name).trim())}`);
-    if (body.category != null) {
-      sets.push(`category = ${escapeSql(String(body.category).trim())}`);
-    }
+    const fields = {};
+    if (body.name != null) fields.name = String(body.name).trim();
+    if (body.category != null) fields.category = String(body.category).trim();
     if (body.originalPrice != null) {
-      sets.push(`originalPrice = ${numOrNull(body.originalPrice)}`);
+      fields.originalPrice = toNumOrNull(body.originalPrice);
     }
     if (body.discountedPrice != null) {
-      sets.push(`discountedPrice = ${numOrNull(body.discountedPrice)}`);
+      fields.discountedPrice = toNumOrNull(body.discountedPrice);
     }
     if (body.discount != null || body.discountPercent != null) {
-      sets.push(`discountPercent = ${intOr(body.discount ?? body.discountPercent)}`);
+      fields.discountPercent = toIntOr(body.discount ?? body.discountPercent);
     }
-    if (body.reportsTime != null) {
-      sets.push(`reportsTime = ${escapeSql(String(body.reportsTime).trim())}`);
-    }
-    if (body.fasting != null) sets.push(`fasting = ${escapeSql(String(body.fasting).trim())}`);
-    if (body.sampleType != null) {
-      sets.push(`sampleType = ${escapeSql(String(body.sampleType).trim())}`);
-    }
+    if (body.reportsTime != null) fields.reportsTime = String(body.reportsTime).trim();
+    if (body.fasting != null) fields.fasting = String(body.fasting).trim();
+    if (body.sampleType != null) fields.sampleType = String(body.sampleType).trim();
     if (body.packageId !== undefined) {
-      sets.push(
-        `packageId = ${body.packageId ? escapeSql(String(body.packageId).trim()) : "NULL"}`,
-      );
+      fields.packageId = body.packageId ? String(body.packageId).trim() : null;
     }
     if (body.testId !== undefined) {
-      sets.push(`testId = ${body.testId ? escapeSql(String(body.testId).trim()) : "NULL"}`);
+      fields.testId = body.testId ? String(body.testId).trim() : null;
     }
-    if (body.isActive !== undefined) sets.push(`isActive = ${bit(Boolean(body.isActive))}`);
-    if (body.sortOrder != null) sets.push(`sortOrder = ${intOr(body.sortOrder)}`);
-    sets.push("updatedAt = SYSUTCDATETIME()");
+    if (body.isActive !== undefined) fields.isActive = toBit(body.isActive);
+    if (body.sortOrder != null) fields.sortOrder = toIntOr(body.sortOrder);
 
-    if (sets.length <= 1) {
+    if (Object.keys(fields).length === 0) {
       return NextResponse.json(
         { success: false, message: "No fields to update" },
         { status: 400 },
       );
     }
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Offer WHERE id = ${escapeSql(offerId)})
-      BEGIN
-        RAISERROR('Offer not found', 16, 1);
-        RETURN;
-      END
-      UPDATE dbo.Offer SET ${sets.join(", ")} WHERE id = ${escapeSql(offerId)};
-    `);
+    const exists = await sqlOne("SELECT `id` FROM `Offer` WHERE `id` = ? LIMIT 1", [
+      offerId,
+    ]);
+    if (!exists) {
+      return NextResponse.json(
+        { success: false, message: "Offer not found" },
+        { status: 404 },
+      );
+    }
 
-    return NextResponse.json({ success: true, message: "Offer updated", data: { id: offerId } });
+    const { clause, params: values } = buildUpdate(fields);
+    await sqlExec(`UPDATE \`Offer\` SET ${clause} WHERE \`id\` = ?`, [...values, offerId]);
+
+    return NextResponse.json({
+      success: true,
+      message: "Offer updated",
+      data: { id: offerId },
+    });
   } catch (error) {
     return apiErrorResponse(error, "Failed to update offer", 500);
   }
@@ -103,17 +104,24 @@ export async function DELETE(request, { params }) {
     const { id } = await params;
     const offerId = String(id || "").trim();
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Offer WHERE id = ${escapeSql(offerId)})
-      BEGIN
-        RAISERROR('Offer not found', 16, 1);
-        RETURN;
-      END
-      UPDATE dbo.Booking SET offerId = NULL WHERE offerId = ${escapeSql(offerId)};
-      DELETE FROM dbo.Offer WHERE id = ${escapeSql(offerId)};
-    `);
+    const exists = await sqlOne("SELECT `id` FROM `Offer` WHERE `id` = ? LIMIT 1", [
+      offerId,
+    ]);
+    if (!exists) {
+      return NextResponse.json(
+        { success: false, message: "Offer not found" },
+        { status: 404 },
+      );
+    }
 
-    return NextResponse.json({ success: true, message: "Offer deleted", data: { id: offerId } });
+    // Booking.offerId is ON DELETE SET NULL.
+    await sqlExec("DELETE FROM `Offer` WHERE `id` = ?", [offerId]);
+
+    return NextResponse.json({
+      success: true,
+      message: "Offer deleted",
+      data: { id: offerId },
+    });
   } catch (error) {
     return apiErrorResponse(error, "Failed to delete offer", 500);
   }

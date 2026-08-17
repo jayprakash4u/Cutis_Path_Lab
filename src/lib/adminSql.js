@@ -1,20 +1,32 @@
-import { escapeSql, newId, sqlExec } from "@/lib/sqlserver";
+import { newId, sqlOne, sqlTransaction } from "@/lib/mysql";
 
-export function bit(value) {
-  return value ? "1" : "0";
+/** MySQL stores booleans as TINYINT(1). */
+export function toBit(value) {
+  return value ? 1 : 0;
 }
 
-export function numOrNull(value) {
-  if (value == null || value === "") return "NULL";
+export function toNumOrNull(value) {
+  if (value == null || value === "") return null;
   const n = Number(value);
-  if (!Number.isFinite(n)) return "NULL";
-  return String(n);
+  return Number.isFinite(n) ? n : null;
 }
 
-export function intOr(value, fallback = 0) {
+export function toIntOr(value, fallback = 0) {
   const n = Number(value);
-  if (!Number.isFinite(n)) return String(fallback);
-  return String(Math.trunc(n));
+  return Number.isFinite(n) ? Math.trunc(n) : fallback;
+}
+
+/**
+ * Build a parameterized `SET` clause from an allowlisted column→value map.
+ * Callers pass only column names they control, never user input.
+ */
+export function buildUpdate(fields) {
+  const columns = Object.keys(fields);
+  return {
+    clause: columns.map((c) => `\`${c}\` = ?`).join(", "),
+    params: columns.map((c) => fields[c]),
+    count: columns.length,
+  };
 }
 
 export function parseIncludes(value) {
@@ -35,19 +47,23 @@ export function parseIncludes(value) {
     .filter((item) => item.testName);
 }
 
+/** Replace a package's included tests atomically. */
 export async function replacePackageIncludes(packageId, includes) {
   const items = parseIncludes(includes);
-  await sqlExec(`DELETE FROM dbo.PackageTest WHERE packageId = ${escapeSql(packageId)};`);
-  for (const item of items) {
-    await sqlExec(`
-      INSERT INTO dbo.PackageTest (id, packageId, testId, testName, sortOrder)
-      VALUES (
-        ${escapeSql(newId())},
-        ${escapeSql(packageId)},
-        ${item.testId ? escapeSql(item.testId) : "NULL"},
-        ${escapeSql(item.testName)},
-        ${item.sortOrder}
+
+  await sqlTransaction(async (tx) => {
+    await tx.exec("DELETE FROM `PackageTest` WHERE `packageId` = ?", [packageId]);
+    for (const item of items) {
+      await tx.exec(
+        "INSERT INTO `PackageTest` (`id`, `packageId`, `testId`, `testName`, `sortOrder`) VALUES (?, ?, ?, ?, ?)",
+        [newId(), packageId, item.testId, item.testName, item.sortOrder],
       );
-    `);
-  }
+    }
+  });
+}
+
+/** True when a row with the given id exists. `table` is caller-controlled, never user input. */
+export async function rowExists(table, id) {
+  const row = await sqlOne(`SELECT 1 AS found FROM \`${table}\` WHERE \`id\` = ? LIMIT 1`, [id]);
+  return row != null;
 }
