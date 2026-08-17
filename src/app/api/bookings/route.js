@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
-import { escapeSql, newId, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { newId, sqlExec, sqlOne, sqlQuery } from "@/lib/mysql";
 import {
   sendBookingNotification,
   sendPatientBookingConfirmation,
@@ -11,15 +11,11 @@ import { bookingCreateSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
 import { validationError } from "@/lib/validation/http";
 
-async function assertOptionalFk(table, id, label) {
-  if (!id) return null;
-  const rows = await sqlJson(`
-    SELECT id FROM dbo.${table} WHERE id = ${escapeSql(id)} FOR JSON PATH
-  `);
-  if (!rows.length) {
-    return `${label} does not exist`;
-  }
-  return null;
+/** `table` is a fixed literal from this module, never user input. */
+async function missingFk(table, id) {
+  if (!id) return false;
+  const row = await sqlOne(`SELECT \`id\` FROM \`${table}\` WHERE \`id\` = ? LIMIT 1`, [id]);
+  return row == null;
 }
 
 export async function POST(request) {
@@ -56,21 +52,21 @@ export async function POST(request) {
 
     const parsed = parseOrErrors(bookingCreateSchema, incoming);
     if (!parsed.ok) {
-      return validationError({
-        message: parsed.message,
-        errors: parsed.errors,
-      });
+      return validationError({ message: parsed.message, errors: parsed.errors });
     }
 
     const data = parsed.data;
 
     const fkErrors = {};
-    const testErr = await assertOptionalFk("Test", data.testId, "selected test");
-    if (testErr) fkErrors.testId = "Please choose a valid test";
-    const pkgErr = await assertOptionalFk("Package", data.packageId, "selected package");
-    if (pkgErr) fkErrors.packageId = "Please choose a valid package";
-    const offerErr = await assertOptionalFk("Offer", data.offerId, "selected offer");
-    if (offerErr) fkErrors.offerId = "Please choose a valid offer";
+    if (await missingFk("Test", data.testId)) {
+      fkErrors.testId = "Please choose a valid test";
+    }
+    if (await missingFk("Package", data.packageId)) {
+      fkErrors.packageId = "Please choose a valid package";
+    }
+    if (await missingFk("Offer", data.offerId)) {
+      fkErrors.offerId = "Please choose a valid offer";
+    }
     if (Object.keys(fkErrors).length) {
       return validationError({
         message: "Please check your booking details and try again",
@@ -79,21 +75,25 @@ export async function POST(request) {
     }
 
     const id = newId();
-    await sqlExec(`
-      INSERT INTO dbo.Booking
-        (id, name, phone, email, address, preferredDate, preferredTime, notes, status, testId, packageId, offerId)
-      VALUES
-        (${escapeSql(id)}, ${escapeSql(data.name)}, ${escapeSql(data.phone)},
-         ${data.email ? escapeSql(data.email) : "NULL"},
-         ${data.address ? escapeSql(data.address) : "NULL"},
-         ${escapeSql(data.preferredDate)},
-         ${escapeSql(data.preferredTime)},
-         ${data.notes ? escapeSql(data.notes) : "NULL"},
-         N'pending',
-         ${data.testId ? escapeSql(data.testId) : "NULL"},
-         ${data.packageId ? escapeSql(data.packageId) : "NULL"},
-         ${data.offerId ? escapeSql(data.offerId) : "NULL"});
-    `);
+    await sqlExec(
+      `INSERT INTO \`Booking\`
+         (\`id\`, \`name\`, \`phone\`, \`email\`, \`address\`, \`preferredDate\`, \`preferredTime\`,
+          \`notes\`, \`status\`, \`testId\`, \`packageId\`, \`offerId\`)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)`,
+      [
+        id,
+        data.name,
+        data.phone,
+        data.email || null,
+        data.address || null,
+        data.preferredDate,
+        data.preferredTime,
+        data.notes || null,
+        data.testId || null,
+        data.packageId || null,
+        data.offerId || null,
+      ],
+    );
 
     const booking = {
       id,
@@ -128,8 +128,8 @@ export async function POST(request) {
     );
   } catch (error) {
     const msg = String(error.message || "");
-    // Surface DB CHECK constraint failures as 400
-    if (/CK_Booking_|CHECK constraint/i.test(msg)) {
+    // Surface CHECK constraint failures as 400 rather than a server error.
+    if (/CK_Booking_|Check constraint|CONSTRAINT/i.test(msg)) {
       return validationError({
         message: "Please check your details and try again",
       });
@@ -143,13 +143,13 @@ export async function GET(request) {
   if (denied) return denied;
 
   try {
-    const bookings = await sqlJson(`
-      SELECT id, name, phone, email, address, preferredDate, preferredTime,
-             notes, status, testId, packageId, offerId, createdAt
-      FROM dbo.Booking
-      ORDER BY createdAt DESC
-      FOR JSON PATH
-    `);
+    const bookings = await sqlQuery(
+      `SELECT \`id\`, \`name\`, \`phone\`, \`email\`, \`address\`, \`preferredDate\`,
+              \`preferredTime\`, \`notes\`, \`status\`, \`testId\`, \`packageId\`,
+              \`offerId\`, \`createdAt\`
+         FROM \`Booking\`
+        ORDER BY \`createdAt\` DESC`,
+    );
     return NextResponse.json({ success: true, data: bookings });
   } catch (error) {
     return apiErrorResponse(error, "Failed to load bookings", 500, "GET /api/bookings");

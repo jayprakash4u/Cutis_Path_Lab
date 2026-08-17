@@ -1,11 +1,6 @@
 "use client";
 
-export default function AdminPagination({
-  page,
-  pageSize,
-  total,
-  onPageChange,
-}) {
+export default function AdminPagination({ page, pageSize, total, onPageChange }) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
   const from = total === 0 ? 0 : (safePage - 1) * pageSize + 1;
@@ -13,8 +8,8 @@ export default function AdminPagination({
 
   if (total <= pageSize) {
     return total > 0 ? (
-      <p className="mt-4 text-xs text-slate-500">
-        Showing {total} item{total === 1 ? "" : "s"}
+      <p className="mt-4 text-xs text-slate-400">
+        Showing all {total} item{total === 1 ? "" : "s"}
       </p>
     ) : null;
   }
@@ -29,24 +24,38 @@ export default function AdminPagination({
     }
   }
 
+  const pageButton = (active) =>
+    `admin-mono min-w-[2rem] rounded-md px-2 py-1.5 text-xs font-semibold transition-colors ${
+      active
+        ? "bg-[var(--admin-sky)] text-white"
+        : "text-slate-600 hover:bg-[var(--admin-subtle)] hover:text-slate-900"
+    }`;
+
   return (
-    <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-slate-100 pt-4">
+    <nav
+      className="mt-5 flex flex-col gap-3 border-t border-[var(--admin-line-soft)] pt-4 sm:flex-row sm:items-center sm:justify-between"
+      aria-label="Pagination"
+    >
       <p className="text-xs text-slate-500">
-        Showing <span className="font-semibold text-slate-700">{from}–{to}</span> of{" "}
-        <span className="font-semibold text-slate-700">{total}</span>
+        <span className="admin-mono font-semibold text-slate-700">
+          {from}–{to}
+        </span>{" "}
+        of <span className="admin-mono font-semibold text-slate-700">{total}</span>
       </p>
-      <div className="flex items-center gap-1.5 flex-wrap">
+
+      <div className="flex flex-wrap items-center gap-1">
         <button
           type="button"
           disabled={safePage <= 1}
           onClick={() => onPageChange(safePage - 1)}
-          className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 bg-white disabled:opacity-40 hover:border-sky-300 hover:text-sky-700"
+          className="admin-btn-ghost !px-2.5 !py-1.5 !text-xs"
         >
-          Prev
+          Previous
         </button>
+
         {pages.map((p, idx) =>
           p === "…" ? (
-            <span key={`e-${idx}`} className="px-1 text-slate-400 text-xs">
+            <span key={`gap-${idx}`} className="px-1 text-xs text-slate-300">
               …
             </span>
           ) : (
@@ -54,26 +63,24 @@ export default function AdminPagination({
               key={p}
               type="button"
               onClick={() => onPageChange(p)}
-              className={`min-w-8 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
-                p === safePage
-                  ? "bg-sky-600 text-white border-sky-600"
-                  : "bg-white text-slate-700 border-slate-200 hover:border-sky-300 hover:text-sky-700"
-              }`}
+              aria-current={p === safePage ? "page" : undefined}
+              className={pageButton(p === safePage)}
             >
               {p}
             </button>
           ),
         )}
+
         <button
           type="button"
           disabled={safePage >= totalPages}
           onClick={() => onPageChange(safePage + 1)}
-          className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 bg-white disabled:opacity-40 hover:border-sky-300 hover:text-sky-700"
+          className="admin-btn-ghost !px-2.5 !py-1.5 !text-xs"
         >
           Next
         </button>
       </div>
-    </div>
+    </nav>
   );
 }
 

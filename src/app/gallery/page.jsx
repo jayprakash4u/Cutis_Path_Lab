@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import PagePosterHero from "@/components/sections/PagePosterHero";
 
 export default function GalleryPage() {
   const [images, setImages] = useState([]);
@@ -53,15 +54,39 @@ export default function GalleryPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <main className="pt-[72px] lg:pt-[88px]">
-        <section className="bg-gradient-to-br from-sky-50 via-white to-slate-50 py-8 sm:py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-2 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-              <h1 className="text-lg font-bold text-white sm:text-xl md:text-2xl">Gallery</h1>
+      <main className="pt-below-nav">
+        {/* Same poster component the About, Services, Tests, Packages and
+            Contact pages use — banner shown uncropped at its native ratio. */}
+        <h1 className="sr-only">Gallery</h1>
+
+        <PagePosterHero
+          src="/images/gallery_banner_exact.png"
+          alt="Cutis Path Lab Gallery"
+          width={2048}
+          height={177}
+        />
+
+        {/* Header card — the shared page-intro pattern */}
+        <section className="bg-white px-4 py-4 lg:px-19 lg:py-8">
+          <div className="mx-auto max-w-7xl px-3 lg:px-6">
+            <div className="overflow-hidden rounded-lg bg-white shadow-sm">
+              <div className="relative px-4 py-4 lg:px-8 lg:py-8">
+                <div className="absolute left-0 right-0 top-1/2 z-0 border-t border-[#FF6B6B]"></div>
+                <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-sky-600 px-3 py-1.5 lg:px-4 lg:py-2">
+                  <h2 className="text-sm font-bold text-white md:text-xl lg:text-lg">
+                    Our Gallery
+                  </h2>
+                </div>
+              </div>
+
+              <div className="px-4 pb-4 lg:px-8 lg:pb-8">
+                <p className="text-xs leading-relaxed text-slate-600 lg:text-sm">
+                  A glimpse of our lab, team, and facilities at Cutis Path Lab. Explore our
+                  state-of-the-art equipment, sample collection areas, and the professionals who
+                  process your tests every day.
+                </p>
+              </div>
             </div>
-            <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-              A glimpse of our lab, team, and facilities at Cutis Path Lab.
-            </p>
           </div>
         </section>
 

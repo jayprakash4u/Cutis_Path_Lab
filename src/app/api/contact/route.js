@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { sendContactNotification } from "@/lib/mail";
 import { rateLimit } from "@/lib/rateLimit";
-import { escapeSql, newId, sqlExec } from "@/lib/sqlserver";
+import { newId, sqlExec } from "@/lib/mysql";
 import { contactCreateSchema } from "@/lib/validation/contact";
 import { parseOrErrors } from "@/lib/validation/common";
 import { validationError } from "@/lib/validation/http";
@@ -35,26 +35,17 @@ export async function POST(request) {
     });
 
     if (!parsed.ok) {
-      return validationError({
-        message: parsed.message,
-        errors: parsed.errors,
-      });
+      return validationError({ message: parsed.message, errors: parsed.errors });
     }
 
     const { name, email, phone, subject, message } = parsed.data;
     const id = newId();
 
-    await sqlExec(`
-      INSERT INTO dbo.ContactMessage (id, name, email, phone, subject, message)
-      VALUES (
-        ${escapeSql(id)},
-        ${escapeSql(name)},
-        ${escapeSql(email)},
-        ${phone ? escapeSql(phone) : "NULL"},
-        ${subject ? escapeSql(subject) : "NULL"},
-        ${escapeSql(message)}
-      );
-    `);
+    await sqlExec(
+      `INSERT INTO \`ContactMessage\` (\`id\`, \`name\`, \`email\`, \`phone\`, \`subject\`, \`message\`)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [id, name, email, phone || null, subject || null, message],
+    );
 
     const mail = await sendContactNotification({
       id,

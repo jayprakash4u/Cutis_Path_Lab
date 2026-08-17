@@ -7,7 +7,6 @@ import FloatingSidebar from "./FloatingSidebar";
 
 const heroImages = [
   {
-<<<<<<< Updated upstream
     url: "/images/banners/herohomepagebanner/1.png",
     alt: "Homepage Banner 1",
   },
@@ -25,25 +24,6 @@ const heroImages = [
   },
   {
     url: "/images/banners/herohomepagebanner/5.png",
-=======
-    url: "/images/banners/HomePageHeroBanner/1.png",
-    alt: "Homepage Banner 1",
-  },
-  {
-    url: "/images/banners/HomePageHeroBanner/2.png",
-    alt: "Homepage Banner 2",
-  },
-  {
-    url: "/images/banners/HomePageHeroBanner/3.png",
-    alt: "Homepage Banner 3",
-  },
-  {
-    url: "/images/banners/HomePageHeroBanner/4.png",
-    alt: "Homepage Banner 4",
-  },
-  {
-    url: "/images/banners/HomePageHeroBanner/5.png",
->>>>>>> Stashed changes
     alt: "Homepage Banner 5",
   },
 ];

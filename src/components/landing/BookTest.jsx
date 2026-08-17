@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
+import { Section, SectionHeading } from "@/components/ui/Section";
 
 export default function BookTest() {
   const [formData, setFormData] = useState({
@@ -143,19 +144,46 @@ export default function BookTest() {
   };
 
   return (
-    <section id="book-test" className="py-6 sm:py-8 lg:py-10 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center">
+    <Section
+      id="book-test"
+      tone="white"
+      backdrop={
+        <>
+          {/*
+            Mirrored twin of the Testimonials panel — same gradient family, the
+            diagonal falling the other way so the two read as a deliberate pair
+            rather than a repeated trick. Flat below `sm`.
+          */}
+          <div
+            className="absolute inset-0 bg-gradient-to-l from-sky-900 via-sky-800 to-sky-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_18%,100%_0,100%_100%,0_100%)] lg:rounded-bl-[8rem]"
+            aria-hidden="true"
+          />
+
+          {/* Coral warmth, mirrored to the opposite corner from Testimonials */}
+          <div
+            className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#FF6B6B]/25 blur-3xl"
+            aria-hidden="true"
+          />
+
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+            <span className="absolute -right-16 top-28 h-64 w-64 rounded-full bg-white/[0.06]" />
+            <span className="absolute right-1/4 top-16 h-40 w-40 rounded-full bg-white/[0.05]" />
+            <span className="absolute bottom-0 right-1/3 h-72 w-72 rounded-full bg-white/[0.04]" />
+            <span className="absolute -bottom-10 left-1/4 h-56 w-56 rounded-full bg-[#FF6B6B]/[0.12]" />
+          </div>
+        </>
+      }
+    >
+      <div>
+        <div className="grid items-center gap-8 md:grid-cols-2 lg:gap-12">
           {/* Left Side - Content & Image */}
           <div>
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 sm:mb-4">
-              Book Your Test Today
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4 lg:mb-6">
-              Get accurate pathology results from the comfort of your home. Our
-              expert team will collect your sample and deliver results
-              digitally.
-            </p>
+            <SectionHeading
+              onDark
+              title="Book your test today"
+              subtitle="Get accurate pathology results from the comfort of your home. Our expert team will collect your sample and deliver results digitally."
+              className="!mb-6"
+            />
 
             <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
@@ -286,10 +314,10 @@ export default function BookTest() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-slate-900 text-xs sm:text-sm">
+                  <p className="text-xs font-semibold text-white sm:text-sm">
                     Quick Results
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="text-[10px] text-sky-100/80 sm:text-xs">
                     Results within 24 hours
                   </p>
                 </div>
@@ -353,10 +381,10 @@ export default function BookTest() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-slate-900 text-xs sm:text-sm">
+                  <p className="text-xs font-semibold text-white sm:text-sm">
                     Home Sample Collection
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="text-[10px] text-sky-100/80 sm:text-xs">
                     We come to your doorstep
                   </p>
                 </div>
@@ -404,10 +432,10 @@ export default function BookTest() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-medium text-slate-900 text-xs sm:text-sm">
+                  <p className="text-xs font-semibold text-white sm:text-sm">
                     NABL Accredited
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500">
+                  <p className="text-[10px] text-sky-100/80 sm:text-xs">
                     ISO certified lab
                   </p>
                 </div>
@@ -417,7 +445,7 @@ export default function BookTest() {
             <div className="mb-3 sm:mb-6">
               <Link
                 href="/tests"
-                className="inline-flex items-center gap-1 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-sky-600 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-sky-700 transition-colors"
+                className="inline-flex items-center gap-1 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-sky-700 shadow-card transition-colors hover:bg-sky-50 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
               >
                 View All Tests
                 <svg
@@ -438,7 +466,7 @@ export default function BookTest() {
           </div>
 
           {/* Right Side - Form */}
-          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-lg">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5 md:p-6">
             <div className="bg-[#FF6B6B] -mx-3 sm:-mx-4 md:-mx-6 -mt-3 sm:-mt-4 md:-mt-6 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 rounded-t-xl sm:rounded-t-2xl mb-3 sm:mb-4">
               <h3 className="text-sm sm:text-base md:text-xl font-semibold text-white">
                 Book Your Appointment
@@ -553,6 +581,6 @@ export default function BookTest() {
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

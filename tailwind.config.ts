@@ -11,6 +11,12 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        // Section background rhythm — alternate `white` and `tint`.
+        surface: {
+          DEFAULT: "#FFFFFF",
+          tint: "#F6F9FE",
+          muted: "#F1F5F9",
+        },
       },
       fontSize: {
         // Typographic Scale
@@ -34,6 +40,16 @@ const config: Config = {
         "space-xl": "2rem", // 32px
         "space-2xl": "2.5rem", // 40px
         "space-3xl": "3rem", // 48px
+      },
+      maxWidth: {
+        // The single page shell width. Every contained section uses this.
+        shell: "1440px",
+      },
+      boxShadow: {
+        // Three tiers, nothing bespoke.
+        card: "0 1px 2px rgba(15,23,42,0.04), 0 4px 16px -4px rgba(15,23,42,0.08)",
+        "card-hover": "0 2px 4px rgba(15,23,42,0.05), 0 12px 32px -8px rgba(15,23,42,0.16)",
+        float: "0 8px 40px -12px rgba(15,23,42,0.28)",
       },
       keyframes: {
         "fade-in": {
