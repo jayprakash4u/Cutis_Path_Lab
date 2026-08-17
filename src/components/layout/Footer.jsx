@@ -7,6 +7,7 @@ const exploreLinks = [
   { label: "Our Tests", href: "/tests" },
   { label: "Packages", href: "/packages" },
   { label: "Gallery", href: "/gallery" },
+  { label: "Blog", href: "/blog" },
 ];
 
 const companyLinks = [
@@ -73,7 +74,7 @@ export default function Footer() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-10 lg:px-8 lg:py-16">
+      <div className="relative mx-auto max-w-shell px-4 py-5 sm:px-6 sm:py-10 lg:px-8 lg:py-16">
         {/* Mobile / tablet: compact stacked layout */}
         <div className="lg:hidden">
           <div className="flex items-center justify-between gap-2">

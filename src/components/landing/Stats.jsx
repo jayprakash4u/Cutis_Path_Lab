@@ -1,3 +1,6 @@
+import Image from "next/image";
+import { Section, SectionHeading } from "@/components/ui/Section";
+
 const steps = [
   {
     number: "01",
@@ -51,55 +54,51 @@ const steps = [
 
 export default function Stats() {
   return (
-    <section className="py-4 sm:py-6 lg:py-10 bg-slate-100 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="relative mb-3 sm:mb-6">
-          <div className="absolute top-0 left-0">
-            <div className="bg-sky-600 px-4 py-2 rounded-tr-2xl rounded-bl-2xl">
-              <h2 className="text-lg md:text-xl font-bold text-white">Why Choose Us</h2>
-            </div>
-          </div>
-          <div className="pt-12">
-            <h2 className="text-lg md:text-2xl font-bold text-slate-900">Why to Choose Cutis Path Lab</h2>
-          </div>
-        </div>
+    <Section tone="white">
+      <SectionHeading
+        title="Why patients choose Cutis Path Lab"
+        subtitle="Accredited processes, experienced people, and results you can act on."
+      />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
+      <div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
           {/* Image - Hidden on very small screens, visible on sm+ */}
-          <div className="hidden sm:block relative rounded-xl overflow-hidden h-48 sm:h-64 lg:h-96">
-            <img 
-              src="/images/home/stats-image.jpg" 
-              alt="LifeLine Lab Team" 
-              className="w-full h-full object-cover"
+          <div className="relative hidden h-48 overflow-hidden rounded-2xl shadow-card sm:block sm:h-64 lg:h-full lg:min-h-[420px]">
+            <Image
+              src="/images/home/stats-image.jpg"
+              alt="Cutis Path Lab team"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-            <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-white">
-              <p className="text-xs sm:text-sm md:text-base font-medium">Best Pathology Lab in town</p>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+            <div className="absolute bottom-4 left-4 text-white sm:bottom-5 sm:left-5">
+              <p className="text-sm font-semibold sm:text-base">Best pathology lab in town</p>
             </div>
           </div>
 
           {/* Cards - Stacked on mobile */}
-          <div className="space-y-3 sm:space-y-4 w-full">
+          <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {steps.map((s, i) => (
-              <div key={i} className="flex items-center bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="min-w-[80px] sm:min-w-[100px] md:min-w-[120px] h-16 sm:h-20 flex flex-col items-center justify-center" style={{ background: s.color, clipPath: 'polygon(0 0, 85% 0, 100% 100%, 0 100%)' }}>
-                  <span className="text-white text-sm sm:text-lg md:text-xl font-bold">{s.number}</span>
+              <div
+                key={i}
+                className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-shadow duration-300 hover:shadow-card-hover sm:p-5"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FF6B6B] text-sm font-bold text-white sm:text-base">
+                  {s.number}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-bold text-slate-900 sm:text-base">{s.title}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm">{s.desc}</p>
                 </div>
 
-                <div className="flex-1 p-2 sm:p-3">
-                  <h3 className="text-xs sm:text-sm md:text-base font-semibold text-slate-800 mb-0.5">{s.title}</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-500 line-clamp-2">{s.desc}</p>
-                </div>
-
-                <div className="p-2 sm:p-3 flex-shrink-0 hidden sm:block">
-                  {s.icon(s.color)}
-                </div>
+                <div className="hidden shrink-0 sm:block">{s.icon(s.color)}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

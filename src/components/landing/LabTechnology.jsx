@@ -5,6 +5,12 @@ import {
   useFullCardCarousel,
   CAROUSEL_BREAKPOINTS,
 } from "@/lib/useFullCardCarousel";
+import {
+  Section,
+  SectionHeading,
+  CarouselButton,
+  CarouselDots,
+} from "@/components/ui/Section";
 
 const technologies = [
   {
@@ -100,6 +106,7 @@ const technologies = [
 ];
 
 function TechIcon({ index }) {
+  // Two-tone, matching the site: sky line work with coral detail accents.
   const stroke = "#0284C7";
   const accent = "#FF6B6B";
 
@@ -181,6 +188,7 @@ function TechIcon({ index }) {
   return icons[index] ?? icons[0];
 }
 
+
 export default function LabTechnology() {
   const {
     scrollRef,
@@ -193,167 +201,166 @@ export default function LabTechnology() {
     handleScroll,
     scroll,
     scrollToDot,
+    canScrollLeft,
+    canScrollRight,
     gap,
   } = useFullCardCarousel({
-    gap: 24,
+    gap: 20,
     breakpoints: CAROUSEL_BREAKPOINTS.lab,
     itemCount: technologies.length,
     deps: [technologies.length],
   });
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-sky-50 via-white to-slate-50 py-8 sm:py-14 md:py-20">
-      <div
-        className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-16 left-0 h-64 w-64 rounded-full bg-[#FF6B6B]/10 blur-3xl"
-        aria-hidden="true"
-      />
+    <Section
+      tone="white"
+      backdrop={
+        <>
+          {/*
+            Third panel in the family, and deliberately the odd one: the other
+            two are cut across the top, this one across the bottom. Same
+            gradient and coral glow, so it reads as a sibling rather than a
+            repeat. Flat below `sm`.
+          */}
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-sky-900 via-sky-800 to-sky-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_0,100%_0,100%_84%,0_100%)] lg:rounded-tr-[8rem]"
+            aria-hidden="true"
+          />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 sm:mb-10 md:mb-12">
-          <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2 sm:mb-4">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
-              Our Lab Technology
-            </h2>
+          {/* Coral warmth, top-left — the corner the other two leave empty */}
+          <div
+            className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-[#FF6B6B]/25 blur-3xl"
+            aria-hidden="true"
+          />
+
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+            <span className="absolute -right-16 top-20 h-64 w-64 rounded-full bg-white/[0.06]" />
+            <span className="absolute left-1/3 top-10 h-40 w-40 rounded-full bg-white/[0.05]" />
+            <span className="absolute bottom-10 right-1/4 h-72 w-72 rounded-full bg-white/[0.04]" />
+            <span className="absolute bottom-16 left-16 h-48 w-48 rounded-full bg-[#FF6B6B]/[0.12]" />
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
-            Modern diagnostics powered by precision instruments, digital
-            workflows, and trusted laboratory science.
-          </p>
-        </div>
+        </>
+      }
+    >
+      <SectionHeading
+        onDark
+        title="Precision instruments, trusted science"
+        subtitle="Modern diagnostics powered by digital workflows and accredited laboratory practice."
+        actions={
+          <div className="hidden items-center gap-3 sm:flex">
+            <CarouselButton
+              direction="left"
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              label="Previous technologies"
+            />
+            <CarouselButton
+              direction="right"
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              label="Next technologies"
+            />
+          </div>
+        }
+      />
 
-        <div className="relative sm:px-10 md:px-12 lg:px-14">
-          <button
-            type="button"
-            onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg sm:flex md:h-11 md:w-11"
-            aria-label="Previous"
-          >
-            <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <div ref={viewportRef} className="w-full overflow-hidden py-2 sm:py-6">
-            <div
-              ref={scrollRef}
-              onScroll={handleScroll}
-              className={scrollClassName}
-              style={{
-                gap: `${gap}px`,
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
+      <div ref={viewportRef} className="w-full overflow-hidden py-2">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className={`${scrollClassName} items-stretch`}
+          style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {technologies.map((tech, idx) => (
+            <article
+              key={tech.title}
+              data-tech-card
+              style={cardWidthStyle}
+              className={cardClassName}
             >
-              {technologies.map((tech, idx) => (
-                <article
-                  key={tech.title}
-                  data-tech-card
-                  style={cardWidthStyle}
-                  className={`relative ${cardClassName}`}
-                >
-                <div className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200/80 transition-shadow duration-300 hover:shadow-lg">
-                  <div className="relative bg-[#FF6B6B] px-4 pb-5 pt-4 sm:px-5 sm:pb-7 sm:pt-5">
-                    <h3 className="pr-12 text-sm font-bold leading-tight text-white sm:pr-16 sm:text-lg">
+              <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-card-hover">
+                {/* Compact head: icon and title side by side on a light tint, so
+                    the card leads with its name instead of a block of colour. */}
+                <div className="flex items-center gap-3.5 border-b border-slate-100 bg-sky-50/60 px-5 py-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white shadow-card ring-1 ring-sky-100 transition-transform duration-300 group-hover:scale-105">
+                    <span className="h-7 w-7">
+                      <TechIcon index={idx} />
+                    </span>
+                  </span>
+
+                  <div className="min-w-0">
+                    <h3 className="truncate text-base font-bold leading-snug text-slate-900">
                       {tech.title}
                     </h3>
-                    <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 sm:mt-1.5 sm:gap-x-3">
-                      <span className="text-sm font-semibold text-white sm:text-base">
-                        {tech.highlight}
-                      </span>
-                      <span className="text-[10px] text-white/80 sm:text-xs">{tech.support}</span>
-                    </div>
-
-                    <Link
-                      href="/services"
-                      className="absolute bottom-0 right-3 flex h-12 w-12 translate-y-1/2 items-center justify-center rounded-xl border-2 border-sky-600 bg-white shadow-md transition-transform hover:scale-105 sm:right-4 sm:h-16 sm:w-16 sm:rounded-2xl"
-                      aria-label={`${tech.title} — view services`}
-                    >
-                      <div className="h-8 w-8 sm:h-11 sm:w-11">
-                        <TechIcon index={idx} />
-                      </div>
-                    </Link>
-                  </div>
-
-                  <div className="max-h-[140px] overflow-y-auto px-3 pb-4 pt-6 text-[11px] text-slate-700 sm:max-h-[220px] sm:px-5 sm:pb-5 sm:pt-10 sm:text-sm [scrollbar-width:thin]">
-                    <ul className="space-y-3">
-                      {tech.features.map((group) => (
-                        <li key={group.label}>
-                          <p className="font-medium text-slate-800">
-                            <span className="mr-1.5 text-[#FF6B6B]">•</span>
-                            {group.label}
-                          </p>
-                          {group.items?.length > 0 && (
-                            <ul className="mt-1.5 space-y-1 pl-4 text-slate-600">
-                              {group.items.map((item) => (
-                                <li key={item} className="flex gap-2">
-                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs">
+                      <span className="font-semibold text-sky-600">{tech.highlight}</span>
+                      <span className="h-1 w-1 rounded-full bg-[#FF6B6B]" aria-hidden="true" />
+                      <span className="text-slate-500">{tech.support}</span>
+                    </p>
                   </div>
                 </div>
-              </article>
-            ))}
-            </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg sm:flex md:h-11 md:w-11"
-            aria-label="Next"
-          >
-            <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <ul className="flex-1 space-y-2.5">
+                    {tech.features
+                      .flatMap((group) => group.items)
+                      .map((item) => (
+                        <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
+                          <span
+                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]"
+                            aria-hidden="true"
+                          />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
 
-        <div className="mt-4 flex items-center justify-center gap-3 sm:mt-6">
-          <button
-            type="button"
-            onClick={() => scroll("left")}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md sm:hidden"
-            aria-label="Previous"
-          >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalDots }).map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => scrollToDot(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === activeIndex ? "w-8 bg-sky-600" : "w-2 bg-slate-300"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={() => scroll("right")}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md sm:hidden"
-            aria-label="Next"
-          >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+                {/* Coral foot — the site's established card close */}
+                <span className="block h-1 w-full bg-[#FF6B6B]" aria-hidden="true" />
+              </div>
+            </article>
+          ))}
         </div>
       </div>
-    </section>
+
+      <div className="mt-8 flex items-center justify-center gap-3">
+        <div className="sm:hidden">
+          <CarouselButton
+            direction="left"
+            onClick={() => scroll("left")}
+            disabled={!canScrollLeft}
+            label="Previous technologies"
+          />
+        </div>
+        <CarouselDots onDark total={totalDots} activeIndex={activeIndex} onSelect={scrollToDot} />
+        <div className="sm:hidden">
+          <CarouselButton
+            direction="right"
+            onClick={() => scroll("right")}
+            disabled={!canScrollRight}
+            label="Next technologies"
+          />
+        </div>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <Link
+          href="/services"
+          className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-sky-700 shadow-card transition-all duration-300 hover:bg-sky-50 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          Explore all services
+          <svg
+            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7-7 7M21 12H3" />
+          </svg>
+        </Link>
+      </div>
+    </Section>
   );
 }

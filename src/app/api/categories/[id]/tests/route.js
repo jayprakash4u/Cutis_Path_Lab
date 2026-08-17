@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
-import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { sqlOne, sqlQuery, sqlTransaction } from "@/lib/mysql";
 
 /**
  * Replace all tests linked to a disease category.
@@ -19,33 +19,39 @@ export async function PUT(request, { params }) {
       ? body.testIds.map((t) => String(t).trim()).filter(Boolean)
       : [];
 
-    const exists = await sqlJson(`
-      SELECT id FROM dbo.Category WHERE id = ${escapeSql(categoryId)} FOR JSON PATH
-    `);
-    if (!exists.length) {
+    const exists = await sqlOne("SELECT `id` FROM `Category` WHERE `id` = ? LIMIT 1", [
+      categoryId,
+    ]);
+    if (!exists) {
       return NextResponse.json(
         { success: false, message: "Category not found" },
         { status: 404 },
       );
     }
 
-    const lines = [
-      `DELETE FROM dbo.CategoryTest WHERE categoryId = ${escapeSql(categoryId)};`,
-    ];
-    testIds.forEach((testId, i) => {
-      lines.push(`
-IF EXISTS (SELECT 1 FROM dbo.Test WHERE id = ${escapeSql(testId)})
-INSERT INTO dbo.CategoryTest (categoryId, testId, sortOrder)
-VALUES (${escapeSql(categoryId)}, ${escapeSql(testId)}, ${i});
-`.trim());
-    });
+    const linked = await sqlTransaction(async (tx) => {
+      await tx.exec("DELETE FROM `CategoryTest` WHERE `categoryId` = ?", [categoryId]);
 
-    await sqlExec(lines.join("\n"));
+      let count = 0;
+      for (let i = 0; i < testIds.length; i += 1) {
+        // Skip ids that no longer exist rather than failing the whole request.
+        const test = await tx.one("SELECT `id` FROM `Test` WHERE `id` = ? LIMIT 1", [
+          testIds[i],
+        ]);
+        if (!test) continue;
+        await tx.exec(
+          "INSERT INTO `CategoryTest` (`categoryId`, `testId`, `sortOrder`) VALUES (?, ?, ?)",
+          [categoryId, testIds[i], i],
+        );
+        count += 1;
+      }
+      return count;
+    });
 
     return NextResponse.json({
       success: true,
       message: "Category tests updated",
-      data: { id: categoryId, count: testIds.length },
+      data: { id: categoryId, count: linked },
     });
   } catch (error) {
     return apiErrorResponse(error, "Failed to update category tests", 500);
@@ -57,15 +63,14 @@ export async function GET(_request, { params }) {
     const { id } = await params;
     const categoryId = String(id || "").trim();
 
-    const tests = await sqlJson(`
-      SELECT t.id, t.code, t.name, t.category,
-             CAST(t.price AS decimal(10,2)) AS price
-      FROM dbo.CategoryTest ct
-      INNER JOIN dbo.Test t ON t.id = ct.testId
-      WHERE ct.categoryId = ${escapeSql(categoryId)}
-      ORDER BY ct.sortOrder, t.name
-      FOR JSON PATH
-    `);
+    const tests = await sqlQuery(
+      `SELECT t.\`id\`, t.\`code\`, t.\`name\`, t.\`category\`, t.\`price\`
+         FROM \`CategoryTest\` ct
+         INNER JOIN \`Test\` t ON t.\`id\` = ct.\`testId\`
+        WHERE ct.\`categoryId\` = ?
+        ORDER BY ct.\`sortOrder\`, t.\`name\``,
+      [categoryId],
+    );
 
     return NextResponse.json({ success: true, data: tests });
   } catch (error) {

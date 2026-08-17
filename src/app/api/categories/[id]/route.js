@@ -3,8 +3,8 @@ import path from "path";
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr } from "@/lib/adminSql";
-import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { buildUpdate, toBit, toIntOr } from "@/lib/adminSql";
+import { sqlExec, sqlOne, sqlQuery, toBool } from "@/lib/mysql";
 
 async function removeLocalCategoryImage(imageUrl) {
   if (!imageUrl || typeof imageUrl !== "string") return;
@@ -23,31 +23,30 @@ export async function GET(request, { params }) {
     const { searchParams } = new URL(request.url);
     const includeTests = searchParams.get("include") === "tests";
 
-    const rows = await sqlJson(`
-      SELECT id, label, slug, imageUrl AS image, isActive, sortOrder
-      FROM dbo.Category
-      WHERE id = ${escapeSql(String(id || "").trim())}
-      FOR JSON PATH
-    `);
-    const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
-    if (list.length === 0) {
+    const row = await sqlOne(
+      `SELECT \`id\`, \`label\`, \`slug\`, \`imageUrl\` AS \`image\`, \`isActive\`, \`sortOrder\`
+         FROM \`Category\` WHERE \`id\` = ? LIMIT 1`,
+      [String(id || "").trim()],
+    );
+
+    if (!row) {
       return NextResponse.json(
         { success: false, message: "Category not found" },
         { status: 404 },
       );
     }
 
-    const category = list[0];
+    const category = { ...row, isActive: toBool(row.isActive) };
+
     if (includeTests) {
-      const tests = await sqlJson(`
-        SELECT t.id, t.code, t.name, t.category,
-               CAST(t.price AS decimal(10,2)) AS price
-        FROM dbo.CategoryTest ct
-        INNER JOIN dbo.Test t ON t.id = ct.testId
-        WHERE ct.categoryId = ${escapeSql(category.id)}
-        ORDER BY ct.sortOrder, t.name
-        FOR JSON PATH
-      `);
+      const tests = await sqlQuery(
+        `SELECT t.\`id\`, t.\`code\`, t.\`name\`, t.\`category\`, t.\`price\`
+           FROM \`CategoryTest\` ct
+           INNER JOIN \`Test\` t ON t.\`id\` = ct.\`testId\`
+          WHERE ct.\`categoryId\` = ?
+          ORDER BY ct.\`sortOrder\`, t.\`name\``,
+        [category.id],
+      );
       category.tests = tests;
       category.testIds = tests.map((t) => t.id);
     }
@@ -66,42 +65,43 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const categoryId = String(id || "").trim();
     const body = await request.json();
-    const sets = [];
 
-    let oldImageUrl = null;
-    if (body.imageUrl !== undefined || body.image !== undefined) {
-      const existing = await sqlJson(`
-        SELECT imageUrl FROM dbo.Category WHERE id = ${escapeSql(categoryId)} FOR JSON PATH
-      `);
-      oldImageUrl = existing?.[0]?.imageUrl || null;
+    const existing = await sqlOne(
+      "SELECT `imageUrl` FROM `Category` WHERE `id` = ? LIMIT 1",
+      [categoryId],
+    );
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, message: "Category not found" },
+        { status: 404 },
+      );
     }
 
-    if (body.label != null) sets.push(`label = ${escapeSql(String(body.label).trim())}`);
-    if (body.slug != null) sets.push(`slug = ${escapeSql(String(body.slug).trim())}`);
+    const fields = {};
+    if (body.label != null) fields.label = String(body.label).trim();
+    if (body.slug != null) fields.slug = String(body.slug).trim();
     if (body.imageUrl !== undefined || body.image !== undefined) {
       const v = body.imageUrl || body.image;
-      sets.push(`imageUrl = ${v ? escapeSql(String(v).trim()) : "NULL"}`);
+      fields.imageUrl = v ? String(v).trim() : null;
     }
-    if (body.isActive !== undefined) sets.push(`isActive = ${bit(Boolean(body.isActive))}`);
-    if (body.sortOrder != null) sets.push(`sortOrder = ${intOr(body.sortOrder)}`);
+    if (body.isActive !== undefined) fields.isActive = toBit(body.isActive);
+    if (body.sortOrder != null) fields.sortOrder = toIntOr(body.sortOrder);
 
-    if (sets.length === 0) {
+    if (Object.keys(fields).length === 0) {
       return NextResponse.json(
         { success: false, message: "No fields to update" },
         { status: 400 },
       );
     }
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Category WHERE id = ${escapeSql(categoryId)})
-      BEGIN
-        RAISERROR('Category not found', 16, 1);
-        RETURN;
-      END
-      UPDATE dbo.Category SET ${sets.join(", ")} WHERE id = ${escapeSql(categoryId)};
-    `);
+    const { clause, params: values } = buildUpdate(fields);
+    await sqlExec(`UPDATE \`Category\` SET ${clause} WHERE \`id\` = ?`, [
+      ...values,
+      categoryId,
+    ]);
 
-    const newImageUrl = body.imageUrl || body.image;
+    const oldImageUrl = existing.imageUrl;
+    const newImageUrl = fields.imageUrl;
     if (oldImageUrl && newImageUrl && oldImageUrl !== newImageUrl) {
       await removeLocalCategoryImage(oldImageUrl);
     }
@@ -124,23 +124,20 @@ export async function DELETE(request, { params }) {
     const { id } = await params;
     const categoryId = String(id || "").trim();
 
-    const rows = await sqlJson(`
-      SELECT imageUrl FROM dbo.Category WHERE id = ${escapeSql(categoryId)} FOR JSON PATH
-    `);
-    const imageUrl = rows?.[0]?.imageUrl;
+    const existing = await sqlOne(
+      "SELECT `imageUrl` FROM `Category` WHERE `id` = ? LIMIT 1",
+      [categoryId],
+    );
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, message: "Category not found" },
+        { status: 404 },
+      );
+    }
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Category WHERE id = ${escapeSql(categoryId)})
-      BEGIN
-        RAISERROR('Category not found', 16, 1);
-        RETURN;
-      END
-      IF OBJECT_ID('dbo.CategoryTest', 'U') IS NOT NULL
-        DELETE FROM dbo.CategoryTest WHERE categoryId = ${escapeSql(categoryId)};
-      DELETE FROM dbo.Category WHERE id = ${escapeSql(categoryId)};
-    `);
-
-    await removeLocalCategoryImage(imageUrl);
+    // CategoryTest rows cascade with the category.
+    await sqlExec("DELETE FROM `Category` WHERE `id` = ?", [categoryId]);
+    await removeLocalCategoryImage(existing.imageUrl);
 
     return NextResponse.json({
       success: true,

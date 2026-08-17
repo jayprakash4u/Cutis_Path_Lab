@@ -7,9 +7,9 @@ npm install
 npm run dev
 ```
 
-- **Database:** SQL Server via SSMS, database `CutisPathLab`, accessed through `src/lib/sqlserver.js` (`sqlcmd` + Windows integrated auth).
+- **Database:** MySQL, database `cutispathlab`, accessed through `src/lib/mysql.js` (`mysql2/promise`).
 - **Env:** Copy `.env.example` → `.env.local` and fill in values.
-- **DB init:** See `package.json` scripts `db:init`, `db:init-packages`, etc.
+- **DB init:** See `package.json` scripts `db:init`, `db:seed`.
 
 ## Production items already done
 
@@ -24,14 +24,14 @@ npm run dev
 - `robots.txt`, `sitemap.xml`, Open Graph metadata
 - Health check: `GET /api/health`
 - Sanitized API errors in production across all routes
-- Sanitized SQL/sqlcmd errors in production (`src/lib/sqlserver.js`)
+- Sanitized database errors in production (`src/lib/mysql.js`)
 - `?active=false` on referrals/categories/gallery/testimonials requires admin login
 
 ## Remaining for senior / production deploy
 
-### Database (intentionally unchanged)
+### Database
 
-`src/lib/sqlserver.js` uses **Windows-only `sqlcmd`**. For cloud/Linux hosting, replace with cross-platform `mssql` + SQL auth connection string.
+The app uses MySQL via `mysql2`. For production, provision a MySQL instance and set `MYSQL_*` env vars in `.env.local`.
 
 ### File uploads
 
@@ -50,8 +50,11 @@ Admin uploads (gallery, referrals, categories) write to `public/images/`. Move t
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `SQLSERVER_HOST` | Dev | e.g. `localhost\SQLEXPRESS` |
-| `SQLSERVER_DATABASE` | Dev | `CutisPathLab` |
+| `MYSQL_HOST` | Yes | MySQL host |
+| `MYSQL_PORT` | Yes | MySQL port |
+| `MYSQL_DATABASE` | Yes | MySQL database name |
+| `MYSQL_USER` | Yes | MySQL user |
+| `MYSQL_PASSWORD` | Yes | MySQL password |
 | `NEXT_PUBLIC_SITE_URL` | Production | Canonical URL for SEO |
 | `ADMIN_SESSION_SECRET` | Production | Long random string |
 | `ADMIN_PASSWORD` | Yes | Strong password |
@@ -66,3 +69,5 @@ Admin uploads (gallery, referrals, categories) write to `public/images/`. Move t
 | `npm run build` | Production build |
 | `npm run start` | Run production build |
 | `npm run lint` | ESLint |
+| `npm run db:init` | Initialize MySQL schema |
+| `npm run db:seed` | Seed MySQL data |

@@ -1,0 +1,815 @@
+/* ===================================================================
+   Cutis Path Lab — admin console
+   Direction: "Requisition". This is a worklist staff read all day, not
+   a landing page, so the surface stays flat and quiet and the only
+   colour that carries meaning is workflow status.
+   Type: IBM Plex Sans for UI, IBM Plex Mono for identifiers — phone
+   numbers, IDs and dates read like specimen labels.
+   =================================================================== */
+
+/* Public site sets dark body tokens; reset them inside admin routes. */
+body:has(.admin-app) {
+  color: #0b1524;
+  background: #eef2f6;
+}
+
+/* Tokens live on .admin-app (not .admin-root) so portalled dialogs, which
+   mount as siblings of the shell, still inherit them. */
+.admin-app {
+  min-height: 100vh;
+  isolation: isolate;
+  --admin-canvas: #eef2f6;
+  --admin-surface: #ffffff;
+  --admin-subtle: #f6f9fc;
+  --admin-line: #dde5ed;
+  --admin-line-soft: #eaf0f6;
+
+  /* Text */
+  --admin-ink: #0b1524;
+  --admin-muted: #5b6b7f;
+  --admin-faint: #8a9aad;
+
+  /* Brand — sky is structure, coral is reserved for urgency only */
+  --admin-sky: #0369a1;
+  --admin-sky-deep: #075985;
+  --admin-sky-wash: #eaf4fb;
+  --admin-coral: #e8505b;
+
+  /* Workflow status */
+  --admin-pending: #b45309;
+  --admin-pending-wash: #fef6ec;
+  --admin-confirmed: #0369a1;
+  --admin-confirmed-wash: #eaf4fb;
+  --admin-done: #047857;
+  --admin-done-wash: #eafaf3;
+  --admin-cancelled: #64748b;
+  --admin-cancelled-wash: #f1f5f9;
+
+  --admin-radius: 12px;
+  --admin-font: var(--font-plex-sans), "Segoe UI", system-ui, sans-serif;
+  --admin-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  color: var(--admin-ink);
+  font-family: var(--admin-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.admin-root {
+  background: var(--admin-canvas);
+  min-height: 100vh;
+}
+
+/* Display face is the same family, differentiated by weight and tracking
+   rather than by a second personality. */
+.admin-display {
+  font-family: var(--admin-font);
+  font-weight: 600;
+  letter-spacing: -0.021em;
+}
+
+/* Identifiers, counts, phone numbers, dates. */
+.admin-mono {
+  font-family: var(--admin-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.admin-eyebrow {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--admin-faint);
+}
+
+/* ─── Panels ──────────────────────────────────────────────────────── */
+
+.admin-panel {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: var(--admin-radius);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sections that need emphasis opt in, rather than every panel shouting. */
+.admin-panel--lead {
+  border-color: #cfe0ee;
+  box-shadow: 0 1px 2px rgba(11, 21, 36, 0.04);
+}
+
+/* ─── Status rail — the signature device ──────────────────────────
+   A 3px left edge keyed to workflow state. It encodes where a record
+   sits in the process, so status is readable before any text is. */
+
+.admin-rail {
+  position: relative;
+  padding-left: 0.875rem;
+}
+
+.admin-rail::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--rail, var(--admin-line));
+}
+
+.admin-rail--pending {
+  --rail: var(--admin-pending);
+}
+.admin-rail--confirmed {
+  --rail: var(--admin-confirmed);
+}
+.admin-rail--done {
+  --rail: var(--admin-done);
+}
+.admin-rail--cancelled {
+  --rail: var(--admin-cancelled);
+}
+
+/* ─── Forms ───────────────────────────────────────────────────────── */
+
+.admin-input,
+select.admin-input,
+textarea.admin-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 9px;
+  border: 1px solid var(--admin-line);
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-input::placeholder {
+  color: var(--admin-faint);
+}
+
+.admin-input:hover:not(:disabled) {
+  border-color: #c6d4e2;
+}
+
+.admin-input:focus-visible {
+  border-color: var(--admin-sky);
+  box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.14);
+}
+
+.admin-input:disabled {
+  background: var(--admin-subtle);
+  color: var(--admin-faint);
+  cursor: not-allowed;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────── */
+
+.admin-btn-primary,
+.admin-btn-ghost,
+.admin-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-btn-primary {
+  background: var(--admin-sky);
+  color: #fff;
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  background: var(--admin-sky-deep);
+}
+
+.admin-btn-ghost {
+  background: var(--admin-surface);
+  border-color: var(--admin-line);
+  color: var(--admin-ink);
+}
+
+.admin-btn-ghost:hover:not(:disabled) {
+  border-color: #c2d3e2;
+  background: var(--admin-subtle);
+}
+
+.admin-btn-danger {
+  background: var(--admin-surface);
+  border-color: #f3ccd0;
+  color: #b3323d;
+}
+
+.admin-btn-danger:hover:not(:disabled) {
+  background: #fdf2f3;
+  border-color: #e9b4ba;
+}
+
+.admin-btn-primary:disabled,
+.admin-btn-ghost:disabled,
+.admin-btn-danger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-btn-primary:focus-visible,
+.admin-btn-ghost:focus-visible,
+.admin-btn-danger:focus-visible {
+  outline: 2px solid var(--admin-sky);
+  outline-offset: 2px;
+}
+
+/* ─── Tables ──────────────────────────────────────────────────────── */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--admin-faint);
+  font-weight: 600;
+  text-align: left;
+  padding: 0 0.75rem 0.6rem 0;
+  border-bottom: 1px solid var(--admin-line);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.8rem 0.75rem 0.8rem 0;
+  border-bottom: 1px solid var(--admin-line-soft);
+  vertical-align: top;
+  font-size: 0.875rem;
+  color: var(--admin-ink);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr {
+  transition: background 0.12s ease;
+}
+
+.admin-table tbody tr:hover td {
+  background: var(--admin-subtle);
+}
+
+/* ─── Status pill ─────────────────────────────────────────────────── */
+
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+}
+
+.admin-pill::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.admin-pill--pending {
+  color: var(--admin-pending);
+  background: var(--admin-pending-wash);
+  border-color: #f6e2c6;
+}
+.admin-pill--confirmed {
+  color: var(--admin-confirmed);
+  background: var(--admin-confirmed-wash);
+  border-color: #cfe3f2;
+}
+.admin-pill--done {
+  color: var(--admin-done);
+  background: var(--admin-done-wash);
+  border-color: #c6ecdb;
+}
+.admin-pill--cancelled {
+  color: var(--admin-cancelled);
+  background: var(--admin-cancelled-wash);
+  border-color: var(--admin-line);
+}
+
+/* ─── Feedback ────────────────────────────────────────────────────── */
+
+.admin-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+
+.admin-note--error {
+  color: #9f2933;
+  background: #fdf2f3;
+  border-color: #f3ccd0;
+}
+
+.admin-note--success {
+  color: #04613f;
+  background: var(--admin-done-wash);
+  border-color: #c6ecdb;
+}
+
+/* ─── Empty state ─────────────────────────────────────────────────── */
+
+.admin-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem 1.25rem;
+}
+
+.admin-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.9rem;
+  border-radius: 10px;
+  background: var(--admin-subtle);
+  border: 1px solid var(--admin-line);
+  color: var(--admin-faint);
+}
+
+.admin-empty__title {
+  font-weight: 600;
+  color: var(--admin-ink);
+  font-size: 0.925rem;
+}
+
+.admin-empty__body {
+  margin-top: 0.3rem;
+  max-width: 26rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--admin-muted);
+}
+
+/* ─── Skeletons ───────────────────────────────────────────────────── */
+
+.admin-skeleton {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    #e8eef4 25%,
+    #f2f6fa 37%,
+    #e8eef4 63%
+  );
+  background-size: 400% 100%;
+  animation: admin-shimmer 1.4s ease infinite;
+}
+
+@keyframes admin-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0 50%;
+  }
+}
+
+/* ─── Motion ──────────────────────────────────────────────────────── */
+
+@keyframes admin-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.admin-animate {
+  animation: admin-fade-up 0.24s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-animate,
+  .admin-skeleton {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Sidebar navigation ──────────────────────────────────────────── */
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--admin-muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.admin-nav-link:hover {
+  background: var(--admin-subtle);
+  color: var(--admin-ink);
+}
+
+.admin-nav-link[data-active="true"] {
+  background: var(--admin-sky-wash);
+  color: var(--admin-sky-deep);
+  font-weight: 600;
+}
+
+.admin-nav-link svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.admin-nav-link[data-active="true"] svg {
+  opacity: 1;
+}
+
+.admin-nav-group {
+  padding: 0.9rem 0.7rem 0.3rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--admin-faint);
+}
+
+/* ─── Dialog ──────────────────────────────────────────────────────── */
+
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .admin-modal {
+    align-items: center;
+    padding: 1.5rem;
+  }
+}
+
+.admin-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 21, 36, 0.45);
+  animation: admin-fade-in 0.15s ease-out both;
+}
+
+.admin-modal__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 92vh;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 14px 14px 0 0;
+  box-shadow: 0 24px 60px rgba(11, 21, 36, 0.22);
+  overflow: hidden;
+  animation: admin-modal-in 0.18s ease-out both;
+}
+
+@media (min-width: 640px) {
+  .admin-modal__panel {
+    max-height: 88vh;
+    border-radius: 14px;
+  }
+}
+
+.admin-modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--admin-line-soft);
+  flex-shrink: 0;
+}
+
+.admin-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid var(--admin-line);
+  background: var(--admin-surface);
+  color: var(--admin-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-modal__close:hover {
+  background: var(--admin-subtle);
+  color: var(--admin-ink);
+}
+
+.admin-modal__close:focus-visible {
+  outline: 2px solid var(--admin-sky);
+  outline-offset: 2px;
+}
+
+/* Only the body scrolls, so the save button stays reachable. */
+.admin-modal__body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.admin-modal__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--admin-line-soft);
+  background: var(--admin-subtle);
+  flex-shrink: 0;
+}
+
+@keyframes admin-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes admin-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-modal__scrim,
+  .admin-modal__panel {
+    animation: none;
+  }
+}
+
+/* ─── Login ───────────────────────────────────────────────────────── */
+
+.admin-login-page {
+  min-height: 100vh;
+  background: var(--admin-canvas);
+}
+
+.admin-login-hero {
+  position: relative;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 2.5rem 2.75rem;
+  color: #fff;
+}
+
+@media (min-width: 1024px) {
+  .admin-login-hero {
+    display: flex;
+  }
+}
+
+.admin-login-hero__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.admin-login-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    165deg,
+    rgba(7, 89, 133, 0.94) 0%,
+    rgba(3, 105, 161, 0.86) 40%,
+    rgba(11, 21, 36, 0.78) 100%
+  );
+}
+
+.admin-login-hero__logo-wrap {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.admin-login-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 30rem;
+}
+
+.admin-login-hero__eyebrow {
+  margin-bottom: 1rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(224, 242, 254, 0.9);
+}
+
+.admin-login-hero__title {
+  font-size: clamp(1.9rem, 2.9vw, 2.7rem);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.022em;
+}
+
+.admin-login-hero__desc {
+  margin-top: 1.1rem;
+  max-width: 24rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(240, 249, 255, 0.88);
+}
+
+.admin-login-hero__footer {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: rgba(224, 242, 254, 0.82);
+}
+
+.admin-login-form-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2.5rem 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .admin-login-form-wrap {
+    padding: 2.5rem 2rem;
+  }
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem 1.85rem 2.1rem;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(11, 21, 36, 0.06);
+}
+
+.admin-login-card__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.35rem;
+}
+
+.admin-login-card__eyebrow {
+  margin-bottom: 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--admin-sky);
+}
+
+.admin-login-card__title {
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.022em;
+  color: var(--admin-ink);
+}
+
+.admin-login-card__subtitle {
+  margin-top: 0.45rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--admin-muted);
+}
+
+.admin-login-field {
+  display: block;
+}
+
+.admin-login-field__label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--admin-muted);
+}
+
+.admin-login-input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 9px;
+  border: 1px solid var(--admin-line);
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-login-input:focus-visible {
+  border-color: var(--admin-sky);
+  box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.14);
+}
+
+/* Password shares the username treatment — a different fill implied a
+   different kind of field for no reason. */
+.admin-login-input--password {
+  letter-spacing: 0.08em;
+}
+
+.admin-login-submit {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 9px;
+  background: var(--admin-sky);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.admin-login-submit:hover:not(:disabled) {
+  background: var(--admin-sky-deep);
+}
+
+.admin-login-submit:focus-visible {
+  outline: 2px solid var(--admin-sky);
+  outline-offset: 2px;
+}
+
+.admin-login-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

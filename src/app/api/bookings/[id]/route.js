@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminAuth";
 import { apiErrorResponse } from "@/lib/apiError";
-import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { sqlExec, sqlOne } from "@/lib/mysql";
 import { bookingStatusSchema } from "@/lib/validation/booking";
 import { parseOrErrors } from "@/lib/validation/common";
 import { validationError } from "@/lib/validation/http";
@@ -13,23 +13,30 @@ export async function GET(request, { params }) {
   try {
     const { id } = await params;
     const bookingId = String(id || "").trim();
-    const rows = await sqlJson(`
-      SELECT id, name, phone, email, address, preferredDate, preferredTime,
-             notes, status, testId, packageId, offerId, createdAt
-      FROM dbo.Booking
-      WHERE id = ${escapeSql(bookingId)}
-      FOR JSON PATH
-    `);
-    const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
-    if (list.length === 0) {
+
+    const row = await sqlOne(
+      `SELECT \`id\`, \`name\`, \`phone\`, \`email\`, \`address\`, \`preferredDate\`,
+              \`preferredTime\`, \`notes\`, \`status\`, \`testId\`, \`packageId\`,
+              \`offerId\`, \`createdAt\`
+         FROM \`Booking\` WHERE \`id\` = ? LIMIT 1`,
+      [bookingId],
+    );
+
+    if (!row) {
       return NextResponse.json(
         { success: false, message: "Booking not found" },
         { status: 404 },
       );
     }
-    return NextResponse.json({ success: true, data: list[0] });
+
+    return NextResponse.json({ success: true, data: row });
   } catch (error) {
-    return apiErrorResponse(error, "Failed to load booking", 500, "GET /api/bookings/[id]");
+    return apiErrorResponse(
+      error,
+      "Failed to load booking",
+      500,
+      "GET /api/bookings/[id]",
+    );
   }
 }
 
@@ -41,28 +48,30 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const bookingId = String(id || "").trim();
     const body = await request.json();
+
     const parsed = parseOrErrors(bookingStatusSchema, {
       status: String(body.status || "").trim().toLowerCase(),
     });
     if (!parsed.ok) {
-      return validationError({
-        message: parsed.message,
-        errors: parsed.errors,
-      });
+      return validationError({ message: parsed.message, errors: parsed.errors });
     }
 
     const { status } = parsed.data;
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.Booking WHERE id = ${escapeSql(bookingId)})
-      BEGIN
-        RAISERROR('Booking not found', 16, 1);
-        RETURN;
-      END
-      UPDATE dbo.Booking
-      SET status = ${escapeSql(status)}, updatedAt = SYSUTCDATETIME()
-      WHERE id = ${escapeSql(bookingId)};
-    `);
+    const exists = await sqlOne("SELECT `id` FROM `Booking` WHERE `id` = ? LIMIT 1", [
+      bookingId,
+    ]);
+    if (!exists) {
+      return NextResponse.json(
+        { success: false, message: "Booking not found" },
+        { status: 404 },
+      );
+    }
+
+    await sqlExec("UPDATE `Booking` SET `status` = ? WHERE `id` = ?", [
+      status,
+      bookingId,
+    ]);
 
     return NextResponse.json({
       success: true,
@@ -70,6 +79,11 @@ export async function PATCH(request, { params }) {
       data: { id: bookingId, status },
     });
   } catch (error) {
-    return apiErrorResponse(error, "Failed to update booking", 500, "PATCH /api/bookings/[id]");
+    return apiErrorResponse(
+      error,
+      "Failed to update booking",
+      500,
+      "PATCH /api/bookings/[id]",
+    );
   }
 }

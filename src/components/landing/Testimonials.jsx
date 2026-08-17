@@ -5,6 +5,12 @@ import {
   useFullCardCarousel,
   CAROUSEL_BREAKPOINTS,
 } from "@/lib/useFullCardCarousel";
+import {
+  Section,
+  SectionHeading,
+  CarouselButton,
+  CarouselDots,
+} from "@/components/ui/Section";
 
 function Stars({ rating }) {
   return (
@@ -24,25 +30,6 @@ function Stars({ rating }) {
   );
 }
 
-function NavArrow({ direction, onClick, className = "" }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all duration-300 hover:border-sky-300 hover:text-sky-600 md:h-11 md:w-11 ${className}`}
-      aria-label={direction === "left" ? "Previous reviews" : "Next reviews"}
-    >
-      <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        {direction === "left" ? (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        ) : (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        )}
-      </svg>
-    </button>
-  );
-}
-
 export default function Reviews() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,12 +45,16 @@ export default function Reviews() {
     handleScroll,
     scroll,
     scrollToDot,
+    canScrollLeft,
+    canScrollRight,
     gap,
   } = useFullCardCarousel({
     gap: 16,
     breakpoints: CAROUSEL_BREAKPOINTS.testimonials,
     itemCount: reviews.length,
     deps: [reviews.length, loading],
+    autoPlay: true,
+    autoPlayInterval: 5000,
   });
 
   useEffect(() => {
@@ -89,28 +80,62 @@ export default function Reviews() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-sky-50/60 via-white to-slate-50 py-6 sm:py-14 md:py-20">
-      <div
-        className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-sky-200/35 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-20 left-0 h-64 w-64 rounded-full bg-[#FF6B6B]/10 blur-3xl"
-        aria-hidden="true"
+    <Section
+      tone="white"
+      backdrop={
+        <>
+          {/*
+            The angled panel. `clip-path` cuts a diagonal across the top edge:
+            the top-left corner stays at y=0 while the top-right drops, so the
+            white page shows through as a wedge. Kept flat below `sm` — a steep
+            diagonal on a narrow screen eats the headline.
+          */}
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-sky-900 via-sky-800 to-sky-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_0,100%_18%,100%_100%,0_100%)] lg:rounded-br-[8rem]"
+            aria-hidden="true"
+          />
+
+          {/* Coral warmth — the second brand colour, kept as a diffuse glow so
+              the panel stays sky-led rather than turning muddy in a blend. */}
+          <div
+            className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-[#FF6B6B]/25 blur-3xl"
+            aria-hidden="true"
+          />
+
+          {/* Bokeh — oversized circles at very low opacity for depth */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+            <span className="absolute -left-16 top-24 h-64 w-64 rounded-full bg-white/[0.06]" />
+            <span className="absolute left-1/4 top-12 h-40 w-40 rounded-full bg-white/[0.05]" />
+            <span className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-white/[0.04]" />
+            <span className="absolute -bottom-10 right-1/4 h-56 w-56 rounded-full bg-[#FF6B6B]/[0.12]" />
+            <span className="absolute right-10 top-1/3 h-32 w-32 rounded-full bg-white/[0.06]" />
+          </div>
+        </>
+      }
+    >
+      <SectionHeading
+        onDark
+        title="What our patients say"
+        subtitle="Patients, physicians, and partners who trust our laboratory every day."
+        actions={
+          <div className="hidden items-center gap-3 sm:flex">
+            <CarouselButton
+              direction="left"
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              label="Previous testimonials"
+            />
+            <CarouselButton
+              direction="right"
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              label="Next testimonials"
+            />
+          </div>
+        }
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-5 sm:mb-10 md:mb-12">
-          <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
-              What Our Patients Say
-            </h2>
-          </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
-            Real feedback from patients, physicians, and partners who trust our
-            laboratory every day.
-          </p>
-        </div>
+      <div>
 
         {loading && (
           <p className="py-8 text-sm text-slate-500">Loading testimonials…</p>
@@ -122,14 +147,8 @@ export default function Reviews() {
 
         {!loading && reviews.length > 0 && (
           <>
-            <div className="relative sm:px-10 md:px-12 lg:px-14">
-              <NavArrow
-                direction="left"
-                onClick={() => scroll("left")}
-                className="absolute left-0 top-1/2 z-20 hidden -translate-y-1/2 sm:flex"
-              />
-
-              <div ref={viewportRef} className="w-full overflow-hidden py-2 sm:py-3">
+            <div className="relative">
+              <div ref={viewportRef} className="w-full overflow-hidden py-2">
                 <div
                   ref={scrollRef}
                   onScroll={handleScroll}
@@ -143,7 +162,7 @@ export default function Reviews() {
                       style={cardWidthStyle}
                       className={cardClassName}
                     >
-                      <div className="flex h-full flex-col rounded-2xl border-b-4 border-b-[#FF6B6B] bg-white px-3 py-4 shadow-md sm:px-5 sm:py-6 md:px-6 md:py-7">
+                      <div className="flex h-full flex-col rounded-2xl border border-slate-200 border-b-4 border-b-[#FF6B6B] bg-white p-5 shadow-card transition-shadow duration-300 hover:shadow-card-hover sm:p-6">
                         <Stars rating={review.rating} />
 
                         <p className="mb-4 line-clamp-4 flex-1 text-xs leading-snug text-slate-600 sm:mb-6 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed">
@@ -173,43 +192,35 @@ export default function Reviews() {
                 </div>
               </div>
 
-              <NavArrow
-                direction="right"
-                onClick={() => scroll("right")}
-                className="absolute right-0 top-1/2 z-20 hidden -translate-y-1/2 sm:flex"
-              />
             </div>
 
-            <div className="mt-4 flex items-center justify-center gap-3 sm:mt-8">
-              <NavArrow
-                direction="left"
-                onClick={() => scroll("left")}
-                className="sm:hidden"
-              />
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalDots }).map((_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => scrollToDot(index)}
-                    className={`rounded-full transition-all duration-300 ${
-                      index === activeIndex
-                        ? "h-2.5 w-8 bg-sky-600"
-                        : "h-2 w-2 bg-slate-300 hover:bg-slate-400"
-                    }`}
-                    aria-label={`Go to review set ${index + 1}`}
-                  />
-                ))}
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <div className="sm:hidden">
+                <CarouselButton
+                  direction="left"
+                  onClick={() => scroll("left")}
+                  disabled={!canScrollLeft}
+                  label="Previous testimonials"
+                />
               </div>
-              <NavArrow
-                direction="right"
-                onClick={() => scroll("right")}
-                className="sm:hidden"
+              <CarouselDots
+                onDark
+                total={totalDots}
+                activeIndex={activeIndex}
+                onSelect={scrollToDot}
               />
+              <div className="sm:hidden">
+                <CarouselButton
+                  direction="right"
+                  onClick={() => scroll("right")}
+                  disabled={!canScrollRight}
+                  label="Next testimonials"
+                />
+              </div>
             </div>
           </>
         )}
       </div>
-    </section>
+    </Section>
   );
 }

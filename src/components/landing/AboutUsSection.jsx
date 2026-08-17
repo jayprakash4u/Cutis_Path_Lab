@@ -1,145 +1,136 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Section, SectionHeading } from "@/components/ui/Section";
+
+const SKY = "#0284C7";
+const CORAL = "#FF6B6B";
+
+/**
+ * Same construction as QuickIcon and TechIcon: 48px grid, 2px primary strokes,
+ * 1.8px secondary, round caps and joins, sky line work with coral marking the
+ * one detail that names the point.
+ */
+function AboutIcon({ index }) {
+  const common = {
+    viewBox: "0 0 48 48",
+    fill: "none",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true",
+    className: "h-full w-full",
+  };
+
+  const icons = [
+    // 1 — Advanced Technology: microscope, coral slide on the stage
+    <svg key="tech" {...common}>
+      <path d="M10 41h28" stroke={SKY} strokeWidth="2" />
+      <path d="M18 41c-3.5-2.6-5.5-6.6-5.5-11 0-4.6 2.4-8.7 6-11" stroke={SKY} strokeWidth="2" />
+      <rect
+        x="22"
+        y="6"
+        width="9"
+        height="17"
+        rx="2.5"
+        transform="rotate(18 22 6)"
+        stroke={SKY}
+        strokeWidth="2"
+      />
+      <path d="M20.5 25.5l6.5 2" stroke={SKY} strokeWidth="2" />
+      <path d="M22 41h14" stroke={SKY} strokeWidth="1.8" />
+      <path d="M16 33h16" stroke={CORAL} strokeWidth="2" />
+      <path d="M22 30v3" stroke={CORAL} strokeWidth="1.8" />
+    </svg>,
+
+    // 2 — Expert Professionals: clinician with a coral badge
+    <svg key="people" {...common}>
+      <circle cx="20" cy="14" r="7" stroke={SKY} strokeWidth="2" />
+      <path d="M7 40v-3a11 11 0 0 1 11-11h4a11 11 0 0 1 11 11v3" stroke={SKY} strokeWidth="2" />
+      <path d="M34 20a5.5 5.5 0 1 0-4-9.3" stroke={SKY} strokeWidth="1.8" />
+      <path d="M38 40v-2.5a8.5 8.5 0 0 0-5-7.7" stroke={SKY} strokeWidth="1.8" />
+      <rect x="24" y="30" width="7" height="9" rx="1.5" stroke={CORAL} strokeWidth="2" />
+      <path d="M27.5 33v3M26 34.5h3" stroke={CORAL} strokeWidth="1.8" />
+    </svg>,
+
+    // 3 — Quality Assurance: accreditation shield with a coral seal
+    <svg key="quality" {...common}>
+      <path
+        d="M24 5l14 5v11c0 9.4-6 16.6-14 19-8-2.4-14-9.6-14-19V10l14-5Z"
+        stroke={SKY}
+        strokeWidth="2"
+      />
+      <path d="M17 22h14M17 28h9" stroke={SKY} strokeWidth="1.8" />
+      <circle cx="30" cy="30" r="6" fill="#fff" stroke={CORAL} strokeWidth="2" />
+      <path d="M27.5 30l1.8 1.8 3.2-3.4" stroke={CORAL} strokeWidth="2" />
+    </svg>,
+
+    // 4 — Timely & Reliable: clock with coral hands and motion marks
+    <svg key="timely" {...common}>
+      <circle cx="26" cy="24" r="15" stroke={SKY} strokeWidth="2" />
+      <path d="M26 10.5v3M26 34.5v3M39.5 24h-3M15.5 24h-3" stroke={SKY} strokeWidth="1.8" />
+      <path d="M26 15.5V24l6 4" stroke={CORAL} strokeWidth="2" />
+      <path d="M9 17h6M6 24h4M9 31h6" stroke={CORAL} strokeWidth="1.8" />
+    </svg>,
+  ];
+
+  return icons[index] ?? icons[0];
+}
 
 const highlights = [
   {
-    title: "Expert Lab Technicians",
+    title: "Advanced Technology",
     description:
-      "Trained medical laboratory technicians with quality-focused workflows and a patient-first mindset.",
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.8}
-          d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-        />
-      </svg>
-    ),
+      "Modern equipment and digital workflows for precise, reliable results.",
   },
   {
-    title: "NABL Accredited",
-    tag: "Lab Quality Accreditation",
+    title: "Expert Professionals",
     description:
-      "National Accreditation Board recognition for medical testing — validated quality systems you can trust.",
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.8}
-          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-        />
-      </svg>
-    ),
+      "Qualified pathologists and technicians with years of hands-on experience.",
   },
   {
-    title: "ISO 15189:2012 Compliant",
-    tag: "Quality Certification",
+    title: "Quality Assurance",
     description:
-      "Structured processes, calibrated equipment, and consistent diagnostic accuracy to the international standard.",
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.8}
-          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-        />
-      </svg>
-    ),
+      "NABL accredited and ISO 15189:2012 compliant to maintain the highest testing standards.",
   },
   {
-    title: "CAP Pathology Standards",
-    tag: "Clinical Certification",
+    title: "Timely & Reliable",
     description:
-      "Benchmarked against College of American Pathologists practices — rigorous review and quality controls.",
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.8}
-          d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-        />
-      </svg>
-    ),
+      "Quick turnaround without compromising accuracy, because every result matters.",
   },
 ];
 
-function DotPattern({ className = "", cols = 6, rows = 6 }) {
-  return (
-    <div
-      className={`grid gap-2 ${className}`}
-      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-      aria-hidden
-    >
-      {Array.from({ length: cols * rows }).map((_, i) => (
-        <span
-          key={i}
-          className={`h-1.5 w-1.5 rounded-full ${
-            i % 3 === 0 ? "bg-[#FF6B6B]/30" : "bg-sky-300/60"
-          }`}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function AboutUsSection() {
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#F2F7FE] via-[#F7FAFF] to-white py-10 sm:py-14 md:py-20">
-      <div
-        className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-[#FF6B6B]/10 blur-3xl"
-        aria-hidden
-      />
-      <DotPattern
-        className="pointer-events-none absolute right-6 top-8 hidden xl:grid"
-        cols={7}
-        rows={4}
-      />
-
-      <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="grid items-center gap-12 lg:grid-cols-[45fr_55fr] lg:gap-12 xl:gap-16">
-          {/* Left 45% — image collage with decorative shapes */}
+    <Section tone="white">
+      <div>
+        <div className="grid items-center gap-12 lg:grid-cols-[45fr_55fr] lg:gap-14 xl:gap-20">
+          {/* Left 45% — image collage */}
           <div className="relative mx-auto w-full max-w-lg pb-16 sm:pb-20 lg:max-w-none">
-            {/* Blue organic blob */}
+            {/* Soft offset shape behind the main image */}
             <div
-              className="pointer-events-none absolute -left-4 top-8 z-0 h-40 w-40 rounded-[48%_52%_40%_60%/55%_45%_55%_45%] bg-gradient-to-br from-sky-600 to-sky-500 sm:-left-8 sm:h-52 sm:w-52"
+              className="pointer-events-none absolute -left-4 -top-6 z-0 h-1/2 w-3/4 rounded-2xl bg-slate-200/50 sm:-left-6 sm:-top-8"
               aria-hidden
             />
-            {/* Red organic blob */}
-            <div
-              className="pointer-events-none absolute bottom-10 right-0 z-0 h-32 w-32 rounded-[55%_45%_50%_50%/45%_55%_45%_55%] bg-[#FF6B6B] sm:h-44 sm:w-44"
-              aria-hidden
-            />
-            <DotPattern className="absolute -left-1 top-16 z-10 sm:-left-3 sm:top-24" cols={5} rows={5} />
 
-            <div className="relative z-10 ml-6 sm:ml-12 lg:ml-10">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] rounded-tr-[5rem] shadow-2xl ring-1 ring-white/60 sm:rounded-[2.5rem] sm:rounded-tr-[7rem]">
+            <div className="relative z-10">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-float">
                 <Image
                   src="/images/home/abouthomepage/pathlab1.jpg"
-                  alt="Cutis Path Lab facility"
+                  alt="Cutis Path Lab pathologist at work"
                   fill
                   className="object-cover object-center"
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent" />
               </div>
 
               {/* Floating secondary image */}
-              <div className="absolute bottom-0 right-0 z-20 w-[48%] translate-x-[8%] translate-y-[24%] overflow-hidden rounded-2xl border-4 border-white bg-white shadow-2xl sm:w-[46%] sm:rounded-3xl sm:border-[6px]">
+              <div className="absolute -bottom-12 right-0 z-20 w-[56%] overflow-hidden rounded-2xl border-[6px] border-white bg-white shadow-float sm:-bottom-14 sm:w-[52%] sm:translate-x-[10%]">
                 <div className="relative aspect-[4/3]">
                   <Image
                     src="/images/home/abouthomepage/pathlab2.jpg"
-                    alt="Cutis Path Lab team and equipment"
+                    alt="Cutis Path Lab samples and equipment"
                     fill
                     className="object-cover object-center"
-                    sizes="260px"
+                    sizes="300px"
                   />
                 </div>
               </div>
@@ -148,57 +139,28 @@ export default function AboutUsSection() {
 
           {/* Right 55% — content */}
           <div>
-            <div className="inline-flex items-center gap-2.5 rounded-full bg-sky-600 px-5 py-2.5 shadow-lg shadow-sky-600/20">
-              <svg
-                className="h-5 w-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.8}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span className="text-xs font-bold uppercase tracking-wide text-white sm:text-sm">
-                About Cutis Path Lab
-              </span>
-            </div>
-
-            <h2 className="mt-6 text-3xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              Advanced Technology.
-              <br />
-              <span className="text-sky-600">Trusted Professionals.</span>
-            </h2>
-
-            <div className="mt-5 h-1.5 w-16 rounded-full bg-[#FF6B6B]" aria-hidden />
-
-            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base lg:text-lg">
-              At Cutis Path Lab, we combine advanced technology with a team of dedicated experts to
-              deliver accurate, reliable, and timely diagnostic results. Your health is our priority,
-              and excellence is our commitment.
-            </p>
+            <SectionHeading
+              title="Advanced technology, trusted professionals"
+              subtitle="We combine modern diagnostic technology with a team of dedicated specialists to deliver accurate, reliable and timely results. Your health is our priority, and excellence is our commitment."
+              className="!mb-0"
+            />
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-5">
-              {highlights.map((item) => (
+              {highlights.map((item, idx) => (
                 <div
                   key={item.title}
-                  className="group flex gap-4 rounded-2xl border border-sky-100 bg-white/80 p-4 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-lg hover:shadow-sky-600/10 sm:p-5"
+                  className="group flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-card-hover"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition group-hover:bg-sky-600 group-hover:text-white">
-                    {item.icon}
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-50 p-2 ring-1 ring-sky-100 transition duration-300 group-hover:bg-sky-100">
+                    <AboutIcon index={idx} />
                   </div>
                   <div className="min-w-0">
-                    {item.tag && (
-                      <span className="mb-1 inline-block rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600">
-                        {item.tag}
-                      </span>
-                    )}
-                    <h3 className="text-base font-bold text-slate-900">{item.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{item.description}</p>
+                    <h3 className="text-base font-bold text-slate-900">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-500">
+                      {item.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -206,22 +168,29 @@ export default function AboutUsSection() {
 
             <Link
               href="/about"
-              className="group mt-8 inline-flex items-center gap-3 rounded-xl bg-sky-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-sky-600/25 transition hover:bg-sky-700 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 sm:text-base"
+              className="group mt-9 inline-flex items-center gap-3 rounded-full bg-sky-600 py-2.5 pl-7 pr-2.5 text-sm font-bold text-white shadow-lg shadow-sky-600/25 transition duration-300 hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 sm:text-base"
             >
               Learn More About Us
-              <svg
-                className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 transition duration-300 group-hover:translate-x-0.5">
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </span>
             </Link>
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

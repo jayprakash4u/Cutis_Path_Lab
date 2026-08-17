@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import React from "react";
+import { Section, SectionHeading } from "@/components/ui/Section";
 
 const tips = [
   {
@@ -244,7 +245,7 @@ const tips = [
 
 const StepCard = ({ borderColor, title, description, icon: Icon }) => (
   <div
-    className="bg-white rounded-2xl p-5 sm:p-6 shadow-md border-t-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center"
+    className="flex flex-col items-center rounded-2xl border border-slate-200 border-t-4 bg-white p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover sm:p-6"
     style={{ borderTopColor: borderColor }}
   >
     <div className="w-20 h-20 sm:w-24 sm:h-24 mb-4">{Icon}</div>
@@ -261,23 +262,15 @@ const StepCard = ({ borderColor, title, description, icon: Icon }) => (
 
 export default function HealthTips() {
   return (
-    <section className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8 md:mb-10">
-          <div className="mb-3 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-lg font-bold text-white md:text-xl">
-              Pre-Checkup Tips
-            </h2>
-          </div>
-          <p className="max-w-xl text-sm leading-relaxed text-slate-500 md:text-base">
-            Follow these guidelines before your health checkup for accurate
-            results
-          </p>
-        </div>
+    <Section tone="white">
+      <SectionHeading
+        title="How to prepare for your health checkup"
+        subtitle="Follow these guidelines before your visit so your results are as accurate as possible."
+      />
 
+      <div>
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 sm:gap-6">
           {tips.map((tip) => (
             <StepCard
               key={tip.title}
@@ -289,6 +282,6 @@ export default function HealthTips() {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

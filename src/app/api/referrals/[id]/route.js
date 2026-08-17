@@ -3,8 +3,8 @@ import path from "path";
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
-import { bit, intOr } from "@/lib/adminSql";
-import { escapeSql, sqlExec, sqlJson } from "@/lib/sqlserver";
+import { buildUpdate, toBit, toIntOr } from "@/lib/adminSql";
+import { sqlExec, sqlOne, toBool } from "@/lib/mysql";
 
 async function removeLocalReferralImage(imageUrl) {
   if (!imageUrl || typeof imageUrl !== "string") return;
@@ -20,21 +20,25 @@ async function removeLocalReferralImage(imageUrl) {
 export async function GET(_request, { params }) {
   try {
     const { id } = await params;
-    const rows = await sqlJson(`
-      SELECT id, name, specialization, hospital, quote,
-             imageUrl AS image, isActive, sortOrder
-      FROM dbo.ReferralDoctor
-      WHERE id = ${escapeSql(String(id || "").trim())}
-      FOR JSON PATH
-    `);
-    const list = Array.isArray(rows) ? rows : rows ? [rows] : [];
-    if (list.length === 0) {
+
+    const row = await sqlOne(
+      `SELECT \`id\`, \`name\`, \`specialization\`, \`hospital\`, \`quote\`,
+              \`imageUrl\` AS \`image\`, \`isActive\`, \`sortOrder\`
+         FROM \`ReferralDoctor\` WHERE \`id\` = ? LIMIT 1`,
+      [String(id || "").trim()],
+    );
+
+    if (!row) {
       return NextResponse.json(
         { success: false, message: "Referral doctor not found" },
         { status: 404 },
       );
     }
-    return NextResponse.json({ success: true, data: list[0] });
+
+    return NextResponse.json({
+      success: true,
+      data: { ...row, isActive: toBool(row.isActive) },
+    });
   } catch (error) {
     return apiErrorResponse(error, "Failed to load referral doctor", 500);
   }
@@ -48,49 +52,49 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const doctorId = String(id || "").trim();
     const body = await request.json();
-    const sets = ["updatedAt = SYSUTCDATETIME()"];
 
-    let oldImageUrl = null;
-    if (body.imageUrl !== undefined || body.image !== undefined) {
-      const existing = await sqlJson(`
-        SELECT imageUrl FROM dbo.ReferralDoctor WHERE id = ${escapeSql(doctorId)} FOR JSON PATH
-      `);
-      oldImageUrl = existing?.[0]?.imageUrl || null;
+    const existing = await sqlOne(
+      "SELECT `imageUrl` FROM `ReferralDoctor` WHERE `id` = ? LIMIT 1",
+      [doctorId],
+    );
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, message: "Referral doctor not found" },
+        { status: 404 },
+      );
     }
 
-    if (body.name != null) sets.push(`name = ${escapeSql(String(body.name).trim())}`);
+    const fields = {};
+    if (body.name != null) fields.name = String(body.name).trim();
     if (body.specialization != null) {
-      sets.push(`specialization = ${escapeSql(String(body.specialization).trim())}`);
+      fields.specialization = String(body.specialization).trim();
     }
     if (body.hospital !== undefined) {
-      const v = body.hospital ? String(body.hospital).trim() : null;
-      sets.push(`hospital = ${v ? escapeSql(v) : "NULL"}`);
+      fields.hospital = body.hospital ? String(body.hospital).trim() : null;
     }
-    if (body.quote != null) sets.push(`quote = ${escapeSql(String(body.quote).trim())}`);
+    if (body.quote != null) fields.quote = String(body.quote).trim();
     if (body.imageUrl !== undefined || body.image !== undefined) {
       const v = body.imageUrl || body.image;
-      sets.push(`imageUrl = ${v ? escapeSql(String(v).trim()) : "NULL"}`);
+      fields.imageUrl = v ? String(v).trim() : null;
     }
-    if (body.isActive !== undefined) sets.push(`isActive = ${bit(Boolean(body.isActive))}`);
-    if (body.sortOrder != null) sets.push(`sortOrder = ${intOr(body.sortOrder)}`);
+    if (body.isActive !== undefined) fields.isActive = toBit(body.isActive);
+    if (body.sortOrder != null) fields.sortOrder = toIntOr(body.sortOrder);
 
-    if (sets.length === 1) {
+    if (Object.keys(fields).length === 0) {
       return NextResponse.json(
         { success: false, message: "No fields to update" },
         { status: 400 },
       );
     }
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.ReferralDoctor WHERE id = ${escapeSql(doctorId)})
-      BEGIN
-        RAISERROR('Referral doctor not found', 16, 1);
-        RETURN;
-      END
-      UPDATE dbo.ReferralDoctor SET ${sets.join(", ")} WHERE id = ${escapeSql(doctorId)};
-    `);
+    const { clause, params: values } = buildUpdate(fields);
+    await sqlExec(`UPDATE \`ReferralDoctor\` SET ${clause} WHERE \`id\` = ?`, [
+      ...values,
+      doctorId,
+    ]);
 
-    const newImageUrl = body.imageUrl || body.image;
+    const oldImageUrl = existing.imageUrl;
+    const newImageUrl = fields.imageUrl;
     if (oldImageUrl && newImageUrl && oldImageUrl !== newImageUrl) {
       await removeLocalReferralImage(oldImageUrl);
     }
@@ -113,21 +117,19 @@ export async function DELETE(request, { params }) {
     const { id } = await params;
     const doctorId = String(id || "").trim();
 
-    const rows = await sqlJson(`
-      SELECT imageUrl FROM dbo.ReferralDoctor WHERE id = ${escapeSql(doctorId)} FOR JSON PATH
-    `);
-    const imageUrl = rows?.[0]?.imageUrl;
+    const existing = await sqlOne(
+      "SELECT `imageUrl` FROM `ReferralDoctor` WHERE `id` = ? LIMIT 1",
+      [doctorId],
+    );
+    if (!existing) {
+      return NextResponse.json(
+        { success: false, message: "Referral doctor not found" },
+        { status: 404 },
+      );
+    }
 
-    await sqlExec(`
-      IF NOT EXISTS (SELECT 1 FROM dbo.ReferralDoctor WHERE id = ${escapeSql(doctorId)})
-      BEGIN
-        RAISERROR('Referral doctor not found', 16, 1);
-        RETURN;
-      END
-      DELETE FROM dbo.ReferralDoctor WHERE id = ${escapeSql(doctorId)};
-    `);
-
-    await removeLocalReferralImage(imageUrl);
+    await sqlExec("DELETE FROM `ReferralDoctor` WHERE `id` = ?", [doctorId]);
+    await removeLocalReferralImage(existing.imageUrl);
 
     return NextResponse.json({
       success: true,

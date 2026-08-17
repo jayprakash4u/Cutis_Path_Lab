@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/landing/Hero";
+import QuickActions from "@/components/landing/QuickActions";
 import BookTest from "@/components/landing/BookTest";
 import Testimonials from "@/components/landing/Testimonials";
 import Footer from "@/components/layout/Footer";
@@ -18,6 +19,7 @@ export default function Home() {
       <Navbar />
       <main className="pt-below-nav pb-24 lg:pb-0">
         <Hero />
+        <QuickActions />
         <TestsInOffers />
         <Stats />
         <TestByDiseaseCategories />

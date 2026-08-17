@@ -47,6 +47,9 @@ const nextConfig = {
         hostname: "plus.unsplash.com",
       },
     ],
+    // Next 16 only honours qualities listed here — anything else silently
+    // falls back to 75. 90 is used by the blog cards.
+    qualities: [75, 90],
   },
 };
 

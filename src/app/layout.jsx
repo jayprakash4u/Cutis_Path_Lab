@@ -1,5 +1,6 @@
 import { getSiteUrl } from "@/lib/siteUrl";
 import "./globals.css";
+import BackToTop from "@/components/ui/BackToTop";
 
 const siteUrl = getSiteUrl();
 
@@ -44,7 +45,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <BackToTop />
+      </body>
     </html>
   );
 }
