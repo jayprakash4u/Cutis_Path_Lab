@@ -1,82 +1,109 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   useFullCardCarousel,
   CAROUSEL_BREAKPOINTS,
 } from "@/lib/useFullCardCarousel";
+import {
+  Section,
+  SectionHeading,
+  CarouselButton,
+  CarouselDots,
+} from "@/components/ui/Section";
 
-function DoctorCardMobile({ doctor }) {
-  const image = doctor.image || doctor.imageUrl || "/images/cutis.png";
+// Admins can paste an arbitrary image URL (see admin/referrals `resolveImageUrl`),
+// and next/image throws on a host that isn't in next.config remotePatterns.
+// Optimise the sources we know are configured; fall back to a plain <img> for
+// anything else so one bad URL can't take the homepage down.
+const OPTIMISED_IMAGE_HOSTS = ["images.unsplash.com", "plus.unsplash.com"];
+
+function canUseNextImage(src) {
+  if (!src) return false;
+  if (src.startsWith("/")) return true;
+  try {
+    return OPTIMISED_IMAGE_HOSTS.includes(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}
+
+function DoctorAvatar({ src, alt }) {
+  if (canUseNextImage(src)) {
+    return <Image src={src} alt={alt} fill className="object-cover" sizes="88px" />;
+  }
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt={alt} className="h-full w-full object-cover" />;
+}
+
+function VerifiedBadge() {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_4px_20px_rgba(15,23,42,0.07)]">
-      <div className="h-1 shrink-0 bg-gradient-to-r from-sky-600 via-sky-500 to-sky-400" />
+    <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-sky-600 text-white shadow-md ring-2 ring-white">
+      <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <path
+          fillRule="evenodd"
+          d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </span>
+  );
+}
 
-      <div className="flex flex-1 flex-col p-4">
-        <div className="mb-3 flex items-start gap-3.5">
+/**
+ * One card for every breakpoint — row layout on mobile, centred portrait from
+ * `sm` up. Previously this was two separate components toggled with
+ * `sm:hidden` / `hidden sm:block`, which put both in the DOM and fetched every
+ * doctor's photo twice.
+ */
+function DoctorCard({ doctor }) {
+  const image = doctor.image || doctor.imageUrl || "/images/cutis.png";
+
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 border-t-[3px] border-t-sky-600 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+      <div className="flex flex-1 flex-col p-4 sm:items-center sm:p-5 sm:text-center">
+        <div className="mb-3 flex items-start gap-3.5 sm:mb-4 sm:flex-col sm:items-center sm:gap-3">
           <div className="relative shrink-0">
-            <div className="h-[72px] w-[72px] overflow-hidden rounded-2xl border-2 border-[#FF6B6B] bg-slate-100 shadow-sm">
-              <img src={image} alt={doctor.name} className="h-full w-full object-cover" />
+            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl border-2 border-[#FF6B6B] bg-slate-100 shadow-sm sm:h-[88px] sm:w-[88px]">
+              <DoctorAvatar src={image} alt={doctor.name} />
             </div>
-            <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-sky-600 text-white shadow-md">
-              <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </span>
+            <VerifiedBadge />
           </div>
 
-          <div className="min-w-0 flex-1 pt-0.5">
-            <h3 className="text-[15px] font-bold leading-tight text-slate-900">{doctor.name}</h3>
-            <p className="mt-0.5 text-xs font-semibold text-sky-600">{doctor.specialization}</p>
-            <p className="mt-0.5 text-[11px] leading-snug text-slate-500">{doctor.hospital}</p>
+          <div className="min-w-0 flex-1 pt-0.5 sm:flex-none sm:pt-0">
+            <h3 className="text-[15px] font-bold leading-tight text-slate-900 sm:text-base">
+              {doctor.name}
+            </h3>
+            <p className="mt-0.5 text-xs font-semibold text-sky-600 sm:text-[13px]">
+              {doctor.specialization}
+            </p>
+            {doctor.hospital && (
+              <p className="mt-0.5 text-[11px] leading-snug text-slate-500 sm:text-xs">
+                {doctor.hospital}
+              </p>
+            )}
           </div>
         </div>
 
-        <blockquote className="relative flex-1 rounded-xl bg-slate-50 px-3.5 py-3">
-          <svg className="absolute left-3 top-2.5 h-4 w-4 text-[#FF6B6B]/40" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        {/* flex-1 + clamp keeps every card the same height */}
+        <blockquote className="relative flex-1 rounded-xl bg-slate-50 px-3.5 py-3 sm:w-full">
+          <svg
+            className="absolute left-3 top-2.5 h-4 w-4 text-[#FF6B6B]/40"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z" />
           </svg>
-          <p className="line-clamp-3 pl-5 text-xs leading-relaxed text-slate-600">{doctor.quote}</p>
+          <p className="line-clamp-4 pl-5 text-xs leading-relaxed text-slate-600 sm:pl-0 sm:pt-3.5 sm:text-[13px]">
+            {doctor.quote}
+          </p>
         </blockquote>
       </div>
 
       <div className="h-1 shrink-0 bg-[#FF6B6B]" />
     </div>
-  );
-}
-
-function DoctorCardDesktop({ doctor }) {
-  const image = doctor.image || doctor.imageUrl || "/images/cutis.png";
-  return (
-    <div className="relative w-full pt-11 md:pt-11">
-      <div className="relative rounded-[20px] border-t-[3px] border-t-sky-600 border-b-4 border-b-[#FF6B6B] bg-white px-6 pb-8 pt-14 text-center shadow-[0_4px_24px_rgba(15,23,42,0.08)] md:pt-16">
-        <div className="absolute left-1/2 top-3 z-20 -translate-x-1/2 -translate-y-1/2 md:top-4">
-          <div className="h-[88px] w-[88px] overflow-hidden rounded-[20px] border-[3px] border-[#FF6B6B] bg-white shadow-lg md:h-[96px] md:w-[96px]">
-            <img src={image} alt={doctor.name} className="h-full w-full object-cover" />
-          </div>
-        </div>
-
-        <h3 className="mb-1.5 text-base font-bold text-slate-900 md:text-lg">{doctor.name}</h3>
-        <p className="mb-5 text-sm text-slate-500">
-          {doctor.specialization}
-          {doctor.hospital ? `, ${doctor.hospital}` : ""}
-        </p>
-        <p className="text-sm leading-relaxed text-slate-600 md:text-[15px]">&ldquo;{doctor.quote}&rdquo;</p>
-      </div>
-    </div>
-  );
-}
-
-function DoctorCard({ doctor }) {
-  return (
-    <>
-      <div className="sm:hidden">
-        <DoctorCardMobile doctor={doctor} />
-      </div>
-      <div className="hidden sm:block">
-        <DoctorCardDesktop doctor={doctor} />
-      </div>
-    </>
   );
 }
 
@@ -95,10 +122,12 @@ export default function DoctorReferrals() {
     handleScroll,
     scroll,
     scrollToDot,
+    canScrollLeft,
+    canScrollRight,
     gap,
   } = useFullCardCarousel({
     gap: 16,
-    breakpoints: CAROUSEL_BREAKPOINTS.standard,
+    breakpoints: CAROUSEL_BREAKPOINTS.referrals,
     itemCount: doctors.length,
     deps: [doctors.length, loading],
   });
@@ -128,19 +157,29 @@ export default function DoctorReferrals() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden bg-white py-6 sm:py-14 md:py-20">
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-5 sm:mb-10 md:mb-14">
-          <div className="mb-4 inline-block rounded-tr-2xl rounded-bl-2xl bg-sky-600 px-4 py-2">
-            <h2 className="text-base font-bold text-white sm:text-lg md:text-xl">
-              Our Referral Network
-            </h2>
+    <Section tone="tint">
+      <SectionHeading
+        title="Trusted by specialists across the city"
+        subtitle="Consultants who partner with Cutis Path Lab for accurate diagnostics and patient care."
+        actions={
+          <div className="hidden items-center gap-3 sm:flex">
+            <CarouselButton
+              direction="left"
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              label="Previous doctors"
+            />
+            <CarouselButton
+              direction="right"
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              label="Next doctors"
+            />
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
-            Trusted specialists across specialties who partner with Cutis Path
-            Lab for accurate diagnostics and patient care.
-          </p>
-        </div>
+        }
+      />
+
+      <div>
 
         {loading && (
           <p className="py-8 text-center text-sm text-slate-500">Loading referral network…</p>
@@ -154,23 +193,12 @@ export default function DoctorReferrals() {
 
         {!loading && doctors.length > 0 && (
           <>
-            <div className="relative sm:px-10 md:px-12">
-              <button
-                type="button"
-                onClick={() => scroll("left")}
-                className="absolute left-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-sky-600 shadow-sm transition-all duration-200 hover:border-sky-300 hover:shadow-md sm:flex md:h-10 md:w-10"
-                aria-label="Previous doctors"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <div ref={viewportRef} className="w-full overflow-hidden py-2 sm:py-2 sm:pt-4">
+            <div className="relative">
+              <div ref={viewportRef} className="w-full overflow-hidden py-2">
                 <div
                   ref={scrollRef}
                   onScroll={handleScroll}
-                  className={scrollClassName}
+                  className={`${scrollClassName} items-stretch`}
                   style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
                   {doctors.map((doctor) => (
@@ -186,60 +214,34 @@ export default function DoctorReferrals() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => scroll("right")}
-                className="absolute right-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-sky-600 shadow-sm transition-all duration-200 hover:border-sky-300 hover:shadow-md sm:flex md:h-10 md:w-10"
-                aria-label="Next doctors"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
             </div>
 
-            <div className="mt-5 flex items-center justify-center gap-3 sm:mt-10">
-              <button
-                type="button"
-                onClick={() => scroll("left")}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-sky-600 shadow-sm sm:hidden"
-                aria-label="Previous doctors"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalDots }).map((_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => scrollToDot(index)}
-                    className={`rounded-full transition-all duration-300 ${
-                      index === activeIndex
-                        ? "h-2.5 w-8 bg-sky-600"
-                        : "h-2 w-2 bg-slate-300 hover:bg-slate-400"
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <div className="sm:hidden">
+                <CarouselButton
+                  direction="left"
+                  onClick={() => scroll("left")}
+                  disabled={!canScrollLeft}
+                  label="Previous doctors"
+                />
               </div>
-
-              <button
-                type="button"
-                onClick={() => scroll("right")}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-sky-600 shadow-sm sm:hidden"
-                aria-label="Next doctors"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+              <CarouselDots
+                total={totalDots}
+                activeIndex={activeIndex}
+                onSelect={scrollToDot}
+              />
+              <div className="sm:hidden">
+                <CarouselButton
+                  direction="right"
+                  onClick={() => scroll("right")}
+                  disabled={!canScrollRight}
+                  label="Next doctors"
+                />
+              </div>
             </div>
           </>
         )}
       </div>
-    </section>
+    </Section>
   );
 }

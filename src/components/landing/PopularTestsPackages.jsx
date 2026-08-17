@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useFullCardCarousel, CAROUSEL_BREAKPOINTS } from "@/lib/useFullCardCarousel";
+import {
+  Section,
+  SectionHeading,
+  CarouselButton,
+  CarouselDots,
+} from "@/components/ui/Section";
 
 export default function PopularTestsPackages() {
   const router = useRouter();
@@ -107,33 +113,30 @@ export default function PopularTestsPackages() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-sky-50 to-white py-6 shadow-lg shadow-slate-200/50 sm:py-8 md:py-10 lg:py-12">
-      <div className="absolute left-0 top-0 z-10">
-        <div className="rounded-tr-xl rounded-bl-xl bg-sky-600 px-3 py-1.5 sm:rounded-tr-2xl sm:rounded-bl-2xl sm:px-4 sm:py-2">
-          <h2 className="text-sm font-bold text-white sm:text-base md:text-lg">
-            Popular Tests & Packages
-          </h2>
-        </div>
-      </div>
+    <Section tone="tint">
+      <SectionHeading
+        title="Most booked tests and packages"
+        subtitle="Frequently chosen tests and health packages, with transparent pricing."
+        actions={
+          <div className="hidden items-center gap-3 sm:flex">
+            <CarouselButton
+              direction="left"
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              label="Scroll left"
+            />
+            <CarouselButton
+              direction="right"
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              label="Scroll right"
+            />
+          </div>
+        }
+      />
 
-      <div className="max-w-full pt-12">
-        <div className="relative sm:px-10 md:px-12 lg:px-14">
-          <button
-            type="button"
-            onClick={() => scroll("left")}
-            disabled={!canScrollLeft}
-            className={`absolute left-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border shadow-md transition-all duration-300 sm:flex md:h-11 md:w-11 ${
-              canScrollLeft
-                ? "border-slate-200 bg-white text-slate-500 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg"
-                : "cursor-not-allowed border-slate-100 bg-white text-slate-300 opacity-50"
-            }`}
-            aria-label="Scroll left"
-          >
-            <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
+      <div>
+        <div className="relative">
           <div ref={viewportRef} className="w-full overflow-hidden py-2">
             <div
               ref={scrollRef}
@@ -160,7 +163,7 @@ export default function PopularTestsPackages() {
                       key={`${item.kind}-${item.id}`}
                       data-popular-card
                       style={cardWidthStyle}
-                      className={`flex flex-col overflow-hidden rounded-xl bg-white shadow-sm sm:rounded-2xl ${cardClassName}`}
+                      className={`flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover ${cardClassName}`}
                     >
                       <div className="flex min-h-[24px] items-center justify-between gap-2 bg-[#FF6B6B] px-2 py-1 sm:min-h-[28px] sm:px-3 md:min-h-[32px] md:px-4">
                         <h3 className="w-full truncate text-[10px] font-semibold text-white sm:text-xs md:text-sm">
@@ -229,71 +232,34 @@ export default function PopularTestsPackages() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => scroll("right")}
-            disabled={!canScrollRight}
-            className={`absolute right-0 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border shadow-md transition-all duration-300 sm:flex md:h-11 md:w-11 ${
-              canScrollRight
-                ? "border-slate-200 bg-white text-slate-500 hover:border-sky-300 hover:text-sky-600 hover:shadow-lg"
-                : "cursor-not-allowed border-slate-100 bg-white text-slate-300 opacity-50"
-            }`}
-            aria-label="Scroll right"
-          >
-            <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
 
         {!loading && items.length > 0 && (
-          <div className="mt-4 flex items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={() => scroll("left")}
-              disabled={!canScrollLeft}
-              className={`flex h-9 w-9 items-center justify-center rounded-full border shadow sm:hidden ${
-                canScrollLeft
-                  ? "border-slate-200 bg-white text-slate-500"
-                  : "cursor-not-allowed border-slate-100 text-slate-300 opacity-50"
-              }`}
-              aria-label="Scroll left"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalDots }).map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => scrollToDot(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === activeIndex ? "w-6 bg-sky-600" : "w-2 bg-slate-300"
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <div className="sm:hidden">
+              <CarouselButton
+                direction="left"
+                onClick={() => scroll("left")}
+                disabled={!canScrollLeft}
+                label="Scroll left"
+              />
             </div>
-            <button
-              type="button"
-              onClick={() => scroll("right")}
-              disabled={!canScrollRight}
-              className={`flex h-9 w-9 items-center justify-center rounded-full border shadow sm:hidden ${
-                canScrollRight
-                  ? "border-slate-200 bg-white text-slate-500"
-                  : "cursor-not-allowed border-slate-100 text-slate-300 opacity-50"
-              }`}
-              aria-label="Scroll right"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            <CarouselDots
+              total={totalDots}
+              activeIndex={activeIndex}
+              onSelect={scrollToDot}
+            />
+            <div className="sm:hidden">
+              <CarouselButton
+                direction="right"
+                onClick={() => scroll("right")}
+                disabled={!canScrollRight}
+                label="Scroll right"
+              />
+            </div>
           </div>
         )}
       </div>
-    </section>
+    </Section>
   );
 }
