@@ -363,3 +363,28 @@ INSERT IGNORE INTO `AboutAccreditation` (`id`, `title`, `body`, `iconKey`, `sort
 ('acc-nabl', 'NABL Accredited', 'National Accreditation Board for Testing and Calibration Laboratories', 'nabl', 0, 1),
 ('acc-iso',  'ISO 15189:2012',  'Medical laboratories — requirements for quality and competence',        'iso',  1, 1),
 ('acc-cap',  'CAP Certified',   'College of American Pathologists accreditation for excellence',         'cap',  2, 1);
+
+-- ---------------------------------------------------------------------------
+-- Blog
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `BlogPost` (
+  `id`           VARCHAR(50)  NOT NULL,
+  `slug`         VARCHAR(200) NOT NULL,
+  `title`        VARCHAR(300) NOT NULL,
+  `excerpt`      TEXT         NULL,
+  `content`      LONGTEXT     NULL,
+  `category`     VARCHAR(50)  NOT NULL DEFAULT 'Blog',
+  `author`       VARCHAR(150) NULL,
+  `imageUrl`     VARCHAR(500) NULL,
+  `readMinutes`  INT          NOT NULL DEFAULT 4,
+  `publishedAt`  DATE         NULL,
+  `isActive`     TINYINT(1)   NOT NULL DEFAULT 1,
+  `sortOrder`    INT          NOT NULL DEFAULT 0,
+  `createdAt`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  -- The public page will look posts up by slug, so it must be unique.
+  UNIQUE KEY `UQ_BlogPost_slug` (`slug`),
+  KEY `IX_BlogPost_active` (`isActive`, `publishedAt`),
+  KEY `IX_BlogPost_category` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

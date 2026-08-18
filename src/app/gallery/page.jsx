@@ -61,6 +61,9 @@ export default function GalleryPage() {
 
         <PagePosterHero
           src="/images/gallery_banner_exact.png"
+          mobileSrc="/images/banners/mobile/galleryheroimage.jpg"
+          mobileWidth={1024}
+          mobileHeight={474}
           alt="Cutis Path Lab Gallery"
           width={2048}
           height={177}

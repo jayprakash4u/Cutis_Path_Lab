@@ -20,6 +20,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -29,6 +30,7 @@ export default function Navbar() {
   const [searchActiveIdx, setSearchActiveIdx] = useState(-1);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
   const mobileSearchInputRef = useRef(null);
 
   // Combined dataset: tests (from staticData) + packages (inline, matching packages/page.jsx)
@@ -148,23 +150,35 @@ export default function Navbar() {
     const onKey = (e) => {
       if (e.key !== "Escape") return;
       setIsOpen(false);
+      setMobileSearchOpen(false);
       setShowSearchDropdown(false);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
+  // Focus the field once the sheet has opened.
+  useEffect(() => {
+    if (mobileSearchOpen) mobileSearchInputRef.current?.focus();
+  }, [mobileSearchOpen]);
+
   const closeMobileMenu = useCallback(() => {
     setIsOpen(false);
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
-    setIsOpen((open) => !open);
+    setIsOpen((open) => {
+      const next = !open;
+      // Only one of the two panels should be down at a time.
+      if (next) setMobileSearchOpen(false);
+      return next;
+    });
   }, []);
 
   // Close menus on route change
   useEffect(() => {
     setIsOpen(false);
+    setMobileSearchOpen(false);
     setShowSearchDropdown(false);
   }, [pathname]);
 
@@ -265,19 +279,19 @@ export default function Navbar() {
               </span>
               <span className="hidden opacity-80 lg:inline">|</span>
               <a
-                href="tel:+9779825849435"
+                href="tel:+9779861848382"
                 className="flex shrink-0 items-center gap-1.5 hover:text-sky-100"
               >
                 <PhoneIcon size={15} className="text-white" />
-                +977-9825849435
+                +977 986-1848382
               </a>
               <span className="hidden opacity-80 lg:inline">|</span>
               <a
-                href="mailto:cutislabpath@gmail.com"
+                href="mailto:info@cutispathlab.com"
                 className="hidden truncate hover:text-sky-100 lg:flex lg:items-center lg:gap-1.5"
               >
                 <EmailIcon size={16} className="text-white" />
-                cutislabpath@gmail.com
+                info@cutispathlab.com
               </a>
             </div>
             <div className="flex shrink-0 items-center gap-3">
@@ -290,7 +304,7 @@ export default function Navbar() {
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
                 <TwitterIcon size={18} />
               </a>
-              <a href="https://wa.me/9779825849435" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-sky-300">
+              <a href="https://wa.me/9779861848382" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-sky-300">
                 <WhatsAppIcon size={17} />
               </a>
             </div>
@@ -311,41 +325,17 @@ export default function Navbar() {
               the opposite edge reads as disconnected. Hidden on desktop, where
               the full nav is inline.
             */}
-            <div className="flex shrink-0 items-center gap-2.5">
-              <button
-                type="button"
-                className={`lg:hidden relative z-[80] flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
-                  isOpen
-                    ? "bg-slate-900 text-white"
-                    : "bg-sky-600 text-white hover:bg-sky-700"
-                }`}
-                onClick={toggleMobileMenu}
-                aria-label={isOpen ? "Close menu" : "Open menu"}
-                aria-expanded={isOpen}
-                aria-controls="mobile-nav-panel"
-              >
-                {isOpen ? (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M4 7h16M4 12h16M4 17h16" />
-                  </svg>
-                )}
-              </button>
-
-              <Link href="/" className="flex items-center shrink-0" onClick={closeMobileMenu}>
-                <Image
-                  src="/images/cutis.png"
-                  alt="CUTIS Lab"
-                  width={120}
-                  height={45}
-                  className="w-[108px] sm:w-28 lg:w-32 h-auto"
-                  priority
-                />
-              </Link>
-            </div>
+            {/* Logo */}
+            <Link href="/" className="flex shrink-0 items-center" onClick={closeMobileMenu}>
+              <Image
+                src="/images/cutis.png"
+                alt="CUTIS Lab"
+                width={120}
+                height={45}
+                className="w-[108px] sm:w-28 lg:w-32 h-auto"
+                priority
+              />
+            </Link>
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center gap-1 ml-8">
@@ -394,22 +384,69 @@ export default function Navbar() {
             </div>
 
             {/*
-              Search sits on the logo line on mobile. `min-w-0` matters: without
-              it the flex item refuses to shrink below its content width and
-              pushes the logo off the row on narrow phones.
+              Hidden while the drawer is open. These sit above the overlay so
+              they stay tappable normally, but the drawer carries its own close
+              button — leaving these on screen showed two ✕ at once.
             */}
-            <div className="lg:hidden relative z-[80] ml-2 min-w-0 flex-1">
+            <div
+              className={`lg:hidden relative z-[80] flex items-center gap-2 transition-opacity duration-200 ${
+                isOpen ? "pointer-events-none opacity-0" : "opacity-100"
+              }`}
+            >
+              <button
+                type="button"
+                data-mobile-search-toggle
+                onClick={() => {
+                  setMobileSearchOpen((v) => !v);
+                  setIsOpen(false);
+                }}
+                className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
+                  mobileSearchOpen
+                    ? "border-sky-400 bg-sky-50 text-sky-700"
+                    : "border-slate-200 bg-white text-slate-600"
+                }`}
+                aria-label="Search tests"
+                aria-expanded={mobileSearchOpen}
+              >
+                <SearchIcon size={18} />
+              </button>
+              {/* Always the hamburger — closing is the drawer's job now */}
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-600 text-white transition-colors hover:bg-sky-700"
+                onClick={toggleMobileMenu}
+                aria-label="Open menu"
+                aria-expanded={isOpen}
+                aria-controls="mobile-nav-panel"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Search sheet — expands under the header when the icon is tapped */}
+        <div
+          ref={mobileSearchRef}
+          className={`lg:hidden overflow-hidden border-t border-sky-50 transition-[max-height,opacity] duration-300 ease-out ${
+            mobileSearchOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="bg-slate-50 px-4 py-3">
+            <div className="relative">
               <input
                 ref={mobileSearchInputRef}
                 type="search"
-                placeholder="Search tests…"
+                placeholder="Search tests & packages"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
                 onKeyDown={searchKeyDown}
-                className="w-full rounded-lg border border-sky-200 bg-white py-2 pl-3 pr-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                className="w-full rounded-xl border border-sky-200 bg-white py-3 pl-4 pr-11 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
               />
-              <div className="pointer-events-none absolute right-1 top-1/2 flex h-7 w-8 -translate-y-1/2 items-center justify-center rounded-md bg-sky-600">
+              <div className="pointer-events-none absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg bg-sky-600">
                 <SearchIcon size={14} className="text-white" />
               </div>
               {renderSearchResults(true)}
@@ -507,7 +544,7 @@ export default function Navbar() {
                 Report
               </Link>
               <a
-                href="tel:+9779825849435"
+                href="tel:+9779861848382"
                 className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
               >
                 <PhoneIcon size={16} />

@@ -44,6 +44,31 @@ export default function PackagesPage() {
   const handleViewDetails = (pkg) => setSelectedPackage(pkg);
   const closePanel = () => setSelectedPackage(null);
 
+  /*
+    On phones the detail panel is a modal sheet over a scrim, so the listing
+    behind it must not scroll — otherwise flicking the sheet drags the page.
+    The desktop side panel is deliberately non-modal (the listing stays usable
+    behind it), so the lock is matched to the same 1024px breakpoint the layout
+    switches at. Escape closes at both sizes.
+  */
+  useEffect(() => {
+    if (!selectedPackage) return undefined;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setSelectedPackage(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    const isSheet = window.matchMedia("(max-width: 1023px)").matches;
+    const previousOverflow = document.body.style.overflow;
+    if (isSheet) document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      if (isSheet) document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedPackage]);
+
   const handleBookPackage = (pkg) => {
     if (!pkg?.id) return;
     router.push(`/book-package/${encodeURIComponent(pkg.id)}`);
@@ -117,30 +142,49 @@ export default function PackagesPage() {
       </main>
 
       {selectedPackage && (
-        <div className="fixed right-0 top-[330px] lg:top-[300px] bottom-0 w-full max-w-[320px] pointer-events-none z-40">
-          <div className="h-full bg-white shadow-2xl overflow-y-auto animate-slide-in pointer-events-auto">
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-sky-100 text-sky-700 mb-2">
+        <>
+          {/* Phones only — the desktop side panel deliberately leaves the
+              listing behind it usable, so it gets no scrim. */}
+          <div
+            className="fixed inset-0 z-40 bg-slate-900/40 lg:hidden"
+            onClick={closePanel}
+            aria-hidden="true"
+          />
+
+          {/*
+            Two shapes, one element. On phones it's a bottom sheet anchored to
+            the bottom edge and capped at 85vh, so the details always get most
+            of the screen. From lg it returns to the right-hand side panel
+            hanging below the page header. The old markup used the desktop
+            `top-[330px]` offset on mobile as well, which left a package with a
+            long test list about 370px to render into.
+          */}
+          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 lg:inset-x-auto lg:right-0 lg:top-[300px] lg:w-full lg:max-w-[320px]">
+            <div className="pointer-events-auto flex max-h-[85vh] flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl animate-detail-panel lg:h-full lg:max-h-none lg:rounded-none">
+              {/* Header stays put so Close is always reachable in a long list */}
+              <div className="flex flex-none items-start justify-between gap-3 border-b border-slate-100 px-5 pb-4 pt-4 lg:px-6 lg:pt-6">
+                <div className="min-w-0">
+                  <span className="mb-2 inline-block rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700">
                     {selectedPackage.category}
                   </span>
-                  <h2 className="text-2xl font-bold text-slate-800">
+                  <h2 className="text-xl font-bold text-slate-800 lg:text-2xl">
                     {selectedPackage.name}
                   </h2>
                 </div>
                 <button
                   onClick={closePanel}
-                  className="p-2 hover:bg-slate-100 rounded-full transition-colors border border-slate-200 bg-white shadow-sm"
+                  className="flex-none rounded-full border border-slate-200 bg-white p-2 shadow-sm transition-colors hover:bg-slate-100"
                   aria-label="Close panel"
                 >
-                  <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
 
-              <div className="bg-sky-50 rounded-lg p-4 mb-6">
+              {/* Only this scrolls */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-5 lg:px-6">
+                <div className="bg-sky-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-slate-600 mb-1">Package Price</p>
                 <p className="text-3xl font-bold text-sky-600">Rs. {selectedPackage.price}</p>
               </div>
@@ -194,16 +238,26 @@ export default function PackagesPage() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => handleBookPackage(selectedPackage)}
-                className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-lg hover:bg-[#e55a5a] transition-colors"
-              >
-                Book This Package
-              </button>
+              </div>
+
+              {/*
+                Pinned below the scroll area. Previously the CTA sat at the end
+                of the content, so on a package with a dozen tests you had to
+                scroll the whole list before you could book it. `pb-safe`-style
+                padding keeps it clear of the iOS home indicator.
+              */}
+              <div className="flex-none border-t border-slate-100 px-5 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 lg:px-6 lg:pb-6">
+                <button
+                  type="button"
+                  onClick={() => handleBookPackage(selectedPackage)}
+                  className="w-full rounded-lg bg-[#FF6B6B] py-3 font-semibold text-white transition-colors hover:bg-[#e55a5a]"
+                >
+                  Book This Package
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       <Footer />

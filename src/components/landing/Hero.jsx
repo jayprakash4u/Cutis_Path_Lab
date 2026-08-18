@@ -2,28 +2,38 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import FloatingSidebar from "./FloatingSidebar";
 
+/*
+  Each slide ships a phone-sized companion. The desktop PNGs are 1.4-1.6 MB
+  each; the mobile JPGs are ~100 KB, so a phone now pulls roughly 500 KB for
+  the whole carousel instead of ~8 MB.
+*/
+const MOBILE_UP_TO = 639;
 const heroImages = [
   {
     url: "/images/banners/herohomepagebanner/1.png",
-    alt: "Homepage Banner 1",
+    mobileUrl: "/images/banners/mobile/homepageheromobile1.jpg",
+    alt: "Special care and dedicated doctors — your health, our priority",
   },
   {
     url: "/images/banners/herohomepagebanner/2.png",
+    mobileUrl: "/images/banners/mobile/homepageheromobile2.jpg",
     alt: "Homepage Banner 2",
   },
   {
     url: "/images/banners/herohomepagebanner/3.png",
+    mobileUrl: "/images/banners/mobile/homepageheromobile3.jpg",
     alt: "Homepage Banner 3",
   },
   {
     url: "/images/banners/herohomepagebanner/4.png",
-    alt: "Homepage Banner 4",
+    mobileUrl: "/images/banners/mobile/homepageheromobile4.jpg",
+    alt: "Precision in every test, care in every result — Cutis Path Lab",
   },
   {
     url: "/images/banners/herohomepagebanner/5.png",
+    mobileUrl: "/images/banners/mobile/homepageheromobile5.jpg",
     alt: "Homepage Banner 5",
   },
 ];
@@ -43,25 +53,37 @@ export default function Hero() {
       <FloatingSidebar />
 
       {/*
-        Held at the artwork's native 3:1 so the full banner is always visible —
-        a taller ratio here would make `object-cover` trim the sides. On mobile
-        the extra height comes from the copy block below instead.
+        Each artwork is held at its own native ratio so nothing is cropped:
+        1024x506 for the phone art, 3:1 for the desktop art.
       */}
-      <div className="relative mx-auto aspect-[3/1] w-full max-w-[1920px] bg-[#eef5fb] leading-none sm:bg-slate-900">
+      <div className="relative mx-auto aspect-[1024/506] w-full max-w-[1920px] bg-[#eef5fb] leading-none sm:aspect-[3/1] sm:bg-slate-900">
         {heroImages.map((img, i) => (
-          <Image
-            key={img.url}
-            src={img.url}
-            alt={img.alt}
-            width={2172}
-            height={724}
-            priority={i === 0}
-            unoptimized
-            sizes="(min-width: 1920px) 1920px, 100vw"
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
-              i === index ? "opacity-100" : "opacity-0"
-            }`}
-          />
+          /*
+            <picture> rather than two elements toggled with `hidden` — CSS only
+            hides an element, it does not cancel the download, so that would
+            fetch both the 1.5 MB desktop PNG and the phone JPG on every device.
+            Same approach as PagePosterHero.
+          */
+          <picture key={img.url}>
+            <source
+              media={`(max-width: ${MOBILE_UP_TO}px)`}
+              srcSet={img.mobileUrl}
+              width={1024}
+              height={506}
+            />
+            <img
+              src={img.url}
+              alt={img.alt}
+              width={2172}
+              height={724}
+              fetchPriority={i === 0 ? "high" : undefined}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+                i === index ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </picture>
         ))}
 
         <div className="absolute inset-0 hidden bg-gradient-to-r from-slate-800/70 via-slate-900/50 to-slate-900/60 sm:block" />
@@ -78,8 +100,12 @@ export default function Hero() {
             <button
               key={i}
               onClick={() => setIndex(i)}
+              /* The phone artwork is light, so white dots would vanish on it —
+                 they only go white once the dark desktop overlay is in play. */
               className={`h-2 rounded-full transition-all duration-300 ${
-                i === index ? "w-4 bg-sky-400" : "w-2 bg-white/60 hover:bg-white"
+                i === index
+                  ? "w-4 bg-sky-600 sm:bg-sky-400"
+                  : "w-2 bg-slate-400/70 hover:bg-slate-500 sm:bg-white/60 sm:hover:bg-white"
               }`}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -88,16 +114,20 @@ export default function Hero() {
       </div>
 
       {/*
-        One copy block, two behaviours: it sits below the banner on mobile —
-        which is where the added height comes from, and it also gives phones the
-        headline and CTA they previously never saw — and becomes an overlay on
-        the image from `sm` up.
+        One copy block, two behaviours: it sits below the banner on mobile and
+        becomes an overlay on the image from `sm` up.
+
+        The phone artwork carries its own headline and strapline, so repeating
+        them underneath just says the same thing twice. On mobile this collapses
+        to the CTA alone — the one thing the artwork can't provide. The h1 stays
+        in the accessibility tree via sr-only rather than being removed with
+        `hidden`, so the page still has a heading on phones.
       */}
-      <div className="relative z-10 flex flex-col items-center justify-center bg-[#eef5fb] px-4 py-6 text-center sm:absolute sm:inset-0 sm:bg-transparent sm:px-6 sm:py-0 lg:px-8">
-        <h1 className="mb-2 text-xl font-bold text-slate-900 sm:mb-3 sm:text-2xl sm:font-normal sm:text-white sm:drop-shadow-lg md:text-3xl lg:text-4xl">
-          Your Trusted Partner in <span className="text-sky-600 sm:text-sky-400">Health</span>
+      <div className="relative z-10 flex flex-col items-center justify-center bg-[#eef5fb] px-4 py-4 text-center sm:absolute sm:inset-0 sm:bg-transparent sm:px-6 sm:py-0 lg:px-8">
+        <h1 className="sr-only sm:not-sr-only sm:mb-3 sm:text-2xl sm:text-white sm:drop-shadow-lg md:text-3xl lg:text-4xl">
+          Your Trusted Partner in <span className="sm:text-sky-400">Health</span>
         </h1>
-        <p className="mb-4 max-w-xl text-sm text-slate-600 sm:mb-4 sm:text-xs sm:text-slate-200 sm:drop-shadow-lg md:text-base">
+        <p className="hidden max-w-xl sm:mb-4 sm:block sm:text-xs sm:text-slate-200 sm:drop-shadow-lg md:text-base">
           Accurate diagnostics delivered with speed &amp; precision
         </p>
         <Link

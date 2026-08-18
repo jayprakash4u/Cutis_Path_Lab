@@ -496,6 +496,9 @@ function ContactPageContent() {
       <main className="pt-below-nav">
         <PagePosterHero
           src="/images/6psd.png"
+          mobileSrc="/images/banners/mobile/contactusheroimage.jpg"
+          mobileWidth={1024}
+          mobileHeight={474}
           alt="Contact Us"
           width={6667}
           height={579}

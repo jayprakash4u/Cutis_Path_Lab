@@ -19,6 +19,7 @@ const icons = {
   gallery: "M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1zM3 16l5-4 4 3 3-2 6 4M8.5 9.5h.01",
   contact: "M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1zM3.5 7l8.5 6 8.5-6",
   about: "M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 7.5h.01",
+  blog: "M5 3.5h9l5 5V20a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 015 20V3.5zM14 3.5V9h5M8.5 13h7M8.5 17h4.5",
 };
 
 function NavIcon({ name }) {
@@ -54,6 +55,7 @@ const NAV_GROUPS = [
       { href: "/admin/testimonials", label: "Testimonials", icon: "testimonials" },
       { href: "/admin/referrals", label: "Referral network", icon: "referrals" },
       { href: "/admin/gallery", label: "Gallery", icon: "gallery" },
+      { href: "/admin/blog", label: "Blog", icon: "blog" },
       { href: "/admin/about", label: "About page", icon: "about" },
       { href: "/admin/contact", label: "Contact page", icon: "contact" },
     ],

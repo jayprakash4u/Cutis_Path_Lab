@@ -228,3 +228,33 @@ body {
 .animate-slide-in {
   animation: slideIn 0.3s ease-out forwards;
 }
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/*
+  The package detail panel is a bottom sheet on phones and a right-hand side
+  panel from lg up, so it has to enter from a different edge at each size.
+  One class, two animations, rather than two elements.
+*/
+.animate-detail-panel {
+  animation: sheetUp 0.3s ease-out forwards;
+}
+
+@media (min-width: 1024px) {
+  .animate-detail-panel {
+    animation-name: slideIn;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-detail-panel {
+    animation: none;
+  }
+}

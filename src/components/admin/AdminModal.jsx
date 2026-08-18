@@ -31,6 +31,19 @@ export default function AdminModal({
     if (onClose) onClose();
   }, [onClose]);
 
+  /*
+    Held in a ref so the effect below can depend on `open` alone.
+    Callers pass `onClose={busy ? () => {} : closeForm}` — a fresh function on
+    every render — so keying the effect on `close` made it tear down and re-run
+    after each keystroke, which restored focus outside the dialog and then
+    re-focused [data-autofocus]. That is what made a field drop focus after a
+    single character.
+  */
+  const closeRef = useRef(close);
+  useEffect(() => {
+    closeRef.current = close;
+  }, [close]);
+
   // Escape to close, Tab cycles inside the dialog.
   useEffect(() => {
     if (!open) return undefined;
@@ -40,7 +53,7 @@ export default function AdminModal({
     const onKeyDown = (e) => {
       if (e.key === "Escape") {
         e.stopPropagation();
-        close();
+        closeRef.current();
         return;
       }
       if (e.key !== "Tab") return;
@@ -81,7 +94,7 @@ export default function AdminModal({
       const restore = restoreFocusRef.current;
       if (restore && typeof restore.focus === "function") restore.focus();
     };
-  }, [open, close]);
+  }, [open]);
 
   // `document` is absent during SSR; the dialog is client-only by nature.
   if (!open || typeof document === "undefined") return null;

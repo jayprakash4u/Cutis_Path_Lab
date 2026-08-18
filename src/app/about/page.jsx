@@ -17,6 +17,9 @@ export default function AboutPage() {
       <main className="pt-below-nav">
         <PagePosterHero
           src="/images/about-poster.png"
+          mobileSrc="/images/banners/mobile/aboutusheroimage.jpg"
+          mobileWidth={1024}
+          mobileHeight={474}
           alt="Cutis Path Lab About Us"
           width={6667}
           height={579}

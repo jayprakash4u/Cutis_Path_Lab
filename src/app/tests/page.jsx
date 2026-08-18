@@ -386,16 +386,23 @@ function TestsPageContent() {
                             />
                           </div>
                           <div
-                            className={`px-3 sm:px-3 rounded-r-lg -ml-12 sm:-ml-12 shadow-md h-20 sm:h-14 w-full sm:w-52 flex items-center justify-between border-t-4 ${
+                            className={`px-3 py-2 rounded-r-lg -ml-12 sm:-ml-12 shadow-md min-h-20 sm:min-h-14 w-full sm:w-52 flex items-center justify-between border-t-4 ${
                               isSelected
                                 ? "bg-[#FF6B6B] border-sky-600"
                                 : "bg-sky-600 border-[#FF6B6B]"
                             }`}
                           >
-                            <p className="text-xs sm:text-xs text-white font-medium leading-tight ml-12 sm:ml-10">
+                            {/*
+                              `min-w-0` lets the name shrink — flex children
+                              default to min-width:auto and would otherwise push
+                              the price out of the card. `break-words` handles
+                              single long words like "Immunohistochemistry",
+                              which have no space to wrap at.
+                            */}
+                            <p className="ml-12 min-w-0 break-words text-xs font-medium leading-tight text-white sm:ml-10">
                               {item.text}
                             </p>
-                            <span className="text-xs sm:text-xs font-bold text-white mr-3 sm:mr-2">
+                            <span className="ml-1.5 shrink-0 text-xs font-bold text-white mr-3 sm:mr-2">
                               ₹{item.price}
                             </span>
                           </div>

@@ -116,7 +116,7 @@ export default function ServiceDetailPage() {
                 Book / Enquire
               </Link>
               <a
-                href="tel:+9779825849435"
+                href="tel:+9779861848382"
                 className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:border-sky-500 hover:text-sky-700 transition-colors"
               >
                 Call lab

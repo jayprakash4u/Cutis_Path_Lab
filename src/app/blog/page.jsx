@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PagePosterHero from "@/components/sections/PagePosterHero";
-import { blogPosts, blogCategories } from "@/data/blogPosts";
+import { blogCategories } from "@/data/blogPosts";
+
+const PAGE_SIZE = 9; // 3 rows of 3 on desktop
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-IN", {
@@ -17,11 +19,64 @@ function formatDate(iso) {
 
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const posts =
-    activeCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((post) => post.category === activeCategory);
+  // Posts come from the database now, so the admin panel can publish them.
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/blog");
+        const json = await res.json();
+        if (!cancelled && json.success && Array.isArray(json.data)) {
+          setBlogPosts(json.data);
+        }
+      } catch {
+        if (!cancelled) setBlogPosts([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const posts = useMemo(
+    () =>
+      activeCategory === "All"
+        ? blogPosts
+        : blogPosts.filter((post) => post.category === activeCategory),
+    [blogPosts, activeCategory],
+  );
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+
+  const pagedPosts = useMemo(
+    () => posts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [posts, currentPage],
+  );
+
+  const pageNumbers = useMemo(() => {
+    const pages = [];
+    const windowSize = 5;
+    let start = Math.max(1, currentPage - Math.floor(windowSize / 2));
+    const end = Math.min(totalPages, start + windowSize - 1);
+    start = Math.max(1, end - windowSize + 1);
+    for (let i = start; i <= end; i += 1) pages.push(i);
+    return pages;
+  }, [currentPage, totalPages]);
+
+  // Changing the filter can leave you past the end of the shorter list.
+  const goToPage = (page) => {
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -32,6 +87,9 @@ export default function BlogPage() {
 
         <PagePosterHero
           src="/images/blog-poster.png"
+          mobileSrc="/images/banners/mobile/blogheroimage.jpg"
+          mobileWidth={1024}
+          mobileHeight={506}
           alt="Cutis Path Lab Blog"
           width={2048}
           height={177}
@@ -73,7 +131,10 @@ export default function BlogPage() {
                   <button
                     key={category}
                     type="button"
-                    onClick={() => setActiveCategory(category)}
+                    onClick={() => {
+                      setActiveCategory(category);
+                      setCurrentPage(1);
+                    }}
                     className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
                       isActive
                         ? "bg-sky-600 text-white"
@@ -91,13 +152,29 @@ export default function BlogPage() {
         {/* Posts */}
         <section className="bg-gray-50 py-8 lg:py-12">
           <div className="mx-auto max-w-7xl px-6">
-            {posts.length === 0 ? (
+            {loading ? (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card"
+                  >
+                    <div className="aspect-[16/10] animate-pulse bg-slate-100" />
+                    <div className="space-y-2 p-5">
+                      <div className="h-3 w-24 animate-pulse rounded bg-slate-100" />
+                      <div className="h-4 w-3/4 animate-pulse rounded bg-slate-100" />
+                      <div className="h-3 w-full animate-pulse rounded bg-slate-100" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : posts.length === 0 ? (
               <p className="py-12 text-center text-sm text-slate-500">
                 No posts in this category yet.
               </p>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-                {posts.map((post) => (
+                {pagedPosts.map((post) => (
                   <article
                     key={post.id}
                     className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
@@ -191,6 +268,50 @@ export default function BlogPage() {
                     </div>
                   </article>
                 ))}
+              </div>
+            )}
+
+            {!loading && posts.length > PAGE_SIZE && (
+              <div className="mt-6 flex flex-col items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 sm:mt-8 sm:flex-row sm:px-4">
+                <p className="text-xs text-slate-500 sm:text-sm">
+                  Page {currentPage} of {totalPages}
+                  <span className="hidden sm:inline"> · {posts.length} posts</span>
+                </p>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <button
+                    type="button"
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-sky-300 hover:text-sky-700 disabled:cursor-not-allowed disabled:opacity-40 sm:text-sm"
+                  >
+                    Prev
+                  </button>
+
+                  {pageNumbers.map((page) => (
+                    <button
+                      key={page}
+                      type="button"
+                      onClick={() => goToPage(page)}
+                      aria-current={page === currentPage ? "page" : undefined}
+                      className={`h-8 min-w-8 rounded-md text-xs font-semibold transition-colors sm:h-9 sm:min-w-9 sm:text-sm ${
+                        page === currentPage
+                          ? "bg-sky-600 text-white"
+                          : "border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-sky-300 hover:text-sky-700 disabled:cursor-not-allowed disabled:opacity-40 sm:text-sm"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             )}
           </div>
