@@ -12,13 +12,17 @@ import TestsInOffers from "@/components/landing/TestsInOffers";
 import LabTechnology from "@/components/landing/LabTechnology";
 import AboutUsSection from "@/components/landing/AboutUsSection";
 import DoctorReferrals from "@/components/landing/DoctorReferrals";
+import { getHeroBanners } from "@/lib/heroBanners";
 
 export default function Home() {
+  // Read from disk on the server so a re-exported banner cannot 404 the slide.
+  const heroSlides = getHeroBanners();
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
       <main className="pt-below-nav pb-24 lg:pb-0">
-        <Hero />
+        <Hero slides={heroSlides} />
         <QuickActions />
         <TestsInOffers />
         <Stats />

@@ -155,11 +155,13 @@ export default function PackagesPage() {
             Two shapes, one element. On phones it's a bottom sheet anchored to
             the bottom edge and capped at 85vh, so the details always get most
             of the screen. From lg it returns to the right-hand side panel
-            hanging below the page header. The old markup used the desktop
-            `top-[330px]` offset on mobile as well, which left a package with a
-            long test list about 370px to render into.
+            docked just under the navbar. Both offsets used to be hardcoded:
+            `top-[330px]` on mobile left a package with a long test list about
+            370px to render into, and `top-[300px]` on desktop floated it ~190px
+            below a 110px navbar. Deriving it from --site-nav-h-lg-tall keeps it
+            correct if the header height ever changes.
           */}
-          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 lg:inset-x-auto lg:right-0 lg:top-[300px] lg:w-full lg:max-w-[320px]">
+          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 lg:inset-x-auto lg:right-0 lg:top-[calc(var(--site-nav-h-lg-tall)+1.5rem)] lg:w-full lg:max-w-[320px]">
             <div className="pointer-events-auto flex max-h-[85vh] flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl animate-detail-panel lg:h-full lg:max-h-none lg:rounded-none">
               {/* Header stays put so Close is always reachable in a long list */}
               <div className="flex flex-none items-start justify-between gap-3 border-b border-slate-100 px-5 pb-4 pt-4 lg:px-6 lg:pt-6">

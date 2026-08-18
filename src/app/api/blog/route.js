@@ -34,6 +34,15 @@ export async function GET(request) {
     const limit = safeLimit(searchParams.get("limit"), 100);
     const limitClause = limit ? `LIMIT ${limit}` : "";
 
+    /*
+      Article bodies are opt-in. The admin list searches across body text, but
+      sending every post's full content to the public blog page — which only
+      renders titles and excerpts — would multiply that payload for nothing.
+      Admin-only, so this can't be used to bulk-read unpublished drafts.
+    */
+    const wantsContent = searchParams.get("withContent") === "1" && !requireAdmin(request);
+    const contentField = wantsContent ? "`content`," : "";
+
     const where = [];
     const params = [];
     if (activeOnly) where.push("`isActive` = 1");
@@ -44,7 +53,7 @@ export async function GET(request) {
     const whereClause = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
     const rows = await sqlQuery(
-      `SELECT \`id\`, \`slug\`, \`title\`, \`excerpt\`, \`category\`, \`author\`,
+      `SELECT \`id\`, \`slug\`, \`title\`, \`excerpt\`, ${contentField} \`category\`, \`author\`,
               \`imageUrl\` AS \`image\`, \`readMinutes\`, \`publishedAt\` AS \`date\`,
               \`isActive\`, \`sortOrder\`
          FROM \`BlogPost\`
@@ -59,7 +68,8 @@ export async function GET(request) {
         success: true,
         data: rows.map((r) => ({ ...r, isActive: toBool(r.isActive) })),
       },
-      publicCatalogCache(),
+      // An admin listing is per-session, so it must not land in a shared cache.
+      wantsContent ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load blog posts", 500);

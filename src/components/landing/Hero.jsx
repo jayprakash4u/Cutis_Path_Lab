@@ -5,48 +5,29 @@ import Link from "next/link";
 import FloatingSidebar from "./FloatingSidebar";
 
 /*
-  Each slide ships a phone-sized companion. The desktop PNGs are 1.4-1.6 MB
-  each; the mobile JPGs are ~100 KB, so a phone now pulls roughly 500 KB for
-  the whole carousel instead of ~8 MB.
+  Each slide ships a phone-sized companion. The desktop art is 1.4-2.2 MB per
+  file; the mobile JPGs are ~100 KB, so a phone pulls roughly 500 KB for the
+  whole carousel instead of ~8 MB.
+
+  The slide list is discovered from disk by getHeroBanners() and passed in, so
+  re-exporting a banner from PNG to JPG cannot silently 404 the slide.
 */
 const MOBILE_UP_TO = 639;
-const heroImages = [
-  {
-    url: "/images/banners/herohomepagebanner/1.png",
-    mobileUrl: "/images/banners/mobile/homepageheromobile1.jpg",
-    alt: "Special care and dedicated doctors — your health, our priority",
-  },
-  {
-    url: "/images/banners/herohomepagebanner/2.png",
-    mobileUrl: "/images/banners/mobile/homepageheromobile2.jpg",
-    alt: "Homepage Banner 2",
-  },
-  {
-    url: "/images/banners/herohomepagebanner/3.png",
-    mobileUrl: "/images/banners/mobile/homepageheromobile3.jpg",
-    alt: "Homepage Banner 3",
-  },
-  {
-    url: "/images/banners/herohomepagebanner/4.png",
-    mobileUrl: "/images/banners/mobile/homepageheromobile4.jpg",
-    alt: "Precision in every test, care in every result — Cutis Path Lab",
-  },
-  {
-    url: "/images/banners/herohomepagebanner/5.png",
-    mobileUrl: "/images/banners/mobile/homepageheromobile5.jpg",
-    alt: "Homepage Banner 5",
-  },
-];
 
-export default function Hero() {
+export default function Hero({ slides = [] }) {
+  const heroImages = slides;
   const [index, setIndex] = useState(0);
 
+  const count = heroImages.length;
+
   useEffect(() => {
+    // `% 0` is NaN — a single slide needs no timer anyway.
+    if (count < 2) return undefined;
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % heroImages.length);
+      setIndex((prev) => (prev + 1) % count);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [count]);
 
   return (
     <section className="relative w-full overflow-hidden">
@@ -65,12 +46,15 @@ export default function Hero() {
             Same approach as PagePosterHero.
           */
           <picture key={img.url}>
-            <source
-              media={`(max-width: ${MOBILE_UP_TO}px)`}
-              srcSet={img.mobileUrl}
-              width={1024}
-              height={506}
-            />
+            {/* A slide with no phone art falls back to the desktop file. */}
+            {img.mobileUrl ? (
+              <source
+                media={`(max-width: ${MOBILE_UP_TO}px)`}
+                srcSet={img.mobileUrl}
+                width={1024}
+                height={506}
+              />
+            ) : null}
             <img
               src={img.url}
               alt={img.alt}

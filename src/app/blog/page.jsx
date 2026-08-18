@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PagePosterHero from "@/components/sections/PagePosterHero";
@@ -22,6 +23,7 @@ export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   // Posts come from the database now, so the admin panel can publish them.
   useEffect(() => {
@@ -45,12 +47,33 @@ export default function BlogPage() {
     };
   }, []);
 
+  const query = search.trim().toLowerCase();
+
+  /*
+    Search first, so the category chip counts below can be taken from it —
+    "Health (20)" beside a search matching three of them would be misleading.
+
+    Title, excerpt and author only: the public list endpoint deliberately does
+    not ship article bodies (that would send every full post to every visitor),
+    so there is no body text here to search.
+  */
+  const searchMatched = useMemo(() => {
+    if (!query) return blogPosts;
+    return blogPosts.filter((post) =>
+      [post.title, post.excerpt, post.category, post.author]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [blogPosts, query]);
+
   const posts = useMemo(
     () =>
       activeCategory === "All"
-        ? blogPosts
-        : blogPosts.filter((post) => post.category === activeCategory),
-    [blogPosts, activeCategory],
+        ? searchMatched
+        : searchMatched.filter((post) => post.category === activeCategory),
+    [searchMatched, activeCategory],
   );
 
   const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
@@ -85,14 +108,21 @@ export default function BlogPage() {
       <main className="pt-below-nav">
         <h1 className="sr-only">Blog</h1>
 
+        {/*
+          Same full-bleed treatment as every other page hero. Rendering the
+          1024px artwork at its natural size inside a centred flex container
+          left it floating as an island with ~450px of white either side on a
+          desktop screen, and squeezed it to a ~33px sliver on a phone, where
+          11.64:1 is far too wide to stay legible.
+        */}
         <PagePosterHero
-          src="/images/blog-poster.png"
+          src="/images/posters/heroblogpage.jpg"
+          alt="Our Blog — insights on health, wellness and modern medicine"
+          width={1024}
+          height={88}
           mobileSrc="/images/banners/mobile/blogheroimage.jpg"
           mobileWidth={1024}
           mobileHeight={506}
-          alt="Cutis Path Lab Blog"
-          width={2048}
-          height={177}
         />
 
         {/* Header card — shared page-intro pattern */}
@@ -121,12 +151,16 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* Category filter */}
+        {/* Category filter + search */}
         <section className="border-b border-slate-100 bg-white">
-          <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap gap-2">
               {blogCategories.map((category) => {
                 const isActive = activeCategory === category;
+                const count =
+                  category === "All"
+                    ? searchMatched.length
+                    : searchMatched.filter((p) => p.category === category).length;
                 return (
                   <button
                     key={category}
@@ -142,9 +176,64 @@ export default function BlogPage() {
                     }`}
                   >
                     {category}
+                    {!loading ? (
+                      <span className={isActive ? "text-sky-100" : "text-slate-400"}> ({count})</span>
+                    ) : null}
                   </button>
                 );
               })}
+            </div>
+
+            <div className="relative w-full sm:w-72">
+              <span
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                aria-hidden="true"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path strokeLinecap="round" d="M20 20l-3.5-3.5" />
+                </svg>
+              </span>
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  // Reset here rather than in an effect: narrowing the list can
+                  // otherwise strand you on a page that no longer exists.
+                  setCurrentPage(1);
+                }}
+                placeholder="Search articles"
+                aria-label="Search articles"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+              />
+              {search ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    setCurrentPage(1);
+                  }}
+                  aria-label="Clear search"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                >
+                  <svg
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              ) : null}
             </div>
           </div>
         </section>
@@ -152,6 +241,15 @@ export default function BlogPage() {
         {/* Posts */}
         <section className="bg-gray-50 py-8 lg:py-12">
           <div className="mx-auto max-w-7xl px-6">
+            {/* A result count only earns its space once a search is running —
+                the pagination bar already reports the total otherwise. */}
+            {!loading && query && posts.length > 0 ? (
+              <p className="mb-4 text-sm text-slate-500">
+                {posts.length === 1 ? "1 article" : `${posts.length} articles`} matching{" "}
+                <span className="font-semibold text-slate-700">“{search.trim()}”</span>
+              </p>
+            ) : null}
+
             {loading ? (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
@@ -169,15 +267,39 @@ export default function BlogPage() {
                 ))}
               </div>
             ) : posts.length === 0 ? (
-              <p className="py-12 text-center text-sm text-slate-500">
-                No posts in this category yet.
-              </p>
+              <div className="py-12 text-center">
+                <p className="text-sm font-semibold text-slate-700">
+                  {query ? `No articles match “${search.trim()}”` : "No posts in this category yet."}
+                </p>
+                {query ? (
+                  <>
+                    <p className="mt-1.5 text-sm text-slate-500">
+                      Try a different word, or browse everything.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearch("");
+                        setActiveCategory("All");
+                        setCurrentPage(1);
+                      }}
+                      className="mt-4 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sky-700"
+                    >
+                      Clear search
+                    </button>
+                  </>
+                ) : null}
+              </div>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {pagedPosts.map((post) => (
-                  <article
+                  /* The whole card is the link — a "Read article" affordance
+                     that only works on its own three words is a small target,
+                     especially on a phone. */
+                  <Link
                     key={post.id}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
+                    href={`/blog/${post.slug}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                       {post.image ? (
@@ -266,7 +388,7 @@ export default function BlogPage() {
                         </svg>
                       </span>
                     </div>
-                  </article>
+                  </Link>
                 ))}
               </div>
             )}

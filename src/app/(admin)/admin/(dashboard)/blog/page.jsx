@@ -65,6 +65,7 @@ export default function AdminBlogPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [search, setSearch] = useState("");
   const [pendingFile, setPendingFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const fileInputRef = useRef(null);
@@ -72,7 +73,8 @@ export default function AdminBlogPage() {
   const load = async ({ showSkeleton = false } = {}) => {
     if (showSkeleton) setLoading(true);
     try {
-      const json = await adminFetch("/api/blog?active=false");
+      // withContent so the search box can look inside article bodies too.
+      const json = await adminFetch("/api/blog?active=false&withContent=1");
       setRows(json.data || []);
     } catch (err) {
       setError(err.message || "Couldn't load blog posts. Refresh to try again.");
@@ -239,9 +241,34 @@ export default function AdminBlogPage() {
     }
   };
 
+  const query = search.trim().toLowerCase();
+
+  /*
+    Search runs before the category filter so the chip counts below can be
+    taken from it — showing "Health (20)" next to a search that only matches
+    three of them would be misleading.
+
+    Body text is searched too, not just the title: with three dozen posts the
+    question an editor actually has is "which article was it that covered
+    fasting?", and that answer is usually not in the headline.
+  */
+  const searchMatched = useMemo(() => {
+    if (!query) return rows;
+    return rows.filter((r) =>
+      [r.title, r.slug, r.excerpt, r.content, r.category, r.author]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [rows, query]);
+
   const filtered = useMemo(
-    () => (categoryFilter === "All" ? rows : rows.filter((r) => r.category === categoryFilter)),
-    [rows, categoryFilter],
+    () =>
+      categoryFilter === "All"
+        ? searchMatched
+        : searchMatched.filter((r) => r.category === categoryFilter),
+    [searchMatched, categoryFilter],
   );
 
   const { items, total, page: safePage } = useMemo(
@@ -258,9 +285,26 @@ export default function AdminBlogPage() {
         title="Blog"
         description="Articles shown on the public blog page."
         actions={
-          <button type="button" className="admin-btn-primary" onClick={startCreate}>
-            Add post
-          </button>
+          <>
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                // Reset here rather than in an effect keyed on `search` —
+                // narrowing the list can otherwise leave you on a page that
+                // no longer exists.
+                setPage(1);
+              }}
+              placeholder="Search title, text, author"
+              className={inputClass}
+              style={{ width: "auto", minWidth: 220 }}
+              aria-label="Search blog posts"
+            />
+            <button type="button" className="admin-btn-primary" onClick={startCreate}>
+              Add post
+            </button>
+          </>
         }
       />
 
@@ -283,12 +327,17 @@ export default function AdminBlogPage() {
             }
           >
             {c}
-            {c !== "All" ? ` (${rows.filter((r) => r.category === c).length})` : ` (${rows.length})`}
+            {c !== "All"
+              ? ` (${searchMatched.filter((r) => r.category === c).length})`
+              : ` (${searchMatched.length})`}
           </button>
         ))}
       </div>
 
-      <AdminCard title={total === 1 ? "1 post" : `${total} posts`}>
+      <AdminCard
+        title={total === 1 ? "1 post" : `${total} posts`}
+        subtitle={query ? `Filtered from ${rows.length}` : undefined}
+      >
         {loading ? (
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -303,12 +352,29 @@ export default function AdminBlogPage() {
           </div>
         ) : total === 0 ? (
           <EmptyState
-            title="No posts here yet"
-            body="Add a post to show it on the public blog page."
+            title={query ? "No posts match that search" : "No posts here yet"}
+            body={
+              query
+                ? "Try a different title, word from the article, or author."
+                : "Add a post to show it on the public blog page."
+            }
             action={
-              <button type="button" className="admin-btn-primary" onClick={startCreate}>
-                Add post
-              </button>
+              query ? (
+                <button
+                  type="button"
+                  className="admin-btn-ghost"
+                  onClick={() => {
+                    setSearch("");
+                    setPage(1);
+                  }}
+                >
+                  Clear search
+                </button>
+              ) : (
+                <button type="button" className="admin-btn-primary" onClick={startCreate}>
+                  Add post
+                </button>
+              )
             }
           />
         ) : (
