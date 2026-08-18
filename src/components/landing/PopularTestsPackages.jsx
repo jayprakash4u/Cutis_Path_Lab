@@ -165,65 +165,66 @@ export default function PopularTestsPackages() {
                       style={cardWidthStyle}
                       className={`flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover ${cardClassName}`}
                     >
-                      <div className="flex min-h-[24px] items-center justify-between gap-2 bg-[#FF6B6B] px-2 py-1 sm:min-h-[28px] sm:px-3 md:min-h-[32px] md:px-4">
-                        <h3 className="w-full truncate text-[10px] font-semibold text-white sm:text-xs md:text-sm">
+                      <div className="flex items-center justify-between gap-2 bg-[#FF6B6B] px-3 py-2">
+                        <h3 className="w-full truncate text-xs font-semibold text-white sm:text-sm">
                           {item.name}
                         </h3>
-                        <span className="shrink-0 rounded bg-white/20 px-1.5 py-0.5 text-[9px] font-medium text-white sm:text-[10px]">
+                        <span className="shrink-0 rounded bg-white/20 px-1.5 py-0.5 text-[11px] font-medium text-white">
                           {item.kind === "package" ? "Package" : "Test"}
                         </span>
                       </div>
 
-                      <div className="flex flex-1 flex-col p-2 sm:p-3 md:p-5">
-                        <div className="mb-2 flex flex-col gap-1 sm:mb-3 sm:gap-2">
-                          <span className="flex items-center gap-1 text-[10px] text-slate-500 sm:text-xs">
-                            <svg className="h-3 w-3 text-sky-600 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex flex-1 flex-col p-3 md:p-5">
+                        {/* Labels shown at every width — on mobile these read as
+                            three unlabelled values otherwise. */}
+                        <div className="mb-3 flex flex-col gap-1.5 text-xs text-slate-500">
+                          <span className="flex items-center gap-1.5">
+                            <svg className="h-4 w-4 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
-                            <span className="hidden sm:inline">Reports: </span>
-                            {item.reportsTime}
+                            Reports: {item.reportsTime}
                           </span>
-                          <span className="flex items-center gap-1 text-[10px] text-slate-500 sm:text-xs">
-                            <svg className="h-3 w-3 text-sky-600 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <span className="flex items-center gap-1.5">
+                            <svg className="h-4 w-4 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span className="hidden sm:inline">Fasting: </span>
-                            {item.fasting}
+                            Fasting: {item.fasting}
                           </span>
-                          <span className="flex items-center gap-1 text-[10px] text-slate-500 sm:text-xs">
-                            <svg className="h-3 w-3 text-sky-600 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <span className="flex items-center gap-1.5">
+                            <svg className="h-4 w-4 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                             </svg>
-                            <span className="hidden sm:inline">Sample: </span>
-                            {item.sampleType}
+                            Sample: {item.sampleType}
                           </span>
                         </div>
 
-                        <div className="mt-auto flex items-center justify-between border-t border-sky-600 pt-2 sm:pt-3">
-                          <div>
-                            <div className="flex items-center gap-1 sm:gap-2">
-                              <span className="text-sm font-bold text-slate-900 sm:text-base md:text-xl">
-                                ₹{item.price}
-                              </span>
-                              {item.originalPrice && (
-                                <span className="text-[10px] text-slate-500 line-through sm:text-xs">
-                                  ₹{item.originalPrice}
+                        <div className="mt-auto border-t border-sky-600 pt-3">
+                          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                              <div className="flex items-baseline gap-1.5">
+                                <span className="text-base font-bold text-slate-900 md:text-xl">
+                                  ₹{item.price}
+                                </span>
+                                {item.originalPrice && (
+                                  <span className="text-xs text-slate-500 line-through">
+                                    ₹{item.originalPrice}
+                                  </span>
+                                )}
+                              </div>
+                              {discount > 0 && (
+                                <span className="text-xs font-semibold text-green-600">
+                                  {discount}% OFF
                                 </span>
                               )}
                             </div>
-                            {discount > 0 && (
-                              <span className="text-[10px] font-semibold text-green-600 sm:text-xs">
-                                {discount}% OFF
-                              </span>
-                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleBook(item)}
+                              className="w-full rounded-lg bg-sky-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-sky-700 sm:w-auto md:px-4 md:text-sm"
+                            >
+                              Book
+                            </button>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => handleBook(item)}
-                            className="rounded-lg bg-sky-600 px-2 py-1 text-[10px] font-medium text-white transition-colors hover:bg-sky-700 sm:px-3 sm:py-2 sm:text-xs md:px-4 md:text-sm"
-                          >
-                            Book
-                          </button>
                         </div>
                       </div>
                     </div>

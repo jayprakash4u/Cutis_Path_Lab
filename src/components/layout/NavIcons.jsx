@@ -172,6 +172,83 @@ export function WhatsAppIcon({ size = 24, className = '' }) {
   );
 }
 
+/**
+ * Row icons for the mobile drawer, keyed by route. Single-weight outlines in
+ * `currentColor` so each row's icon follows its text colour, including the
+ * active state.
+ */
+export function MobileNavIcon({ href, size = 22, className = '' }) {
+  const paths = {
+    '/': <path d="M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5M10 20v-5.5h4V20" />,
+    '/services': (
+      <>
+        <path d="M6 3v6a4 4 0 0 0 8 0V3" />
+        <path d="M4.5 3h3M12.5 3h3" />
+        <path d="M10 17a4 4 0 0 0 8 0v-2" />
+        <circle cx="18" cy="13" r="2" />
+      </>
+    ),
+    '/tests': (
+      <>
+        <path d="M9 2v7.5L4.8 17A2.4 2.4 0 0 0 6.9 21h10.2a2.4 2.4 0 0 0 2.1-3.5L15 9.5V2" />
+        <path d="M7.5 2h9" />
+        <path d="M6.6 15h10.8" />
+      </>
+    ),
+    '/packages': (
+      <>
+        <path d="M21 8.5v7a1.5 1.5 0 0 1-.8 1.3l-7.5 4a1.5 1.5 0 0 1-1.4 0l-7.5-4A1.5 1.5 0 0 1 3 15.5v-7" />
+        <path d="M3.4 7.7 11.3 3.4a1.5 1.5 0 0 1 1.4 0l7.9 4.3-8.6 4.6z" />
+        <path d="M12 12.3V21" />
+      </>
+    ),
+    '/gallery': (
+      <>
+        <rect x="3" y="4.5" width="18" height="15" rx="2.5" />
+        <circle cx="8.5" cy="10" r="1.8" />
+        <path d="m3.5 17 5-4.5 4 3.5 3-2.5 5 4" />
+      </>
+    ),
+    '/blog': (
+      <>
+        <path d="M5 3.5h9l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20z" />
+        <path d="M14 3.5V9h5" />
+        <path d="M8.5 13h7M8.5 17h4.5" />
+      </>
+    ),
+    '/about': (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v5.5" />
+        <path d="M12 7.5h.01" />
+      </>
+    ),
+    '/contact': (
+      <>
+        <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
+        <path d="m3.5 6.5 8.5 6 8.5-6" />
+      </>
+    ),
+  };
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      {paths[href] ?? paths['/']}
+    </svg>
+  );
+}
+
 export function SearchIcon({ size = 24, className = '' }) {
   return (
     <svg

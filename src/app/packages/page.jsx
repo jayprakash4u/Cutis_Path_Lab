@@ -56,6 +56,9 @@ export default function PackagesPage() {
       <main className="pt-below-nav-tall">
         <PagePosterHero
           src="/images/posters/packages-poster.png"
+          mobileSrc="/images/banners/mobile/packages-poster.png"
+          mobileWidth={1842}
+          mobileHeight={854}
           alt="Cutis Path Lab Packages"
           width={6667}
           height={654}

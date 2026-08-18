@@ -42,7 +42,12 @@ export default function Hero() {
     <section className="relative w-full overflow-hidden">
       <FloatingSidebar />
 
-      <div className="relative mx-auto w-full max-w-[1920px] bg-[#eef5fb] leading-none sm:bg-slate-900 aspect-[3/1]">
+      {/*
+        Held at the artwork's native 3:1 so the full banner is always visible —
+        a taller ratio here would make `object-cover` trim the sides. On mobile
+        the extra height comes from the copy block below instead.
+      */}
+      <div className="relative mx-auto aspect-[3/1] w-full max-w-[1920px] bg-[#eef5fb] leading-none sm:bg-slate-900">
         {heroImages.map((img, i) => (
           <Image
             key={img.url}
@@ -66,18 +71,38 @@ export default function Hero() {
           <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-sky-500/8 blur-3xl" />
           <div className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-sky-400/5 blur-3xl" />
         </div>
+
+        {/* Slide dots live on the image, so the mobile copy block below is clear */}
+        <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-8">
+          {heroImages.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === index ? "w-4 bg-sky-400" : "w-2 bg-white/60 hover:bg-white"
+              }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="absolute inset-0 z-10 hidden flex-col items-center justify-center px-4 text-center sm:flex sm:px-6 lg:px-8">
-        <h1 className="mb-2 text-xl text-white drop-shadow-lg sm:mb-3 sm:text-2xl md:text-3xl lg:text-4xl">
-          Your Trusted Partner in <span className="text-sky-400">Health</span>
+      {/*
+        One copy block, two behaviours: it sits below the banner on mobile —
+        which is where the added height comes from, and it also gives phones the
+        headline and CTA they previously never saw — and becomes an overlay on
+        the image from `sm` up.
+      */}
+      <div className="relative z-10 flex flex-col items-center justify-center bg-[#eef5fb] px-4 py-6 text-center sm:absolute sm:inset-0 sm:bg-transparent sm:px-6 sm:py-0 lg:px-8">
+        <h1 className="mb-2 text-xl font-bold text-slate-900 sm:mb-3 sm:text-2xl sm:font-normal sm:text-white sm:drop-shadow-lg md:text-3xl lg:text-4xl">
+          Your Trusted Partner in <span className="text-sky-600 sm:text-sky-400">Health</span>
         </h1>
-        <p className="mb-3 max-w-xl text-xs text-slate-200 drop-shadow-lg sm:mb-4 sm:text-sm md:text-base">
-          Accurate diagnostics delivered with speed & precision
+        <p className="mb-4 max-w-xl text-sm text-slate-600 sm:mb-4 sm:text-xs sm:text-slate-200 sm:drop-shadow-lg md:text-base">
+          Accurate diagnostics delivered with speed &amp; precision
         </p>
         <Link
           href="/book"
-          className="whitespace-nowrap rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 px-4 py-1.5 text-xs font-bold text-white shadow-xl shadow-sky-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-sky-600 hover:to-sky-700 hover:shadow-sky-500/60 sm:px-5 sm:py-2 sm:text-sm"
+          className="whitespace-nowrap rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-sky-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-sky-600 hover:to-sky-700 hover:shadow-sky-500/60 sm:px-5 sm:py-2 sm:text-sm"
         >
           Book Test Now
         </Link>
@@ -100,18 +125,6 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-8">
-        {heroImages.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`h-2 w-2 rounded-full transition-all duration-300 ${
-              i === index ? "bg-sky-400 w-4" : "bg-white/60 hover:bg-white"
-            }`}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
-      </div>
     </section>
   );
 }

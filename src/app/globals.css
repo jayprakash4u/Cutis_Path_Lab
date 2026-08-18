@@ -9,8 +9,10 @@
   --bg-elevated: #131d33;
 
   /* Fixed navbar height (match Navbar.jsx h-14 / h-16 / lg topbar+nav) */
-  --site-nav-h: 3.5rem;
-  --site-nav-h-sm: 4rem;
+  /* Two rows on small screens: utility strip (~1.75rem) + logo bar, which now
+     carries the search field inline. */
+  --site-nav-h: 5.25rem;
+  --site-nav-h-sm: 5.75rem;
   --site-nav-h-lg: 5.5rem;
   --site-nav-h-lg-tall: 6.875rem;
 

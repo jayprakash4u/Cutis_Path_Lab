@@ -85,6 +85,9 @@ export default function ServicesPage() {
           alt="Cutis Path Lab Services"
           width={6667}
           height={579}
+          mobileSrc="/images/banners/mobile/services-poster.png"
+          mobileWidth={1844}
+          mobileHeight={853}
         />
 
         <section className="bg-white border-b border-slate-100">

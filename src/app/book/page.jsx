@@ -415,7 +415,9 @@ function BookPageContent() {
         </section>
 
         {/* Progress Steps - Sticky */}
-        <div className="bg-white border-b border-slate-100 sticky top-16 lg:top-20 z-30">
+        {/* Pinned against the real header height rather than guessed pixels,
+            so it follows the utility strip appearing on small screens. */}
+        <div className="sticky top-[var(--site-nav-h)] z-30 border-b border-slate-100 bg-white sm:top-[var(--site-nav-h-sm)] lg:top-[var(--site-nav-h-lg)]">
           <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-2 lg:py-4">
             <div className="flex items-center justify-between">
               {STEPS.map((step, index) => (

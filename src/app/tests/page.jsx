@@ -222,6 +222,9 @@ function TestsPageContent() {
           alt="Cutis Path Lab Tests"
           width={6667}
           height={654}
+          mobileSrc="/images/banners/mobile/tests-hero.png"
+          mobileWidth={1844}
+          mobileHeight={853}
         />
 
         <div className="min-h-screen bg-slate-50 pb-20 lg:pb-0">

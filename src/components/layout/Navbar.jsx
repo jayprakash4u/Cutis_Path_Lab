@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { BuildingIcon, LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon } from "./NavIcons";
+import { BuildingIcon, LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon, MobileNavIcon } from "./NavIcons";
 import { tests } from "@/data/staticData";
 
 const navLinks = [
@@ -20,7 +20,6 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -30,7 +29,6 @@ export default function Navbar() {
   const [searchActiveIdx, setSearchActiveIdx] = useState(-1);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const searchRef = useRef(null);
-  const mobileSearchRef = useRef(null);
   const mobileSearchInputRef = useRef(null);
 
   // Combined dataset: tests (from staticData) + packages (inline, matching packages/page.jsx)
@@ -150,36 +148,23 @@ export default function Navbar() {
     const onKey = (e) => {
       if (e.key !== "Escape") return;
       setIsOpen(false);
-      setMobileSearchOpen(false);
       setShowSearchDropdown(false);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // Focus mobile search when opened
-  useEffect(() => {
-    if (mobileSearchOpen) {
-      mobileSearchInputRef.current?.focus();
-    }
-  }, [mobileSearchOpen]);
-
   const closeMobileMenu = useCallback(() => {
     setIsOpen(false);
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
-    setIsOpen((open) => {
-      const next = !open;
-      if (next) setMobileSearchOpen(false);
-      return next;
-    });
+    setIsOpen((open) => !open);
   }, []);
 
   // Close menus on route change
   useEffect(() => {
     setIsOpen(false);
-    setMobileSearchOpen(false);
     setShowSearchDropdown(false);
   }, [pathname]);
 
@@ -260,43 +245,53 @@ export default function Navbar() {
   return (
     <div className="fixed left-0 right-0 top-0 z-50 transition-all duration-300">
 
-{/* TOP BAR — desktop utility strip only */}
-      <div className="hidden lg:block bg-sky-600 text-white py-1.5 border-b border-sky-700">
+      {/*
+        Utility strip. Shown at every width now, but the four desktop items plus
+        four social icons will not fit a phone — so below `lg` it condenses to
+        the two things a visitor actually taps: call and WhatsApp.
+      */}
+      <div className="bg-sky-600 text-white py-1.5 border-b border-sky-700">
         <div className="mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 text-sm font-medium">
-            <div className="flex items-center flex-wrap gap-4 lg:gap-6">
-              <span className="font-semibold tracking-wide flex items-center gap-1.5">
+          <div className="flex items-center justify-between gap-3 text-xs font-medium lg:gap-4 lg:text-sm">
+            <div className="flex min-w-0 items-center gap-3 lg:flex-wrap lg:gap-6">
+              <span className="hidden font-semibold tracking-wide lg:flex lg:items-center lg:gap-1.5">
                 <BuildingIcon size={16} className="text-white" />
                 Cutis Lab Path
               </span>
-              <span className="opacity-80">|</span>
-              <span className="flex items-center gap-1.5">
+              <span className="hidden opacity-80 lg:inline">|</span>
+              <span className="hidden lg:flex lg:items-center lg:gap-1.5">
                 <LocationIcon size={16} className="text-white" />
                 Kathmandu, Bagmati, Nepal
               </span>
-              <span className="opacity-80">|</span>
-              <a href="tel:+9779825849435" className="flex items-center gap-1.5 hover:text-sky-100">
-                <PhoneIcon size={16} className="text-white" />
+              <span className="hidden opacity-80 lg:inline">|</span>
+              <a
+                href="tel:+9779825849435"
+                className="flex shrink-0 items-center gap-1.5 hover:text-sky-100"
+              >
+                <PhoneIcon size={15} className="text-white" />
                 +977-9825849435
               </a>
-              <span className="opacity-80">|</span>
-              <a href="mailto:cutislabpath@gmail.com" className="flex items-center gap-1.5 hover:text-sky-100">
+              <span className="hidden opacity-80 lg:inline">|</span>
+              <a
+                href="mailto:cutislabpath@gmail.com"
+                className="hidden truncate hover:text-sky-100 lg:flex lg:items-center lg:gap-1.5"
+              >
                 <EmailIcon size={16} className="text-white" />
                 cutislabpath@gmail.com
               </a>
             </div>
-            <div className="flex items-center gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+            <div className="flex shrink-0 items-center gap-3">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
                 <FacebookIcon size={18} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
                 <InstagramIcon size={18} />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
                 <TwitterIcon size={18} />
               </a>
-              <a href="https://wa.me/9779825849435" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition">
-                <WhatsAppIcon size={18} />
+              <a href="https://wa.me/9779825849435" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-sky-300">
+                <WhatsAppIcon size={17} />
               </a>
             </div>
           </div>
@@ -310,17 +305,47 @@ export default function Navbar() {
         <div className="relative z-[70] mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0" onClick={closeMobileMenu}>
-              <Image
-                src="/images/cutis.png"
-                alt="CUTIS Lab"
-                width={120}
-                height={45}
-                className="w-[108px] sm:w-28 lg:w-32 h-auto"
-                priority
-              />
-            </Link>
+            {/*
+              Hamburger sits left of the logo on mobile, because the drawer
+              slides in from the left — a right-hand trigger opening a panel on
+              the opposite edge reads as disconnected. Hidden on desktop, where
+              the full nav is inline.
+            */}
+            <div className="flex shrink-0 items-center gap-2.5">
+              <button
+                type="button"
+                className={`lg:hidden relative z-[80] flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                  isOpen
+                    ? "bg-slate-900 text-white"
+                    : "bg-sky-600 text-white hover:bg-sky-700"
+                }`}
+                onClick={toggleMobileMenu}
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isOpen}
+                aria-controls="mobile-nav-panel"
+              >
+                {isOpen ? (
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M4 7h16M4 12h16M4 17h16" />
+                  </svg>
+                )}
+              </button>
+
+              <Link href="/" className="flex items-center shrink-0" onClick={closeMobileMenu}>
+                <Image
+                  src="/images/cutis.png"
+                  alt="CUTIS Lab"
+                  width={120}
+                  height={45}
+                  className="w-[108px] sm:w-28 lg:w-32 h-auto"
+                  priority
+                />
+              </Link>
+            </div>
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center gap-1 ml-8">
@@ -368,95 +393,83 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Mobile / tablet — Search + Menu (stays above overlay) */}
-            <div className="lg:hidden flex items-center gap-2 relative z-[80]">
-              <button
-                type="button"
-                data-mobile-search-toggle
-                onClick={() => {
-                  setMobileSearchOpen((v) => !v);
-                  setIsOpen(false);
-                }}
-                className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
-                  mobileSearchOpen
-                    ? "border-sky-400 bg-sky-50 text-sky-700"
-                    : "border-slate-200 bg-white text-slate-600"
-                }`}
-                aria-label="Search tests"
-                aria-expanded={mobileSearchOpen}
-              >
-                <SearchIcon size={18} />
-              </button>
-              <button
-                type="button"
-                className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
-                  isOpen
-                    ? "bg-slate-900 text-white"
-                    : "bg-sky-600 text-white hover:bg-sky-700"
-                }`}
-                onClick={toggleMobileMenu}
-                aria-label={isOpen ? "Close menu" : "Open menu"}
-                aria-expanded={isOpen}
-                aria-controls="mobile-nav-panel"
-              >
-                {isOpen ? (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.25} d="M4 7h16M4 12h16M4 17h16" />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile search sheet */}
-        <div
-          ref={mobileSearchRef}
-          className={`lg:hidden overflow-hidden border-t border-sky-50 transition-[max-height,opacity] duration-300 ease-out ${
-            mobileSearchOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="px-4 py-3 bg-slate-50">
-            <div className="relative">
+            {/*
+              Search sits on the logo line on mobile. `min-w-0` matters: without
+              it the flex item refuses to shrink below its content width and
+              pushes the logo off the row on narrow phones.
+            */}
+            <div className="lg:hidden relative z-[80] ml-2 min-w-0 flex-1">
               <input
                 ref={mobileSearchInputRef}
                 type="search"
-                placeholder="Search tests & packages"
+                placeholder="Search tests…"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
                 onKeyDown={searchKeyDown}
-                className="w-full rounded-xl border border-sky-200 bg-white pl-4 pr-11 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                className="w-full rounded-lg border border-sky-200 bg-white py-2 pl-3 pr-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
               />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg bg-[#FF6B6B] flex items-center justify-center pointer-events-none">
+              <div className="pointer-events-none absolute right-1 top-1/2 flex h-7 w-8 -translate-y-1/2 items-center justify-center rounded-md bg-sky-600">
                 <SearchIcon size={14} className="text-white" />
               </div>
               {renderSearchResults(true)}
             </div>
           </div>
         </div>
+        </nav>
 
-        {/* Mobile / tablet menu — drops under header; hamburger stays clickable */}
-        {isOpen && (
-          <>
+        {/*
+          Side drawer, not a full-width dropdown: it covers ~82% of the screen
+          (capped at 320px) so the dimmed page stays visible alongside it, which
+          is what makes it read as an overlay rather than a new page.
+
+          Kept mounted and moved with translate-x so it can slide. `invisible`
+          is transitioned too, so it only applies once the slide-out finishes —
+          otherwise the panel would vanish before it had moved.
+        */}
+        <button
+          type="button"
+          className={`lg:hidden fixed inset-0 z-[55] bg-slate-900/50 transition-opacity duration-300 ${
+            isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+          aria-label="Close menu"
+          tabIndex={isOpen ? 0 : -1}
+          onClick={closeMobileMenu}
+        />
+        <div
+          id="mobile-nav-panel"
+          className={`lg:hidden fixed inset-y-0 left-0 z-[65] flex w-[82%] max-w-[320px] flex-col bg-white shadow-2xl transition-[transform,visibility] duration-300 ease-out ${
+            isOpen ? "visible translate-x-0" : "invisible -translate-x-full"
+          }`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
+        >
+          <div className="flex shrink-0 items-center justify-between bg-sky-600 px-5 py-4">
+            <span className="text-base font-bold text-white">Cutis Path Lab</span>
             <button
               type="button"
-              className="lg:hidden fixed inset-x-0 top-14 sm:top-16 bottom-0 z-[55] bg-slate-900/35"
-              aria-label="Close menu"
               onClick={closeMobileMenu}
-            />
-            <div
-              id="mobile-nav-panel"
-              className="lg:hidden absolute left-0 right-0 top-full z-[65] border-t border-slate-100 bg-white shadow-xl max-h-[min(72vh,calc(100dvh-8.5rem))] overflow-y-auto"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Site menu"
+              aria-label="Close menu"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30"
             >
-              <nav className="px-3 py-2">
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto">
+              {/* Icon + label rows split by hairlines, rather than floating pills */}
+              <nav className="divide-y divide-slate-100">
                 {navLinks.map((link) => {
                   const active = pathname === link.href;
                   return (
@@ -464,44 +477,45 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={closeMobileMenu}
-                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-colors ${
+                      className={`flex items-center gap-4 px-5 py-4 text-[15px] transition-colors ${
                         active
-                          ? "bg-sky-50 text-sky-700"
-                          : "text-slate-800 active:bg-slate-50"
+                          ? "bg-sky-50/60 font-semibold text-sky-700"
+                          : "font-medium text-slate-700 active:bg-slate-50"
                       }`}
                     >
-                      <span>{link.label}</span>
+                      <MobileNavIcon
+                        href={link.href}
+                        className={active ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                      />
+                      <span className="flex-1">{link.label}</span>
                       {active && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B6B]" aria-hidden />
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]" aria-hidden />
                       )}
                     </Link>
                   );
                 })}
-              </nav>
+            </nav>
+          </div>
 
-              <div className="px-4 pb-5 pt-2 space-y-2.5 border-t border-slate-100">
-                <div className="grid grid-cols-2 gap-2.5">
-                  <Link
-                    href="/download-report"
-                    onClick={closeMobileMenu}
-                    className="flex items-center justify-center rounded-xl border border-[#FF6B6B]/50 py-2.5 text-sm font-semibold text-[#FF6B6B]"
-                  >
-                    Report
-                  </Link>
-                  <a
-                    href="tel:+9779825849435"
-                    className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
-                  >
-                    <PhoneIcon size={16} />
-                    Call
-                  </a>
-                </div>
-              </div>
+          <div className="shrink-0 border-t border-slate-100 px-4 py-4">
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                href="/download-report"
+                onClick={closeMobileMenu}
+                className="flex items-center justify-center rounded-xl border border-[#FF6B6B]/50 py-2.5 text-sm font-semibold text-[#FF6B6B]"
+              >
+                Report
+              </Link>
+              <a
+                href="tel:+9779825849435"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
+              >
+                <PhoneIcon size={16} />
+                Call
+              </a>
             </div>
-          </>
-        )}
-
-        </nav>
+          </div>
+        </div>
 
       {/* BOTTOM NAV — phones & tablets only (hidden once desktop nav shows) */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-100 bg-white/95 backdrop-blur-md shadow-[0_-8px_30px_rgba(15,23,42,0.06)] pb-[env(safe-area-inset-bottom)]">

@@ -79,7 +79,7 @@ function DoctorCard({ doctor }) {
               {doctor.specialization}
             </p>
             {doctor.hospital && (
-              <p className="mt-0.5 text-[11px] leading-snug text-slate-500 sm:text-xs">
+              <p className="mt-0.5 text-xs leading-snug text-slate-500">
                 {doctor.hospital}
               </p>
             )}
