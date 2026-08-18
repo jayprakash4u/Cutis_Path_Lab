@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { BuildingIcon, LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon, MobileNavIcon } from "./NavIcons";
+import ReportModal from "./ReportModal";
 import { tests } from "@/data/staticData";
 
 const navLinks = [
@@ -21,6 +22,9 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  // The report popover is positioned against this button on desktop.
+  const reportBtnRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -375,12 +379,16 @@ export default function Navbar() {
                   {renderSearchResults()}
                 </div>
 
-              <Link
-                href="/download-report"
+              <button
+                ref={reportBtnRef}
+                type="button"
+                onClick={() => setReportOpen((v) => !v)}
+                aria-haspopup="dialog"
+                aria-expanded={reportOpen}
                 className="px-5 py-2 bg-transparent border-b-2 border-b-[#FF6B6B] rounded-lg text-base font-semibold text-[#FF6B6B] hover:bg-red-50 transition"
               >
                 Report
-              </Link>
+              </button>
             </div>
 
             {/*
@@ -536,13 +544,16 @@ export default function Navbar() {
 
           <div className="shrink-0 border-t border-slate-100 px-4 py-4">
             <div className="grid grid-cols-2 gap-2.5">
-              <Link
-                href="/download-report"
-                onClick={closeMobileMenu}
+              <button
+                type="button"
+                onClick={() => {
+                  closeMobileMenu();
+                  setReportOpen(true);
+                }}
                 className="flex items-center justify-center rounded-xl border border-[#FF6B6B]/50 py-2.5 text-sm font-semibold text-[#FF6B6B]"
               >
                 Report
-              </Link>
+              </button>
               <a
                 href="tel:+9779861848382"
                 className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
@@ -668,6 +679,12 @@ export default function Navbar() {
           <WhatsAppIcon size={22} className="text-white" />
         </div>
       </a>
+
+      {/* Report lookup — portals itself to <body>, so it is safe from the
+          backdrop-blur containing block on <nav>. */}
+      {reportOpen && (
+        <ReportModal anchorRef={reportBtnRef} onClose={() => setReportOpen(false)} />
+      )}
     </div>
   );
 }

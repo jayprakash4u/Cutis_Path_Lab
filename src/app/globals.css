@@ -258,3 +258,37 @@ body {
     animation: none;
   }
 }
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*
+  The report dialog is a bottom sheet on phones and a popover hanging off the
+  navbar's Report button from lg up, so it enters from a different place at
+  each size.
+*/
+.animate-report-panel {
+  animation: sheetUp 0.28s ease-out forwards;
+  transform-origin: top right;
+}
+
+@media (min-width: 1024px) {
+  .animate-report-panel {
+    animation-name: popIn;
+    animation-duration: 0.16s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-report-panel {
+    animation: none;
+  }
+}
