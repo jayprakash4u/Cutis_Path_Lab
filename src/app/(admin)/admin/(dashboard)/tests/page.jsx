@@ -7,6 +7,7 @@ import AdminPagination, {
   ADMIN_PAGE_SIZE,
   paginate,
 } from "@/components/admin/AdminPagination";
+import ImageField from "@/components/admin/ImageField";
 import {
   AdminCard,
   BusyButton,
@@ -355,14 +356,14 @@ export default function AdminTestsPage() {
               onChange={onChange}
             />
           </Field>
-          <Field label="Icon URL">
-            <input
-              name="iconUrl"
-              className={inputClass}
-              value={form.iconUrl}
-              onChange={onChange}
-            />
-          </Field>
+          <ImageField
+            label="Icon image"
+            hint="Optional — tests fall back to their built-in icon."
+            folder="tests"
+            value={form.iconUrl}
+            onChange={(url) => setForm((f) => ({ ...f, iconUrl: url }))}
+            previewClassName="h-14 w-14"
+          />
           <div className="sm:col-span-2">
             <Field label="Description">
               <textarea

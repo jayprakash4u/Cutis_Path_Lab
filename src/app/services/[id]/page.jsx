@@ -1,12 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ServiceIconCard from "@/components/sections/ServiceIconCard";
 import { resolveServiceIcon } from "@/lib/serviceIcons";
-import { services } from "@/data/staticData";
 
 const WHAT_TO_EXPECT = [
   {
@@ -32,10 +32,84 @@ const HIGHLIGHTS = [
 
 export default function ServiceDetailPage() {
   const params = useParams();
-  const serviceId = Number(params.id);
-  const service = services.find((s) => Number(s.id) === serviceId);
+  const serviceId = String(params?.id ?? "");
 
-  if (!service) {
+  const [service, setService] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!serviceId) return undefined;
+    let cancelled = false;
+
+    async function loadService() {
+      try {
+        setLoading(true);
+        setError("");
+        setNotFound(false);
+
+        const res = await fetch(`/api/services/${encodeURIComponent(serviceId)}`);
+        const json = await res.json();
+
+        if (res.status === 404) {
+          if (!cancelled) {
+            setService(null);
+            setNotFound(true);
+          }
+          return;
+        }
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || "Failed to load service");
+        }
+        if (!cancelled) setService(json.data);
+
+        // Related services come from the same public list the grid uses.
+        try {
+          const listRes = await fetch("/api/services?limit=100");
+          const listJson = await listRes.json();
+          if (!cancelled && listRes.ok && listJson.success) {
+            setRelated(
+              (listJson.data || [])
+                .filter((s) => String(s.id) !== serviceId)
+                .slice(0, 4),
+            );
+          }
+        } catch {
+          if (!cancelled) setRelated([]);
+        }
+      } catch (err) {
+        if (!cancelled) setError(err.message || "Could not load this service");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadService();
+    return () => {
+      cancelled = true;
+    };
+  }, [serviceId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <main className="pt-16 sm:pt-20 lg:pt-[7.5rem]">
+          <div className="max-w-4xl mx-auto px-6 py-10 md:py-14 space-y-4">
+            <div className="h-4 w-28 animate-pulse rounded bg-slate-200" />
+            <div className="h-10 w-2/3 animate-pulse rounded bg-slate-200" />
+            <div className="h-4 w-full animate-pulse rounded bg-slate-100" />
+            <div className="h-4 w-5/6 animate-pulse rounded bg-slate-100" />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !service) {
     return (
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />
@@ -45,7 +119,7 @@ export default function ServiceDetailPage() {
               Service Not Found
             </h1>
             <p className="text-slate-600 mb-5">
-              The service you are looking for does not exist or was removed.
+              {error || "The service you are looking for does not exist or was removed."}
             </p>
             <Link
               href="/services"
@@ -60,9 +134,6 @@ export default function ServiceDetailPage() {
     );
   }
 
-  const relatedServices = services
-    .filter((s) => Number(s.id) !== serviceId)
-    .slice(0, 4);
   const IconComponent = resolveServiceIcon(service);
   const enquireHref = `/contact?service=${encodeURIComponent(service.name)}`;
 
@@ -145,10 +216,12 @@ export default function ServiceDetailPage() {
               <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-3">
                 About this service
               </h2>
-              <p className="text-sm md:text-base text-slate-600 leading-relaxed">
-                Our {service.name} service is delivered by trained laboratory professionals
-                using validated methods. Reports are reviewed before release so you and your
-                clinician get clear, reliable findings for diagnosis and follow-up care.
+              {/* Admin-authored copy when there is any; otherwise the generic
+                  paragraph the page has always shown. */}
+              <p className="text-sm md:text-base text-slate-600 leading-relaxed whitespace-pre-line">
+                {service.longDescription
+                  ? service.longDescription
+                  : `Our ${service.name} service is delivered by trained laboratory professionals using validated methods. Reports are reviewed before release so you and your clinician get clear, reliable findings for diagnosis and follow-up care.`}
               </p>
             </div>
 
@@ -186,22 +259,20 @@ export default function ServiceDetailPage() {
           </div>
         </section>
 
-        <section className="bg-white border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-6 py-10 md:py-12">
-            <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-6">
-              Related services
-            </h2>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
-              {relatedServices.map((related) => (
-                <ServiceIconCard
-                  key={related.id}
-                  service={related}
-                  descriptionMax={48}
-                />
-              ))}
+        {related.length > 0 ? (
+          <section className="bg-white border-t border-slate-100">
+            <div className="max-w-7xl mx-auto px-6 py-10 md:py-12">
+              <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-6">
+                Related services
+              </h2>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+                {related.map((item) => (
+                  <ServiceIconCard key={item.id} service={item} descriptionMax={48} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : null}
       </main>
 
       <Footer />

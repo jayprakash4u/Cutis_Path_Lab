@@ -10,7 +10,7 @@ import {
   CarouselDots,
 } from "@/components/ui/Section";
 
-export default function TestsInOffers() {
+export default function TestsInOffers({ section }) {
   const [offerTests, setOfferTests] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,8 +62,8 @@ export default function TestsInOffers() {
   return (
     <Section tone="tint" size="compact">
       <SectionHeading
-        title="Flat 25–33% off on lab tests"
-        subtitle="Free home sample collection on every booking."
+        title={section?.title || "Flat 25–33% off on lab tests"}
+        subtitle={section?.subtitle || "Free home sample collection on every booking."}
         actions={
           <div className="hidden items-center gap-3 sm:flex">
             <CarouselButton

@@ -7,6 +7,7 @@ import AdminPagination, {
   ADMIN_PAGE_SIZE,
   paginate,
 } from "@/components/admin/AdminPagination";
+import ImageField from "@/components/admin/ImageField";
 import {
   AdminCard,
   BusyButton,
@@ -318,14 +319,12 @@ export default function AdminPackagesPage() {
               onChange={onChange}
             />
           </Field>
-          <Field label="Image URL">
-            <input
-              name="imageUrl"
-              className={inputClass}
-              value={form.imageUrl}
-              onChange={onChange}
-            />
-          </Field>
+          <ImageField
+            label="Image"
+            folder="packages"
+            value={form.imageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+          />
           <Field label="Report time">
             <input
               name="reportsTime"

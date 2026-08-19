@@ -12,22 +12,7 @@ import {
   CarouselButton,
   CarouselDots,
 } from "@/components/ui/Section";
-
-// Admins can paste an arbitrary image URL (see admin/referrals `resolveImageUrl`),
-// and next/image throws on a host that isn't in next.config remotePatterns.
-// Optimise the sources we know are configured; fall back to a plain <img> for
-// anything else so one bad URL can't take the homepage down.
-const OPTIMISED_IMAGE_HOSTS = ["images.unsplash.com", "plus.unsplash.com"];
-
-function canUseNextImage(src) {
-  if (!src) return false;
-  if (src.startsWith("/")) return true;
-  try {
-    return OPTIMISED_IMAGE_HOSTS.includes(new URL(src).hostname);
-  } catch {
-    return false;
-  }
-}
+import { canUseNextImage } from "@/lib/optimisableImage";
 
 function DoctorAvatar({ src, alt }) {
   if (canUseNextImage(src)) {
@@ -107,7 +92,7 @@ function DoctorCard({ doctor }) {
   );
 }
 
-export default function DoctorReferrals() {
+export default function DoctorReferrals({ section }) {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -159,8 +144,8 @@ export default function DoctorReferrals() {
   return (
     <Section tone="tint">
       <SectionHeading
-        title="Trusted by specialists across the city"
-        subtitle="Consultants who partner with Cutis Path Lab for accurate diagnostics and patient care."
+        title={section?.title || "Trusted by specialists across the city"}
+        subtitle={section?.subtitle || "Consultants who partner with Cutis Path Lab for accurate diagnostics and patient care."}
         actions={
           <div className="hidden items-center gap-3 sm:flex">
             <CarouselButton

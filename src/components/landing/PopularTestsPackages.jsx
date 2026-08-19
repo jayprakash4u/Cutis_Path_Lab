@@ -11,7 +11,7 @@ import {
   CarouselDots,
 } from "@/components/ui/Section";
 
-export default function PopularTestsPackages() {
+export default function PopularTestsPackages({ section }) {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -115,8 +115,8 @@ export default function PopularTestsPackages() {
   return (
     <Section tone="tint">
       <SectionHeading
-        title="Most booked tests and packages"
-        subtitle="Frequently chosen tests and health packages, with transparent pricing."
+        title={section?.title || "Most booked tests and packages"}
+        subtitle={section?.subtitle || "Frequently chosen tests and health packages, with transparent pricing."}
         actions={
           <div className="hidden items-center gap-3 sm:flex">
             <CarouselButton

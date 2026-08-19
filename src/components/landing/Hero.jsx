@@ -14,9 +14,38 @@ import FloatingSidebar from "./FloatingSidebar";
 */
 const MOBILE_UP_TO = 639;
 
-export default function Hero({ slides = [] }) {
-  const heroImages = slides;
+const DEFAULT_TITLE = "Your Trusted Partner in Health";
+const DEFAULT_HIGHLIGHT = "Health";
+
+/**
+ * Splits the headline around the highlighted word so the accent colour can be
+ * edited from the admin panel instead of being baked into the markup.
+ */
+function splitHeadline(title, highlight) {
+  if (!highlight) return [title, null, ""];
+  const at = title.toLowerCase().lastIndexOf(highlight.toLowerCase());
+  if (at < 0) return [title, null, ""];
+  return [title.slice(0, at), title.slice(at, at + highlight.length), title.slice(at + highlight.length)];
+}
+
+export default function Hero({ slides = [], section, items }) {
+  /* Slides come from the admin screen once any are saved; with none, the disk
+     scan passed in as `slides` still runs, which is what shipped before. */
+  const heroImages = items?.length
+    ? items.map((item) => ({
+        url: item.imageUrl,
+        mobileUrl: item.mobileImageUrl || null,
+        alt: item.title || "",
+        href: item.linkUrl || null,
+      }))
+    : slides;
+
   const [index, setIndex] = useState(0);
+
+  const [before, accent, after] = splitHeadline(
+    section?.title || DEFAULT_TITLE,
+    section?.highlight ?? DEFAULT_HIGHLIGHT,
+  );
 
   const count = heroImages.length;
 
@@ -109,16 +138,18 @@ export default function Hero({ slides = [] }) {
       */}
       <div className="relative z-10 flex flex-col items-center justify-center bg-[#eef5fb] px-4 py-4 text-center sm:absolute sm:inset-0 sm:bg-transparent sm:px-6 sm:py-0 lg:px-8">
         <h1 className="sr-only sm:not-sr-only sm:mb-3 sm:text-2xl sm:text-white sm:drop-shadow-lg md:text-3xl lg:text-4xl">
-          Your Trusted Partner in <span className="sm:text-sky-400">Health</span>
+          {before}
+          {accent ? <span className="sm:text-sky-400">{accent}</span> : null}
+          {after}
         </h1>
         <p className="hidden max-w-xl sm:mb-4 sm:block sm:text-xs sm:text-slate-200 sm:drop-shadow-lg md:text-base">
-          Accurate diagnostics delivered with speed &amp; precision
+          {section?.subtitle || "Accurate diagnostics delivered with speed & precision"}
         </p>
         <Link
-          href="/book"
+          href={section?.ctaHref || "/book"}
           className="whitespace-nowrap rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-sky-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-sky-600 hover:to-sky-700 hover:shadow-sky-500/60 sm:px-5 sm:py-2 sm:text-sm"
         >
-          Book Test Now
+          {section?.ctaLabel || "Book Test Now"}
         </Link>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/adminClient";
+import ImageField from "@/components/admin/ImageField";
 import {
   AdminCard,
   BusyButton,
@@ -201,9 +202,13 @@ export default function AdminAboutPage() {
           <Field label="Body">
             <textarea className={inputClass} rows={4} value={settings.missionBody} onChange={setField("missionBody")} />
           </Field>
-          <Field label="Image path" hint="e.g. /images/mission-vision.png">
-            <input className={inputClass} value={settings.missionImage} onChange={setField("missionImage")} />
-          </Field>
+          <ImageField
+            label="Image"
+            folder="about"
+            value={settings.missionImage}
+            onChange={(url) => setSettings((prev) => ({ ...prev, missionImage: url }))}
+            previewClassName="h-24 w-32"
+          />
         </div>
       </AdminCard>
 
@@ -215,9 +220,13 @@ export default function AdminAboutPage() {
           <Field label="Body">
             <textarea className={inputClass} rows={4} value={settings.visionBody} onChange={setField("visionBody")} />
           </Field>
-          <Field label="Image path" hint="e.g. /images/vision-image.png">
-            <input className={inputClass} value={settings.visionImage} onChange={setField("visionImage")} />
-          </Field>
+          <ImageField
+            label="Image"
+            folder="about"
+            value={settings.visionImage}
+            onChange={(url) => setSettings((prev) => ({ ...prev, visionImage: url }))}
+            previewClassName="h-24 w-32"
+          />
         </div>
       </AdminCard>
 

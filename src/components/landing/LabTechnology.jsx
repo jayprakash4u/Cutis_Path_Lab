@@ -11,8 +11,10 @@ import {
   CarouselButton,
   CarouselDots,
 } from "@/components/ui/Section";
+import { toLines } from "@/lib/homeSections";
 
-const technologies = [
+/* Shown when the section has no rows — an empty table must not blank the page. */
+const DEFAULT_TECHNOLOGIES = [
   {
     title: "AI Diagnostics",
     highlight: "Smarter review",
@@ -105,7 +107,9 @@ const technologies = [
   },
 ];
 
-function TechIcon({ index }) {
+const ICON_ORDER = ["ai", "digital", "molecular", "automation", "pcr", "tracking"];
+
+function TechIcon({ iconKey, index }) {
   // Two-tone, matching the site: sky line work with coral detail accents.
   const stroke = "#0284C7";
   const accent = "#FF6B6B";
@@ -185,11 +189,15 @@ function TechIcon({ index }) {
     </svg>,
   ];
 
-  return icons[index] ?? icons[0];
+  // Rows carry an icon key; anything unrecognised falls back to position.
+  const byKey = ICON_ORDER.indexOf(iconKey);
+  return icons[byKey >= 0 ? byKey : index] ?? icons[0];
 }
 
 
-export default function LabTechnology() {
+export default function LabTechnology({ section, items }) {
+  const technologies = items?.length ? items : DEFAULT_TECHNOLOGIES;
+
   const {
     scrollRef,
     viewportRef,
@@ -244,8 +252,8 @@ export default function LabTechnology() {
     >
       <SectionHeading
         onDark
-        title="Precision instruments, trusted science"
-        subtitle="Modern diagnostics powered by digital workflows and accredited laboratory practice."
+        title={section?.title || "Precision instruments, trusted science"}
+        subtitle={section?.subtitle || "Modern diagnostics powered by digital workflows and accredited laboratory practice."}
         actions={
           <div className="hidden items-center gap-3 sm:flex">
             <CarouselButton
@@ -273,7 +281,7 @@ export default function LabTechnology() {
         >
           {technologies.map((tech, idx) => (
             <article
-              key={tech.title}
+              key={tech.id || tech.title}
               data-tech-card
               style={cardWidthStyle}
               className={cardClassName}
@@ -284,7 +292,7 @@ export default function LabTechnology() {
                 <div className="flex items-center gap-3.5 border-b border-slate-100 bg-sky-50/60 px-5 py-4">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white shadow-card ring-1 ring-sky-100 transition-transform duration-300 group-hover:scale-105">
                     <span className="h-7 w-7">
-                      <TechIcon index={idx} />
+                      <TechIcon iconKey={tech.iconKey} index={idx} />
                     </span>
                   </span>
 
@@ -293,18 +301,23 @@ export default function LabTechnology() {
                       {tech.title}
                     </h3>
                     <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs">
-                      <span className="font-semibold text-sky-600">{tech.highlight}</span>
+                      <span className="font-semibold text-sky-600">
+                        {tech.badge || tech.highlight}
+                      </span>
                       <span className="h-1 w-1 rounded-full bg-[#FF6B6B]" aria-hidden="true" />
-                      <span className="text-slate-500">{tech.support}</span>
+                      <span className="text-slate-500">{tech.note || tech.support}</span>
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-1 flex-col p-5">
                   <ul className="flex-1 space-y-2.5">
-                    {tech.features
-                      .flatMap((group) => group.items)
-                      .map((item) => (
+                    {/* Edited rows store one bullet per line; the built-in
+                        fallback still carries its grouped feature lists. */}
+                    {(tech.features
+                      ? tech.features.flatMap((group) => group.items)
+                      : toLines(tech.description)
+                    ).map((item) => (
                         <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
                           <span
                             className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]"

@@ -30,7 +30,7 @@ function Stars({ rating }) {
   );
 }
 
-export default function Reviews() {
+export default function Reviews({ section }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -115,8 +115,8 @@ export default function Reviews() {
     >
       <SectionHeading
         onDark
-        title="What our patients say"
-        subtitle="Patients, physicians, and partners who trust our laboratory every day."
+        title={section?.title || "What our patients say"}
+        subtitle={section?.subtitle || "Patients, physicians, and partners who trust our laboratory every day."}
         actions={
           <div className="hidden items-center gap-3 sm:flex">
             <CarouselButton

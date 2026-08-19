@@ -7,26 +7,68 @@ import { usePathname, useRouter } from "next/navigation";
 import { BuildingIcon, LocationIcon, PhoneIcon, EmailIcon, FacebookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, SearchIcon, MobileNavIcon } from "./NavIcons";
 import ReportModal from "./ReportModal";
 import { tests } from "@/data/staticData";
+import { mailHref, telHref, useSiteHeader } from "@/lib/useSiteChrome";
 
+/* An entry with `children` renders as a dropdown on desktop and an expanding
+   group in the mobile drawer. `href` on the group is what the label itself
+   points at, and what marks the group active. */
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/tests", label: "Our Tests" },
   { href: "/packages", label: "Packages" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About Us" },
-  { href: "/contact", label: "Contact Us" },
+  {
+    href: "/about",
+    label: "About",
+    children: [
+      { href: "/about", label: "About Us" },
+      { href: "/contact", label: "Contact Us" },
+      { href: "/blog", label: "Blog" },
+      { href: "/gallery", label: "Gallery" },
+    ],
+  },
 ];
+
+/** True when the current path is the group itself or any of its children. */
+function isGroupActive(link, pathname) {
+  if (pathname === link.href) return true;
+  return (link.children || []).some(
+    (child) => pathname === child.href || pathname.startsWith(`${child.href}/`),
+  );
+}
+
+function ChevronDown({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  // Label of the open desktop dropdown, and of the expanded drawer group.
+  const [openMenu, setOpenMenu] = useState(null);
+  const [openMobileGroup, setOpenMobileGroup] = useState(null);
+  const menuRef = useRef(null);
   // The report popover is positioned against this button on desktop.
   const reportBtnRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
+  const site = useSiteHeader();
 
   // ── Search state ─────────────────────────────────────────────────
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,6 +174,11 @@ export default function Navbar() {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
         setShowSearchDropdown(false);
       }
+      // Pointer users can open the dropdown by click as well as hover, so it
+      // needs the same outside-click dismissal as the search results.
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpenMenu(null);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -156,6 +203,7 @@ export default function Navbar() {
       setIsOpen(false);
       setMobileSearchOpen(false);
       setShowSearchDropdown(false);
+      setOpenMenu(null);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -184,6 +232,7 @@ export default function Navbar() {
     setIsOpen(false);
     setMobileSearchOpen(false);
     setShowSearchDropdown(false);
+    setOpenMenu(null);
   }, [pathname]);
 
   const searchKeyDown = (e) => {
@@ -268,49 +317,76 @@ export default function Navbar() {
         four social icons will not fit a phone — so below `lg` it condenses to
         the two things a visitor actually taps: call and WhatsApp.
       */}
-      <div className="bg-sky-600 text-white py-1.5 border-b border-sky-700">
+      <div
+        className="bg-sky-600 text-white py-1.5 border-b border-sky-700"
+        /* Header settings can switch the whole strip off without clearing it. */
+        hidden={site.isActive === false}
+      >
         <div className="mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-3 text-xs font-medium lg:gap-4 lg:text-sm">
             <div className="flex min-w-0 items-center gap-3 lg:flex-wrap lg:gap-6">
-              <span className="hidden font-semibold tracking-wide lg:flex lg:items-center lg:gap-1.5">
-                <BuildingIcon size={16} className="text-white" />
-                Cutis Lab Path
-              </span>
-              <span className="hidden opacity-80 lg:inline">|</span>
-              <span className="hidden lg:flex lg:items-center lg:gap-1.5">
-                <LocationIcon size={16} className="text-white" />
-                Kathmandu, Bagmati, Nepal
-              </span>
-              <span className="hidden opacity-80 lg:inline">|</span>
-              <a
-                href="tel:+9779861848382"
-                className="flex shrink-0 items-center gap-1.5 hover:text-sky-100"
-              >
-                <PhoneIcon size={15} className="text-white" />
-                +977 986-1848382
-              </a>
-              <span className="hidden opacity-80 lg:inline">|</span>
-              <a
-                href="mailto:info@cutispathlab.com"
-                className="hidden truncate hover:text-sky-100 lg:flex lg:items-center lg:gap-1.5"
-              >
-                <EmailIcon size={16} className="text-white" />
-                info@cutispathlab.com
-              </a>
+              {site.brandName && (
+                <>
+                  <span className="hidden font-semibold tracking-wide lg:flex lg:items-center lg:gap-1.5">
+                    <BuildingIcon size={16} className="text-white" />
+                    {site.brandName}
+                  </span>
+                  <span className="hidden opacity-80 lg:inline">|</span>
+                </>
+              )}
+              {site.region && (
+                <>
+                  <span className="hidden lg:flex lg:items-center lg:gap-1.5">
+                    <LocationIcon size={16} className="text-white" />
+                    {site.region}
+                  </span>
+                  <span className="hidden opacity-80 lg:inline">|</span>
+                </>
+              )}
+              {site.phone && (
+                <a
+                  href={telHref(site.phone)}
+                  className="flex shrink-0 items-center gap-1.5 hover:text-sky-100"
+                >
+                  <PhoneIcon size={15} className="text-white" />
+                  {site.phone}
+                </a>
+              )}
+              {site.email && (
+                <>
+                  <span className="hidden opacity-80 lg:inline">|</span>
+                  <a
+                    href={mailHref(site.email)}
+                    className="hidden truncate hover:text-sky-100 lg:flex lg:items-center lg:gap-1.5"
+                  >
+                    <EmailIcon size={16} className="text-white" />
+                    {site.email}
+                  </a>
+                </>
+              )}
             </div>
+            {/* A social link with no URL saved simply drops out of the strip. */}
             <div className="flex shrink-0 items-center gap-3">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
-                <FacebookIcon size={18} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
-                <InstagramIcon size={18} />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="transition hover:text-sky-300">
-                <TwitterIcon size={18} />
-              </a>
-              <a href="https://wa.me/9779861848382" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-sky-300">
-                <WhatsAppIcon size={17} />
-              </a>
+              {site.facebookUrl && (
+                <a href={site.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-sky-300">
+                  <FacebookIcon size={18} />
+                </a>
+              )}
+              {site.instagramUrl && (
+                <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-sky-300">
+                  <InstagramIcon size={18} />
+                </a>
+              )}
+              {site.xUrl && (
+                <a href={site.xUrl} target="_blank" rel="noopener noreferrer" aria-label="X" className="transition hover:text-sky-300">
+                  <TwitterIcon size={18} />
+                </a>
+              )}
+              {site.whatsappUrl && (
+                <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-sky-300">
+                  <WhatsAppIcon size={17} />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -342,23 +418,96 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center gap-1 ml-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-4 py-2.5 text-base font-medium rounded-lg transition relative ${
-                    pathname === link.href
-                      ? "text-sky-600"
-                      : "text-slate-800 hover:text-sky-600"
-                  }`}
-                >
-                  {link.label}
-                  {pathname === link.href && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-[#FF6B6B] rounded-full"></span>
-                  )}
-                </Link>
-              ))}
+            <div className="hidden lg:flex items-center gap-1 ml-8" ref={menuRef}>
+              {navLinks.map((link) => {
+                if (!link.children) {
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`px-4 py-2.5 text-base font-medium rounded-lg transition relative ${
+                        pathname === link.href
+                          ? "text-sky-600"
+                          : "text-slate-800 hover:text-sky-600"
+                      }`}
+                    >
+                      {link.label}
+                      {pathname === link.href && (
+                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-[#FF6B6B] rounded-full"></span>
+                      )}
+                    </Link>
+                  );
+                }
+
+                const open = openMenu === link.label;
+                const active = isGroupActive(link, pathname);
+
+                return (
+                  <div
+                    key={link.label}
+                    className="relative"
+                    onMouseEnter={() => setOpenMenu(link.label)}
+                    onMouseLeave={() => setOpenMenu(null)}
+                  >
+                    <button
+                      type="button"
+                      aria-haspopup="true"
+                      aria-expanded={open}
+                      onFocus={() => setOpenMenu(link.label)}
+                      /* Hover already opens the panel, so a click on an open
+                         menu would just close what the pointer revealed. It
+                         goes to the group's own page instead; on touch, where
+                         there is no hover, the first tap opens it. */
+                      onClick={() => {
+                        if (open) router.push(link.href);
+                        else setOpenMenu(link.label);
+                      }}
+                      className={`flex items-center gap-1.5 px-4 py-2.5 text-base font-medium rounded-lg transition relative ${
+                        active ? "text-sky-600" : "text-slate-800 hover:text-sky-600"
+                      }`}
+                    >
+                      {link.label}
+                      <ChevronDown
+                        className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+                      />
+                      {active && (
+                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-[#FF6B6B] rounded-full"></span>
+                      )}
+                    </button>
+
+                    {open && (
+                      /* The wrapper's top padding bridges the gap between the
+                         button and the panel, so the hover doesn't drop. */
+                      <div className="absolute left-0 top-full z-50 pt-2">
+                        <div className="min-w-[13.5rem] rounded-xl border border-slate-100 bg-white p-1.5 shadow-[0_12px_30px_rgba(15,23,42,0.12)]">
+                          {link.children.map((child) => {
+                            const childActive = pathname === child.href;
+                            return (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                onClick={() => setOpenMenu(null)}
+                                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.95rem] font-medium transition-colors ${
+                                  childActive
+                                    ? "bg-sky-50 text-sky-700"
+                                    : "text-slate-700 hover:bg-slate-50 hover:text-sky-600"
+                                }`}
+                              >
+                                <MobileNavIcon
+                                  href={child.href}
+                                  size={18}
+                                  className={childActive ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                                />
+                                {child.label}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
              {/* Desktop Right */}
@@ -516,6 +665,70 @@ export default function Navbar() {
               {/* Icon + label rows split by hairlines, rather than floating pills */}
               <nav className="divide-y divide-slate-100">
                 {navLinks.map((link) => {
+                  if (link.children) {
+                    const groupActive = isGroupActive(link, pathname);
+                    // Open by default when you are already inside the group.
+                    const expanded = openMobileGroup === null ? groupActive : openMobileGroup === link.label;
+
+                    return (
+                      <div key={link.label}>
+                        <button
+                          type="button"
+                          aria-expanded={expanded}
+                          onClick={() =>
+                            setOpenMobileGroup(expanded ? "" : link.label)
+                          }
+                          className={`flex w-full items-center gap-4 px-5 py-4 text-left text-[15px] transition-colors ${
+                            groupActive
+                              ? "bg-sky-50/60 font-semibold text-sky-700"
+                              : "font-medium text-slate-700 active:bg-slate-50"
+                          }`}
+                        >
+                          <MobileNavIcon
+                            href={link.href}
+                            className={groupActive ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                          />
+                          <span className="flex-1">{link.label}</span>
+                          <ChevronDown
+                            className={`shrink-0 text-slate-400 transition-transform duration-200 ${
+                              expanded ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+
+                        {expanded && (
+                          <div className="bg-slate-50/70 pb-1">
+                            {link.children.map((child) => {
+                              const childActive = pathname === child.href;
+                              return (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  onClick={closeMobileMenu}
+                                  className={`flex items-center gap-3 py-3 pl-14 pr-5 text-[14.5px] transition-colors ${
+                                    childActive
+                                      ? "font-semibold text-sky-700"
+                                      : "font-medium text-slate-600 active:bg-slate-100"
+                                  }`}
+                                >
+                                  <MobileNavIcon
+                                    href={child.href}
+                                    size={18}
+                                    className={childActive ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                                  />
+                                  <span className="flex-1">{child.label}</span>
+                                  {childActive && (
+                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]" aria-hidden />
+                                  )}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
                   const active = pathname === link.href;
                   return (
                     <Link
@@ -555,7 +768,7 @@ export default function Navbar() {
                 Report
               </button>
               <a
-                href="tel:+9779861848382"
+                href={telHref(site.phone)}
                 className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700"
               >
                 <PhoneIcon size={16} />
@@ -667,18 +880,20 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Floating WhatsApp — phone only */}
-      <a
-        href="https://wa.me/9779861848382"
-        className="sm:hidden fixed bottom-[5.5rem] right-3 z-40"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp support"
-      >
-        <div className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
-          <WhatsAppIcon size={22} className="text-white" />
-        </div>
-      </a>
+      {/* Floating WhatsApp — phone only, and only with a link saved */}
+      {site.whatsappUrl && (
+        <a
+          href={site.whatsappUrl}
+          className="sm:hidden fixed bottom-[5.5rem] right-3 z-40"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp support"
+        >
+          <div className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
+            <WhatsAppIcon size={22} className="text-white" />
+          </div>
+        </a>
+      )}
 
       {/* Report lookup — portals itself to <body>, so it is safe from the
           backdrop-blur containing block on <nav>. */}

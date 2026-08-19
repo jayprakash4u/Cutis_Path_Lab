@@ -3,10 +3,13 @@
 import React from "react";
 import { Section, SectionHeading } from "@/components/ui/Section";
 
-const tips = [
+/* Shown when the section has no rows, and the source of the artwork the
+   editable rows pick by `iconKey`. */
+const DEFAULT_TIPS = [
   {
     color: "#4a9aba",
     borderColor: "#FF6B6B",
+    iconKey: "fasting",
     title: "FASTING",
     description:
       "Fast for 8-12 hours before blood tests. Only water is allowed during fasting period.",
@@ -120,6 +123,7 @@ const tips = [
   {
     color: "#4a9aba",
     borderColor: "#FF6B6B",
+    iconKey: "hydration",
     title: "HYDRATION",
     description:
       "Drink plenty of water before your test to make blood draw easier.",
@@ -178,6 +182,7 @@ const tips = [
   {
     color: "#4a9aba",
     borderColor: "#FF6B6B",
+    iconKey: "alcohol",
     title: "NO ALCOHOL",
     description:
       "Refrain from alcohol consumption 24 hours before your health checkup.",
@@ -243,6 +248,8 @@ const tips = [
   },
 ];
 
+const ICONS = Object.fromEntries(DEFAULT_TIPS.map((tip) => [tip.iconKey, tip.icon]));
+
 const StepCard = ({ borderColor, title, description, icon: Icon }) => (
   <div
     className="flex flex-col items-center rounded-2xl border border-slate-200 border-t-4 bg-white p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover sm:p-6"
@@ -260,24 +267,26 @@ const StepCard = ({ borderColor, title, description, icon: Icon }) => (
   </div>
 );
 
-export default function HealthTips() {
+export default function HealthTips({ section, items }) {
+  const tips = items?.length ? items : DEFAULT_TIPS;
+
   return (
     <Section tone="white">
       <SectionHeading
-        title="How to prepare for your health checkup"
-        subtitle="Follow these guidelines before your visit so your results are as accurate as possible."
+        title={section?.title || "How to prepare for your health checkup"}
+        subtitle={section?.subtitle || "Follow these guidelines before your visit so your results are as accurate as possible."}
       />
 
       <div>
         {/* Cards */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 sm:gap-6">
-          {tips.map((tip) => (
+          {tips.map((tip, i) => (
             <StepCard
-              key={tip.title}
-              borderColor={tip.borderColor}
+              key={tip.id || tip.title}
+              borderColor={tip.borderColor || "#FF6B6B"}
               title={tip.title}
               description={tip.description}
-              icon={tip.icon}
+              icon={ICONS[tip.iconKey] || DEFAULT_TIPS[i % DEFAULT_TIPS.length].icon}
             />
           ))}
         </div>

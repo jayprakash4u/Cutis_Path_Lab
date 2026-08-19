@@ -12,7 +12,9 @@ const CORAL = "#FF6B6B";
  * Common geometry so the set reads as a family: 2px primary strokes, 1.8px
  * secondary, round caps and joins throughout.
  */
-function QuickIcon({ index }) {
+const ICON_ORDER = ["reports", "collection", "callback", "lab"];
+
+function QuickIcon({ iconKey, index }) {
   const common = {
     viewBox: "0 0 48 48",
     fill: "none",
@@ -76,30 +78,37 @@ function QuickIcon({ index }) {
     </svg>,
   ];
 
-  return icons[index] ?? icons[0];
+  // Rows carry an icon key; anything unrecognised falls back to position.
+  const byKey = ICON_ORDER.indexOf(iconKey);
+  return icons[byKey >= 0 ? byKey : index] ?? icons[0];
 }
 
-const actions = [
+/* Shown when the section has no rows — an empty table must not blank the page. */
+const DEFAULT_ACTIONS = [
   {
     title: "Download Your Reports",
     description: "Your health records are available with us — click here to download.",
     // No reports portal exists yet; reports currently go out over WhatsApp/Gmail.
-    href: "/contact",
+    linkUrl: "/contact",
+    iconKey: "reports",
   },
   {
     title: "Book Home Sample Collection",
     description: "We're at your doorstep within the time frame, with aseptic precautions.",
-    href: "#book-test",
+    linkUrl: "#book-test",
+    iconKey: "collection",
   },
   {
     title: "Request A Call Back",
     description: "Our customer support team will get in touch with you soon.",
-    href: "/contact",
+    linkUrl: "/contact",
+    iconKey: "callback",
   },
   {
     title: "Find Nearest Lab",
     description: "We're available at your nearest location — click here to find us.",
-    href: "/contact",
+    linkUrl: "/contact",
+    iconKey: "lab",
   },
 ];
 
@@ -108,18 +117,20 @@ const actions = [
  * SectionHeading — it is a navigation shortcut row, not a content section, so a
  * headline above it would compete with the hero.
  */
-export default function QuickActions() {
+export default function QuickActions({ items }) {
+  const actions = items?.length ? items : DEFAULT_ACTIONS;
+
   return (
     <Section tone="white" size="compact">
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {actions.map((action, idx) => (
-          <li key={action.title}>
+          <li key={action.id || action.title}>
             <Link
-              href={action.href}
+              href={action.linkUrl || "/contact"}
               className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-[#FF6B6B] hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 sm:p-5"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#FF6B6B] bg-white p-2 transition-colors duration-300 group-hover:bg-[#FF6B6B]/5">
-                <QuickIcon index={idx} />
+                <QuickIcon iconKey={action.iconKey} index={idx} />
               </span>
 
               <span className="min-w-0">

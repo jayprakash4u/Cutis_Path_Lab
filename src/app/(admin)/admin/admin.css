@@ -466,11 +466,39 @@ textarea.admin-input {
 }
 
 .admin-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
   padding: 0.9rem 0.7rem 0.3rem;
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--admin-faint);
+  transition: color 0.15s ease;
+}
+
+/* The group header doubles as the collapse toggle. */
+button.admin-nav-group:hover {
+  color: var(--admin-ink, #0f172a);
+}
+
+.admin-nav-group__chevron {
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.admin-nav-group__chevron[data-open="false"] {
+  transform: rotate(-90deg);
+}
+
+/* Count of what is hidden, so a collapsed group still says how big it is. */
+.admin-nav-group__count {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
   color: var(--admin-faint);
 }
 

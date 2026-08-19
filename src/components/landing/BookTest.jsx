@@ -6,7 +6,7 @@ import { bookingCreateSchema, bookingQuickSchema } from "@/lib/validation/bookin
 import { parseOrErrors } from "@/lib/validation/common";
 import { Section, SectionHeading } from "@/components/ui/Section";
 
-export default function BookTest() {
+export default function BookTest({ section }) {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -180,8 +180,8 @@ export default function BookTest() {
           <div>
             <SectionHeading
               onDark
-              title="Book your test today"
-              subtitle="Get accurate pathology results from the comfort of your home. Our expert team will collect your sample and deliver results digitally."
+              title={section?.title || "Book your test today"}
+              subtitle={section?.subtitle || "Get accurate pathology results from the comfort of your home. Our expert team will collect your sample and deliver results digitally."}
               className="!mb-6"
             />
 

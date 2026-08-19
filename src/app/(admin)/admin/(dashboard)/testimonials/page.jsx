@@ -7,6 +7,7 @@ import AdminPagination, {
   ADMIN_PAGE_SIZE,
   paginate,
 } from "@/components/admin/AdminPagination";
+import ImageField from "@/components/admin/ImageField";
 import {
   AdminCard,
   BusyButton,
@@ -311,14 +312,12 @@ export default function AdminTestimonialsPage() {
             />
           </Field>
           <div className="sm:col-span-2">
-            <Field label="Photo URL">
-              <input
-                name="imageUrl"
-                className={inputClass}
-                value={form.imageUrl}
-                onChange={onChange}
-              />
-            </Field>
+            <ImageField
+              label="Photo"
+              folder="testimonials"
+              value={form.imageUrl}
+              onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+            />
           </div>
           <div className="sm:col-span-2">
             <Field label="Review *">

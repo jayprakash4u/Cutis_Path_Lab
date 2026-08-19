@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ServicesGrid from "@/components/sections/ServicesGrid";
 import PagePosterHero from "@/components/sections/PagePosterHero";
-import { services } from "@/data/staticData";
+import { resolveServiceCategory } from "@/lib/serviceCategories";
 
 const CATEGORIES = [
   { id: "all", name: "All Services" },
@@ -15,44 +15,41 @@ const CATEGORIES = [
   { id: "health", name: "Health Check" },
 ];
 
-const CATEGORY_KEYWORDS = {
-  genetics: ["gene", "dna", "maternal", "newborn", "molecular", "cytogen", "microarray"],
-  pathology: [
-    "pathology",
-    "histo",
-    "cyto",
-    "blood",
-    "urine",
-    "microbio",
-    "serolog",
-    "immuno",
-    "coagulat",
-    "chemic",
-    "marker",
-    "allergy",
-    "bone marrow",
-    "flow",
-  ],
-  imaging: ["x-ray", "scan", "ultrasound", "mri"],
-};
-
-function getCategory(serviceName) {
-  const name = String(serviceName || "").toLowerCase();
-  if (CATEGORY_KEYWORDS.genetics.some((keyword) => name.includes(keyword))) {
-    return "genetics";
-  }
-  if (CATEGORY_KEYWORDS.pathology.some((keyword) => name.includes(keyword))) {
-    return "pathology";
-  }
-  if (CATEGORY_KEYWORDS.imaging.some((keyword) => name.includes(keyword))) {
-    return "imaging";
-  }
-  return "health";
-}
-
 export default function ServicesPage() {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadServices() {
+      try {
+        setLoading(true);
+        setError("");
+        const res = await fetch("/api/services");
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || "Failed to load services");
+        }
+        if (!cancelled) setServices(Array.isArray(json.data) ? json.data : []);
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message || "Could not load services");
+          setServices([]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadServices();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const filteredServices = useMemo(() => {
     let filtered = services;
@@ -61,19 +58,19 @@ export default function ServicesPage() {
     if (query) {
       filtered = filtered.filter(
         (service) =>
-          service.name.toLowerCase().includes(query) ||
-          service.description.toLowerCase().includes(query),
+          (service.name || "").toLowerCase().includes(query) ||
+          (service.description || "").toLowerCase().includes(query),
       );
     }
 
     if (activeCategory !== "all") {
       filtered = filtered.filter(
-        (service) => getCategory(service.name) === activeCategory,
+        (service) => resolveServiceCategory(service) === activeCategory,
       );
     }
 
     return filtered;
-  }, [searchQuery, activeCategory]);
+  }, [services, searchQuery, activeCategory]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -138,7 +135,30 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <ServicesGrid services={filteredServices} />
+        {error ? (
+          <div className="max-w-7xl mx-auto px-6 pt-6">
+            <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </p>
+          </div>
+        ) : null}
+
+        {loading ? (
+          <section className="py-12 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-56 animate-pulse rounded-xl border border-slate-200 bg-white"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : (
+          <ServicesGrid services={filteredServices} />
+        )}
       </main>
 
       <Footer />

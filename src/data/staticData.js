@@ -1102,7 +1102,7 @@ export const services = [
     id: 5,
     name: "Newborn Screening",
     description:
-      "At LifeLine Lab, we offer advanced newborn screening to ensure early detection of serious yet treatable genetic, metabolic, and endocrine disorders.",
+      "At Cutis Path Lab, we offer advanced newborn screening to ensure early detection of serious yet treatable genetic, metabolic, and endocrine disorders.",
     icon: "baby",
   },
   {

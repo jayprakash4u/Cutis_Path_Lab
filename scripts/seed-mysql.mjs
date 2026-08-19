@@ -9,7 +9,22 @@
  */
 import { randomUUID } from "crypto";
 import { connect, describeTarget } from "./db.mjs";
-import { tests as staticTests } from "../src/data/staticData.js";
+import {
+  services as staticServices,
+  tests as staticTests,
+} from "../src/data/staticData.js";
+
+// ── Services ──────────────────────────────────────────────────────
+// staticData carries the copy; the discipline each service belongs to is
+// editorial, so it is mapped by id here rather than guessed from the name.
+const SERVICE_CATEGORIES = {
+  1: "genetics", 2: "genetics", 3: "genetics", 4: "genetics", 5: "genetics",
+  6: "pathology", 7: "pathology", 8: "pathology", 9: "pathology",
+  10: "genetics", 11: "health", 12: "pathology", 13: "pathology",
+  14: "pathology", 15: "pathology", 16: "pathology", 17: "pathology",
+  18: "pathology", 19: "pathology", 20: "health", 21: "health",
+  22: "pathology", 23: "pathology", 24: "pathology",
+};
 
 // ── Packages ──────────────────────────────────────────────────────
 const PACKAGE_IMAGES = {
@@ -180,6 +195,7 @@ async function main() {
       DELETE FROM \`Category\`;
       DELETE FROM \`Package\`;
       DELETE FROM \`Test\`;
+      DELETE FROM \`Service\`;
     `);
 
     // ── Tests ────────────────────────────────────────────────────
@@ -364,6 +380,26 @@ async function main() {
       galleryRows,
     );
     console.log(`  Gallery images.... ${galleryCount}`);
+
+    // ── Services ─────────────────────────────────────────────────
+    // Ids stay the staticData ids so existing /services/<id> links survive.
+    const serviceRows = staticServices.map((s, i) => [
+      String(s.id),
+      s.name,
+      s.description ?? null,
+      null,
+      SERVICE_CATEGORIES[Number(s.id)] ?? "health",
+      s.icon ?? null,
+      1,
+      i,
+    ]);
+    const serviceCount = await bulkInsert(
+      conn,
+      "Service",
+      ["id", "name", "description", "longDescription", "category", "iconKey", "isActive", "sortOrder"],
+      serviceRows,
+    );
+    console.log(`  Services.......... ${serviceCount}`);
 
     console.log("\nSeed complete.");
   } finally {
