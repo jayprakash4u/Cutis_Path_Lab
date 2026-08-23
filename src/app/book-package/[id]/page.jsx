@@ -156,7 +156,7 @@ export default function BookPackagePage() {
               {error || "The package you are looking for does not exist or has been removed."}
             </p>
             <Link href="/packages">
-              <button className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors">
+              <button className="bg-brand-600 text-white px-6 py-2 rounded-lg hover:bg-brand-700 transition-colors">
                 Back to Packages
               </button>
             </Link>
@@ -175,7 +175,7 @@ export default function BookPackagePage() {
           <div className="max-w-lg mx-auto px-4 py-20 text-center">
             <h1 className="text-2xl font-bold text-slate-900 mb-3">Booking Confirmed</h1>
             <p className="text-slate-600 mb-2">
-              Your booking for <span className="font-semibold text-sky-700">{pkg.name}</span> has
+              Your booking for <span className="font-semibold text-brand-700">{pkg.name}</span> has
               been saved.
             </p>
             <p className="text-sm text-slate-500 mb-8">
@@ -184,7 +184,7 @@ export default function BookPackagePage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/packages"
-                className="px-5 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700"
+                className="px-5 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700"
               >
                 Browse Packages
               </Link>
@@ -207,17 +207,17 @@ export default function BookPackagePage() {
       <style>{datePickerStyles}</style>
       <Navbar />
       <main className="pt-[80px] lg:pt-[88px]">
-        <section className="relative h-48 lg:h-60 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400 overflow-hidden">
+        <section className="relative h-48 lg:h-60 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400 overflow-hidden">
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative h-full max-w-6xl mx-auto px-6 flex flex-col items-center justify-center text-center">
             <Link
               href="/packages"
-              className="self-start text-sky-100 hover:text-white text-sm transition-colors mb-2"
+              className="self-start text-brand-100 hover:text-white text-sm transition-colors mb-2"
             >
               ← Back to Packages
             </Link>
             <h1 className="text-2xl lg:text-4xl font-bold text-white">{pkg.name}</h1>
-            <p className="text-sky-100 text-sm lg:text-base mt-1 max-w-lg">{pkg.description}</p>
+            <p className="text-brand-100 text-sm lg:text-base mt-1 max-w-lg">{pkg.description}</p>
             <span className="mt-2 inline-block px-4 py-1 rounded-full bg-white/20 text-white text-xs lg:text-sm font-semibold">
               Rs. {pkg.price} · {(pkg.includes || []).length} Tests Included
             </span>
@@ -227,8 +227,8 @@ export default function BookPackagePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden">
-                <div className="bg-[#FF6B6B] px-5 py-2">
+              <div className="bg-white rounded-2xl border border-brand-100 shadow-sm overflow-hidden">
+                <div className="bg-accent-500 px-5 py-2">
                   <h2 className="text-sm lg:text-base font-bold text-white">What&apos;s Included</h2>
                 </div>
                 <div className="p-5">
@@ -236,10 +236,10 @@ export default function BookPackagePage() {
                     {includeItems.map((item, index) => (
                       <div
                         key={`${item.testName}-${index}`}
-                        className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-sky-200 hover:bg-sky-50/50 transition-colors"
+                        className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-brand-200 hover:bg-brand-50/50 transition-colors"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">
+                          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold">
                             T
                           </span>
                           <div className="min-w-0">
@@ -253,13 +253,13 @@ export default function BookPackagePage() {
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
                           {item.price != null && (
-                            <span className="text-sm font-bold text-sky-600">₹{item.price}</span>
+                            <span className="text-sm font-bold text-brand-600">₹{item.price}</span>
                           )}
                           {item.testId && (
                             <button
                               type="button"
                               onClick={() => handleBookSingle(item.testId)}
-                              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+                              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white hover:bg-brand-700 transition-colors"
                             >
                               Book
                             </button>
@@ -280,16 +280,16 @@ export default function BookPackagePage() {
             <div className="lg:col-span-1">
               <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden sticky top-32"
+                className="bg-white rounded-2xl border border-brand-100 shadow-sm overflow-hidden sticky top-32"
               >
-                <div className="bg-sky-600 px-5 py-3">
+                <div className="bg-brand-600 px-5 py-3">
                   <h3 className="text-sm font-bold text-white">Book This Package</h3>
                 </div>
                 <div className="p-5 space-y-4">
-                  <div className="bg-sky-50 rounded-xl p-4 flex items-center justify-between">
+                  <div className="bg-brand-50 rounded-xl p-4 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-slate-500 mb-0.5">Package Price</p>
-                      <p className="text-2xl font-bold text-sky-600">Rs. {pkg.price}</p>
+                      <p className="text-2xl font-bold text-brand-600">Rs. {pkg.price}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-slate-500 mb-0.5">Tests Included</p>
@@ -309,7 +309,7 @@ export default function BookPackagePage() {
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                       placeholder="Your name"
                     />
                   </div>
@@ -324,7 +324,7 @@ export default function BookPackagePage() {
                       required
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                       placeholder="98xxxxxxxx"
                     />
                   </div>
@@ -338,7 +338,7 @@ export default function BookPackagePage() {
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                       placeholder="Home / collection address"
                     />
                   </div>
@@ -355,7 +355,7 @@ export default function BookPackagePage() {
                       value={formData.date}
                       onChange={handleChange}
                       style={{ colorScheme: "light" }}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 cursor-pointer"
                     />
                   </div>
 
@@ -368,7 +368,7 @@ export default function BookPackagePage() {
                       required
                       value={formData.time}
                       onChange={handleChange}
-                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 text-sm outline-none bg-white text-slate-800"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 text-sm outline-none bg-white text-slate-800"
                     >
                       <option value="">Select time…</option>
                       {[
@@ -393,7 +393,7 @@ export default function BookPackagePage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
+                    className="w-full py-3 bg-accent-500 text-white font-semibold rounded-xl hover:bg-accent-600 transition-colors text-sm disabled:opacity-60"
                   >
                     {submitting ? "Booking…" : `Book Package (Rs. ${pkg.price})`}
                   </button>
@@ -401,7 +401,7 @@ export default function BookPackagePage() {
                   {pkgTests.length > 0 && (
                     <Link
                       href={`/book?testIds=${encodeURIComponent(pkgTests.map((t) => t.id).join(","))}`}
-                      className="block w-full py-2.5 text-center text-sky-600 font-semibold text-sm hover:underline"
+                      className="block w-full py-2.5 text-center text-brand-600 font-semibold text-sm hover:underline"
                     >
                       Or book linked tests individually →
                     </Link>
@@ -421,7 +421,7 @@ export default function BookPackagePage() {
                         </span>
                       ))}
                       {includeItems.length > 4 && (
-                        <span className="px-2 py-0.5 bg-sky-50 text-sky-600 text-[10px] rounded-full font-medium">
+                        <span className="px-2 py-0.5 bg-brand-50 text-brand-600 text-[10px] rounded-full font-medium">
                           +{includeItems.length - 4} more
                         </span>
                       )}

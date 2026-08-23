@@ -105,7 +105,7 @@ export default function TestsInOffers({ section }) {
                     style={cardWidthStyle}
                     className={`flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:shadow-card-hover ${cardClassName}`}
                   >
-                    <div className="bg-[#FF6B6B] px-3 py-2">
+                    <div className="bg-accent-500 px-3 py-2">
                       <h3 className="truncate text-center text-xs font-semibold text-white sm:text-sm">
                         {test.name}
                       </h3>
@@ -113,10 +113,10 @@ export default function TestsInOffers({ section }) {
 
                     <div className="flex flex-1 flex-col p-3">
                       <div className="mb-2 flex items-center justify-between gap-1.5">
-                        <span className="truncate rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-[#FF6B6B]">
+                        <span className="truncate rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-accent-500">
                           {test.category}
                         </span>
-                        <span className="shrink-0 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-bold text-sky-600">
+                        <span className="shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-bold text-brand-600">
                           {test.discount}% OFF
                         </span>
                       </div>
@@ -129,12 +129,12 @@ export default function TestsInOffers({ section }) {
                         <div>Sample: {test.sampleType}</div>
                       </div>
 
-                      <div className="mt-auto border-t border-sky-300 pt-2">
+                      <div className="mt-auto border-t border-brand-300 pt-2">
                         {/* Stacked on mobile so the button gets a full-width
                             tap target instead of a ~40x22px one. */}
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex items-baseline gap-1.5">
-                            <span className="text-base font-bold text-sky-600">
+                            <span className="text-base font-bold text-brand-600">
                               ₹{test.discountedPrice}
                             </span>
                             <span className="text-xs text-slate-400 line-through">
@@ -143,7 +143,7 @@ export default function TestsInOffers({ section }) {
                           </div>
                           <Link
                             href={bookHref(test)}
-                            className="block w-full rounded-md bg-sky-600 px-3 py-2 text-center text-xs font-semibold text-white transition-all hover:bg-sky-700 sm:w-auto"
+                            className="block w-full rounded-md bg-brand-600 px-3 py-2 text-center text-xs font-semibold text-white transition-all hover:bg-brand-700 sm:w-auto"
                           >
                             Book
                           </Link>

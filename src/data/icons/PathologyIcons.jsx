@@ -2,9 +2,9 @@
 
 import React from "react";
 
-const primary = "#0284C7"
+const primary = "#3750A4"
 const primaryLight = "#7DD3FC"
-const accent = "#FF6B6B"
+const accent = "#C62F45"
 const accentLight = "#FFA8A8"
 
 export const BloodTestsIcon = ({ className, size = 48 }) => (

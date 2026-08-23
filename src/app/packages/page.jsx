@@ -93,8 +93,8 @@ export default function PackagesPage() {
           <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
               <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 border-t border-[#FF6B6B] z-0"></div>
-                <div className="relative z-10 inline-block bg-sky-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
+                <div className="absolute left-0 right-0 top-1/2 border-t border-accent-500 z-0"></div>
+                <div className="relative z-10 inline-block bg-brand-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
                   <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                     Our Packages
                   </h2>
@@ -166,7 +166,7 @@ export default function PackagesPage() {
               {/* Header stays put so Close is always reachable in a long list */}
               <div className="flex flex-none items-start justify-between gap-3 border-b border-slate-100 px-5 pb-4 pt-4 lg:px-6 lg:pt-6">
                 <div className="min-w-0">
-                  <span className="mb-2 inline-block rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700">
+                  <span className="mb-2 inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700">
                     {selectedPackage.category}
                   </span>
                   <h2 className="text-xl font-bold text-slate-800 lg:text-2xl">
@@ -186,9 +186,9 @@ export default function PackagesPage() {
 
               {/* Only this scrolls */}
               <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-5 lg:px-6">
-                <div className="bg-sky-50 rounded-lg p-4 mb-6">
+                <div className="bg-brand-50 rounded-lg p-4 mb-6">
                 <p className="text-sm text-slate-600 mb-1">Package Price</p>
-                <p className="text-3xl font-bold text-sky-600">Rs. {selectedPackage.price}</p>
+                <p className="text-3xl font-bold text-brand-600">Rs. {selectedPackage.price}</p>
               </div>
 
               <div className="mb-6">
@@ -205,7 +205,7 @@ export default function PackagesPage() {
                 <div className="space-y-2">
                   {(selectedPackage.includes || []).map((test, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                      <div className="w-2 h-2 bg-sky-600 rounded-full"></div>
+                      <div className="w-2 h-2 bg-brand-600 rounded-full"></div>
                       <span className="text-slate-700 text-sm font-medium">{test}</span>
                     </div>
                   ))}
@@ -252,7 +252,7 @@ export default function PackagesPage() {
                 <button
                   type="button"
                   onClick={() => handleBookPackage(selectedPackage)}
-                  className="w-full rounded-lg bg-[#FF6B6B] py-3 font-semibold text-white transition-colors hover:bg-[#e55a5a]"
+                  className="w-full rounded-lg bg-accent-500 py-3 font-semibold text-white transition-colors hover:bg-accent-600"
                 >
                   Book This Package
                 </button>

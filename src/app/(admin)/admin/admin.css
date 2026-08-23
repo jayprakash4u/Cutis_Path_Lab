@@ -29,17 +29,18 @@ body:has(.admin-app) {
   --admin-muted: #5b6b7f;
   --admin-faint: #8a9aad;
 
-  /* Brand — sky is structure, coral is reserved for urgency only */
-  --admin-sky: #0369a1;
-  --admin-sky-deep: #075985;
-  --admin-sky-wash: #eaf4fb;
-  --admin-coral: #e8505b;
+  /* Brand — taken from the Cutis seal. Blue is structure, crimson is
+     reserved for urgency only. */
+  --admin-brand: #3750A4;
+  --admin-brand-deep: #2E438A;
+  --admin-brand-wash: #EFF2FB;
+  --admin-accent: #C62F45;
 
   /* Workflow status */
   --admin-pending: #b45309;
   --admin-pending-wash: #fef6ec;
-  --admin-confirmed: #0369a1;
-  --admin-confirmed-wash: #eaf4fb;
+  --admin-confirmed: #3750A4;
+  --admin-confirmed-wash: #EFF2FB;
   --admin-done: #047857;
   --admin-done-wash: #eafaf3;
   --admin-cancelled: #64748b;
@@ -158,7 +159,7 @@ textarea.admin-input {
 }
 
 .admin-input:focus-visible {
-  border-color: var(--admin-sky);
+  border-color: var(--admin-brand);
   box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.14);
 }
 
@@ -190,12 +191,12 @@ textarea.admin-input {
 }
 
 .admin-btn-primary {
-  background: var(--admin-sky);
+  background: var(--admin-brand);
   color: #fff;
 }
 
 .admin-btn-primary:hover:not(:disabled) {
-  background: var(--admin-sky-deep);
+  background: var(--admin-brand-deep);
 }
 
 .admin-btn-ghost {
@@ -211,12 +212,12 @@ textarea.admin-input {
 
 .admin-btn-danger {
   background: var(--admin-surface);
-  border-color: #f3ccd0;
+  border-color: #F1BBC3;
   color: #b3323d;
 }
 
 .admin-btn-danger:hover:not(:disabled) {
-  background: #fdf2f3;
+  background: #FCEDF0;
   border-color: #e9b4ba;
 }
 
@@ -230,7 +231,7 @@ textarea.admin-input {
 .admin-btn-primary:focus-visible,
 .admin-btn-ghost:focus-visible,
 .admin-btn-danger:focus-visible {
-  outline: 2px solid var(--admin-sky);
+  outline: 2px solid var(--admin-brand);
   outline-offset: 2px;
 }
 
@@ -332,8 +333,8 @@ textarea.admin-input {
 
 .admin-note--error {
   color: #9f2933;
-  background: #fdf2f3;
-  border-color: #f3ccd0;
+  background: #FCEDF0;
+  border-color: #F1BBC3;
 }
 
 .admin-note--success {
@@ -449,8 +450,8 @@ textarea.admin-input {
 }
 
 .admin-nav-link[data-active="true"] {
-  background: var(--admin-sky-wash);
-  color: var(--admin-sky-deep);
+  background: var(--admin-brand-wash);
+  color: var(--admin-brand-deep);
   font-weight: 600;
 }
 
@@ -579,7 +580,7 @@ button.admin-nav-group:hover {
 }
 
 .admin-modal__close:focus-visible {
-  outline: 2px solid var(--admin-sky);
+  outline: 2px solid var(--admin-brand);
   outline-offset: 2px;
 }
 
@@ -757,7 +758,7 @@ button.admin-nav-group:hover {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--admin-sky);
+  color: var(--admin-brand);
 }
 
 .admin-login-card__title {
@@ -803,7 +804,7 @@ button.admin-nav-group:hover {
 }
 
 .admin-login-input:focus-visible {
-  border-color: var(--admin-sky);
+  border-color: var(--admin-brand);
   box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.14);
 }
 
@@ -819,7 +820,7 @@ button.admin-nav-group:hover {
   padding: 0.75rem 1rem;
   border: none;
   border-radius: 9px;
-  background: var(--admin-sky);
+  background: var(--admin-brand);
   color: #fff;
   font-family: inherit;
   font-size: 0.875rem;
@@ -829,11 +830,11 @@ button.admin-nav-group:hover {
 }
 
 .admin-login-submit:hover:not(:disabled) {
-  background: var(--admin-sky-deep);
+  background: var(--admin-brand-deep);
 }
 
 .admin-login-submit:focus-visible {
-  outline: 2px solid var(--admin-sky);
+  outline: 2px solid var(--admin-brand);
   outline-offset: 2px;
 }
 

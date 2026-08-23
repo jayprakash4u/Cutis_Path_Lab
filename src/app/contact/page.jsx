@@ -54,20 +54,20 @@ const QUICK_CONTACTS = [
           cx="60"
           cy="60"
           r="56"
-          fill="#e8f4fd"
-          stroke="#0284c7"
+          fill="#EFF2FB"
+          stroke="#3750A4"
           strokeWidth="2"
         />
         <path
           d="M38 34 L48 34 Q52 34 53 38 L56 50 Q57 54 54 56 L50 58 Q56 70 62 76 L64 72 Q66 69 70 70 L82 73 Q86 74 86 78 L86 88 Q86 92 82 92 L78 92 Q52 92 34 54 Q28 40 34 36 Q36 34 38 34Z"
-          fill="#bae6fd"
-          stroke="#0284c7"
+          fill="#C3CDEE"
+          stroke="#3750A4"
           strokeWidth="2.2"
           strokeLinejoin="round"
         />
-        <circle cx="82" cy="38" r="16" fill="#FF6B6B" opacity="0.2" />
-        <circle cx="82" cy="38" r="11" fill="#FF6B6B" opacity="0.35" />
-        <circle cx="82" cy="38" r="7" fill="#FF6B6B" />
+        <circle cx="82" cy="38" r="16" fill="#C62F45" opacity="0.2" />
+        <circle cx="82" cy="38" r="11" fill="#C62F45" opacity="0.35" />
+        <circle cx="82" cy="38" r="7" fill="#C62F45" />
         <line
           x1="82"
           y1="33"
@@ -106,26 +106,26 @@ const QUICK_CONTACTS = [
           cx="60"
           cy="60"
           r="56"
-          fill="#e8f4fd"
-          stroke="#0284c7"
+          fill="#EFF2FB"
+          stroke="#3750A4"
           strokeWidth="2"
         />
         <path
           d="M28 52 Q28 28 60 28 Q92 28 92 52 Q92 72 60 72 Q51 72 44 68 L28 76 L33 62 Q28 58 28 52Z"
-          fill="#bae6fd"
-          stroke="#0284c7"
+          fill="#C3CDEE"
+          stroke="#3750A4"
           strokeWidth="2.2"
           strokeLinejoin="round"
         />
         <path
           d="M43 40 L51 40 Q54 40 54.5 43 L56 50 Q56.5 53 54 54.5 L52 56 Q55 62 58 65 L60 63 Q62 61 65 62 L72 64 Q75 65 75 68 L75 74 Q75 77 72 77 L69 77 Q52 77 40 56 Q35 46 40 41 Q41 40 43 40Z"
-          fill="#0284c7"
+          fill="#3750A4"
         />
         <circle
           cx="82"
           cy="84"
           r="14"
-          fill="#FF6B6B"
+          fill="#C62F45"
           stroke="#fff"
           strokeWidth="2"
         />
@@ -156,14 +156,14 @@ const QUICK_CONTACTS = [
           cx="60"
           cy="60"
           r="56"
-          fill="#e8f4fd"
-          stroke="#0284c7"
+          fill="#EFF2FB"
+          stroke="#3750A4"
           strokeWidth="2"
         />
         <path
           d="M30 60 Q30 34 60 34 Q90 34 90 60"
           fill="none"
-          stroke="#0284c7"
+          stroke="#3750A4"
           strokeWidth="3"
           strokeLinecap="round"
         />
@@ -173,8 +173,8 @@ const QUICK_CONTACTS = [
           width="14"
           height="22"
           rx="7"
-          fill="#bae6fd"
-          stroke="#0284c7"
+          fill="#C3CDEE"
+          stroke="#3750A4"
           strokeWidth="2.2"
         />
         <rect
@@ -183,7 +183,7 @@ const QUICK_CONTACTS = [
           width="8"
           height="14"
           rx="4"
-          fill="#0284c7"
+          fill="#3750A4"
           opacity="0.4"
         />
         <rect
@@ -192,8 +192,8 @@ const QUICK_CONTACTS = [
           width="14"
           height="22"
           rx="7"
-          fill="#bae6fd"
-          stroke="#0284c7"
+          fill="#C3CDEE"
+          stroke="#3750A4"
           strokeWidth="2.2"
         />
         <rect
@@ -202,13 +202,13 @@ const QUICK_CONTACTS = [
           width="8"
           height="14"
           rx="4"
-          fill="#0284c7"
+          fill="#3750A4"
           opacity="0.4"
         />
         <path
           d="M38 76 Q38 88 60 88 Q82 88 82 76"
           fill="none"
-          stroke="#0284c7"
+          stroke="#3750A4"
           strokeWidth="2.5"
           strokeLinecap="round"
         />
@@ -217,7 +217,7 @@ const QUICK_CONTACTS = [
           y1="88"
           x2="60"
           y2="96"
-          stroke="#0284c7"
+          stroke="#3750A4"
           strokeWidth="2.5"
           strokeLinecap="round"
         />
@@ -225,7 +225,7 @@ const QUICK_CONTACTS = [
           cx="60"
           cy="98"
           r="5"
-          fill="#FF6B6B"
+          fill="#C62F45"
           stroke="#fff"
           strokeWidth="1.5"
         />
@@ -238,7 +238,7 @@ const QUICK_CONTACTS = [
           strokeWidth="1.8"
           strokeLinecap="round"
         />
-        <rect x="44" y="54" width="32" height="16" rx="8" fill="#FF6B6B" />
+        <rect x="44" y="54" width="32" height="16" rx="8" fill="#C62F45" />
         <text
           x="60"
           y="65"
@@ -378,7 +378,7 @@ function ContactPageContent() {
     `w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl bg-white text-slate-900 placeholder:text-slate-400 transition-colors outline-none text-sm ${
       fieldErrors[key]
         ? "border border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-100"
-        : "border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+        : "border border-slate-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-200"
     }`;
 
   const handleChange = (e) => {
@@ -513,7 +513,7 @@ function ContactPageContent() {
                   key={index}
                   className="flex items-center gap-3 lg:gap-4 p-2 lg:p-4 rounded-lg lg:rounded-xl bg-slate-50"
                 >
-                  <div className="w-8 lg:w-12 h-8 lg:h-12 rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 bg-sky-100">
+                  <div className="w-8 lg:w-12 h-8 lg:h-12 rounded-lg lg:rounded-xl flex items-center justify-center flex-shrink-0 bg-brand-100">
                     {item.icon}
                   </div>
                   <div>
@@ -536,7 +536,7 @@ function ContactPageContent() {
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-16">
               {/* Contact Form - title changes based on activeTab */}
               <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                <div className="bg-accent-500 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                   <h2 className="text-sm lg:text-xl font-bold text-white">
                     {CONTENT.FORM_TITLES[activeTab]}
                   </h2>
@@ -721,7 +721,7 @@ function ContactPageContent() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-2.5 lg:py-3.5 bg-sky-600 text-white text-xs lg:text-sm font-semibold rounded-lg lg:rounded-xl hover:bg-sky-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full py-2.5 lg:py-3.5 bg-brand-600 text-white text-xs lg:text-sm font-semibold rounded-lg lg:rounded-xl hover:bg-brand-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {submitting ? "Sending..." : "Send Message"}
                   </button>
@@ -730,7 +730,7 @@ function ContactPageContent() {
 
               {/* Contact Info - from CONTENT.CONTACT_INFO */}
               <div className="space-y-4 lg:space-y-8 w-full">
-                <div className="bg-sky-600 w-full px-4 lg:px-6 py-1.5 lg:py-2 rounded-tr-xl">
+                <div className="bg-brand-600 w-full px-4 lg:px-6 py-1.5 lg:py-2 rounded-tr-xl">
                   <h2 className="text-sm lg:text-xl font-bold text-white">
                     Get in Touch
                   </h2>
@@ -753,14 +753,14 @@ function ContactPageContent() {
                           cx="60"
                           cy="60"
                           r="56"
-                          fill="#e8f4fd"
-                          stroke="#0284c7"
+                          fill="#EFF2FB"
+                          stroke="#3750A4"
                           strokeWidth="2"
                         />
                         <path
                           d="M60 22 Q78 22 78 44 Q78 58 60 80 Q42 58 42 44 Q42 22 60 22Z"
-                          fill="#bae6fd"
-                          stroke="#0284c7"
+                          fill="#C3CDEE"
+                          stroke="#3750A4"
                           strokeWidth="2.5"
                           strokeLinejoin="round"
                         />
@@ -769,16 +769,16 @@ function ContactPageContent() {
                           cy="44"
                           r="12"
                           fill="#fff"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2"
                         />
-                        <circle cx="60" cy="44" r="6" fill="#FF6B6B" />
+                        <circle cx="60" cy="44" r="6" fill="#C62F45" />
                         <ellipse
                           cx="60"
                           cy="92"
                           rx="16"
                           ry="5"
-                          fill="#0284c7"
+                          fill="#3750A4"
                           opacity="0.2"
                         />
                         <line
@@ -786,7 +786,7 @@ function ContactPageContent() {
                           y1="88"
                           x2="50"
                           y2="83"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -795,7 +795,7 @@ function ContactPageContent() {
                           y1="83"
                           x2="92"
                           y2="88"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -804,7 +804,7 @@ function ContactPageContent() {
                           y1="94"
                           x2="92"
                           y2="94"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           opacity="0.4"
@@ -827,32 +827,32 @@ function ContactPageContent() {
                           cx="60"
                           cy="60"
                           r="56"
-                          fill="#e8f4fd"
-                          stroke="#0284c7"
+                          fill="#EFF2FB"
+                          stroke="#3750A4"
                           strokeWidth="2"
                         />
                         <path
                           d="M36 32 L48 32 Q52 32 53 36 L56 50 Q57 54 54 56 L49 59 Q54 70 62 78 L65 73 Q67 70 71 71 L85 74 Q89 75 89 79 L89 90 Q89 94 85 94 L80 94 Q50 94 32 56 Q25 40 32 35 Q34 32 36 32Z"
-                          fill="#bae6fd"
-                          stroke="#0284c7"
+                          fill="#C3CDEE"
+                          stroke="#3750A4"
                           strokeWidth="2.2"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M72 28 Q84 36 84 50"
                           fill="none"
-                          stroke="#FF6B6B"
+                          stroke="#C62F45"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
                         <path
                           d="M78 22 Q96 34 96 54"
                           fill="none"
-                          stroke="#FF6B6B"
+                          stroke="#C62F45"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
-                        <circle cx="68" cy="30" r="3.5" fill="#FF6B6B" />
+                        <circle cx="68" cy="30" r="3.5" fill="#C62F45" />
                       </svg>
                     }
                   />
@@ -871,8 +871,8 @@ function ContactPageContent() {
                           cx="60"
                           cy="60"
                           r="56"
-                          fill="#e8f4fd"
-                          stroke="#0284c7"
+                          fill="#EFF2FB"
+                          stroke="#3750A4"
                           strokeWidth="2"
                         />
                         <circle
@@ -880,7 +880,7 @@ function ContactPageContent() {
                           cy="62"
                           r="34"
                           fill="#fff"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2.5"
                         />
                         <circle
@@ -888,7 +888,7 @@ function ContactPageContent() {
                           cy="62"
                           r="29"
                           fill="#fff"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.2"
                         />
                         <line
@@ -896,7 +896,7 @@ function ContactPageContent() {
                           y1="33"
                           x2="60"
                           y2="40"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
@@ -905,7 +905,7 @@ function ContactPageContent() {
                           y1="84"
                           x2="60"
                           y2="91"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
@@ -914,7 +914,7 @@ function ContactPageContent() {
                           y1="62"
                           x2="33"
                           y2="62"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
@@ -923,7 +923,7 @@ function ContactPageContent() {
                           y1="62"
                           x2="94"
                           y2="62"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2.5"
                           strokeLinecap="round"
                         />
@@ -932,7 +932,7 @@ function ContactPageContent() {
                           y1="38"
                           x2="40"
                           y2="44"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -941,7 +941,7 @@ function ContactPageContent() {
                           y1="44"
                           x2="84"
                           y2="38"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -950,7 +950,7 @@ function ContactPageContent() {
                           y1="86"
                           x2="40"
                           y2="80"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -959,7 +959,7 @@ function ContactPageContent() {
                           y1="80"
                           x2="84"
                           y2="86"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -968,7 +968,7 @@ function ContactPageContent() {
                           y1="62"
                           x2="60"
                           y2="44"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="3"
                           strokeLinecap="round"
                         />
@@ -977,18 +977,18 @@ function ContactPageContent() {
                           y1="62"
                           x2="76"
                           y2="62"
-                          stroke="#FF6B6B"
+                          stroke="#C62F45"
                           strokeWidth="3"
                           strokeLinecap="round"
                         />
-                        <circle cx="60" cy="62" r="4" fill="#FF6B6B" />
-                        <circle cx="60" cy="22" r="6" fill="#FF6B6B" />
+                        <circle cx="60" cy="62" r="4" fill="#C62F45" />
+                        <circle cx="60" cy="22" r="6" fill="#C62F45" />
                         <line
                           x1="60"
                           y1="14"
                           x2="60"
                           y2="11"
-                          stroke="#FF6B6B"
+                          stroke="#C62F45"
                           strokeWidth="2"
                           strokeLinecap="round"
                         />
@@ -997,7 +997,7 @@ function ContactPageContent() {
                           y1="16"
                           x2="68"
                           y2="14"
-                          stroke="#FF6B6B"
+                          stroke="#C62F45"
                           strokeWidth="2"
                           strokeLinecap="round"
                         />
@@ -1006,7 +1006,7 @@ function ContactPageContent() {
                           y1="16"
                           x2="52"
                           y2="14"
-                          stroke="#FF6B6B"
+                          stroke="#C62F45"
                           strokeWidth="2"
                           strokeLinecap="round"
                         />
@@ -1028,8 +1028,8 @@ function ContactPageContent() {
                           cx="60"
                           cy="60"
                           r="56"
-                          fill="#e8f4fd"
-                          stroke="#0284c7"
+                          fill="#EFF2FB"
+                          stroke="#3750A4"
                           strokeWidth="2"
                         />
                         <rect
@@ -1038,14 +1038,14 @@ function ContactPageContent() {
                           width="84"
                           height="56"
                           rx="6"
-                          fill="#bae6fd"
-                          stroke="#0284c7"
+                          fill="#C3CDEE"
+                          stroke="#3750A4"
                           strokeWidth="2.2"
                         />
                         <path
                           d="M18 44 L60 70 L102 44"
                           fill="none"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="2.2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -1055,7 +1055,7 @@ function ContactPageContent() {
                           y1="94"
                           x2="46"
                           y2="68"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
@@ -1064,11 +1064,11 @@ function ContactPageContent() {
                           y1="94"
                           x2="74"
                           y2="68"
-                          stroke="#0284c7"
+                          stroke="#3750A4"
                           strokeWidth="1.8"
                           strokeLinecap="round"
                         />
-                        <circle cx="60" cy="57" r="14" fill="#FF6B6B" />
+                        <circle cx="60" cy="57" r="14" fill="#C62F45" />
                         <circle
                           cx="60"
                           cy="57"
@@ -1112,7 +1112,7 @@ function ContactPageContent() {
                               width="52"
                               height="52"
                               rx="10"
-                              fill="#0284c7"
+                              fill="#3750A4"
                             />
                             <path
                               d="M34 18 L30 18 Q24 18 24 24 L24 28 L19 28 L19 35 L24 35 L24 54 L32 54 L32 35 L37 35 L38 28 L32 28 L32 24 Q32 22 34 22 L38 22 Z"
@@ -1120,7 +1120,7 @@ function ContactPageContent() {
                             />
                             <path
                               d="M34 18 L30 18 Q24 18 24 24 L24 28 L19 28 L19 35 L24 35 L24 54 L32 54 L32 35 L37 35 L38 28 L32 28 L32 24 Q32 22 34 22 L38 22 Z"
-                              fill="#FF6B6B"
+                              fill="#C62F45"
                               opacity="0.25"
                             />
                           </svg>
@@ -1142,7 +1142,7 @@ function ContactPageContent() {
                               width="52"
                               height="52"
                               rx="14"
-                              fill="#0284c7"
+                              fill="#3750A4"
                             />
                             <rect
                               x="14"
@@ -1159,11 +1159,11 @@ function ContactPageContent() {
                               cy="30"
                               r="8"
                               fill="none"
-                              stroke="#FF6B6B"
+                              stroke="#C62F45"
                               stroke-width="3"
                             />
-                            <circle cx="30" cy="30" r="4" fill="#FF6B6B" />
-                            <circle cx="43" cy="17" r="3" fill="#FF6B6B" />
+                            <circle cx="30" cy="30" r="4" fill="#C62F45" />
+                            <circle cx="43" cy="17" r="3" fill="#C62F45" />
                             <circle cx="43" cy="17" r="1.5" fill="#fff" />
                           </svg>
                         ),
@@ -1184,7 +1184,7 @@ function ContactPageContent() {
                               width="52"
                               height="52"
                               rx="10"
-                              fill="#0284c7"
+                              fill="#3750A4"
                             />
                             <rect
                               x="13"
@@ -1194,7 +1194,7 @@ function ContactPageContent() {
                               rx="2"
                               fill="#fff"
                             />
-                            <circle cx="17" cy="15" r="5" fill="#FF6B6B" />
+                            <circle cx="17" cy="15" r="5" fill="#C62F45" />
                             <circle cx="17" cy="15" r="3" fill="#fff" />
                             <path
                               d="M25 26 L25 46 L33 46 L33 34 Q33 28 38 28 Q43 28 43 34 L43 46 L51 46 L51 33 Q51 22 40 22 Q35 22 33 26 L33 22 L25 22 Z"
@@ -1219,7 +1219,7 @@ function ContactPageContent() {
                               width="52"
                               height="52"
                               rx="10"
-                              fill="#0284c7"
+                              fill="#3750A4"
                             />
                             <path
                               d="M12 12 L26 32 L12 48 L18 48 L29 36 L39 48 L48 48 L33.5 27.5 L47 12 L41 12 L27.5 23.5 L19 12 Z"
@@ -1230,7 +1230,7 @@ function ContactPageContent() {
                             />
                             <path
                               d="M12 12 L26 32 L12 48 L18 48 L29 36 L39 48 L48 48 L33.5 27.5 L47 12 L41 12 L27.5 23.5 L19 12 Z"
-                              fill="#FF6B6B"
+                              fill="#C62F45"
                               opacity="0.3"
                             />
                           </svg>
@@ -1257,7 +1257,7 @@ function ContactPageContent() {
         <section className="py-8 lg:py-24 bg-slate-50">
           <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="text-center mb-6 lg:mb-12">
-              <h2 className="text-lg lg:text-3xl font-bold text-slate-900 mb-2 lg:mb-4 border-b-2 lg:border-b-4 border-[#FF6B6B] inline-block pb-1 lg:pb-2">
+              <h2 className="text-lg lg:text-3xl font-bold text-slate-900 mb-2 lg:mb-4 border-b-2 lg:border-b-4 border-accent-500 inline-block pb-1 lg:pb-2">
                 FAQs
               </h2>
             </div>
@@ -1304,7 +1304,7 @@ function ContactPageContent() {
 
         {/* Map Section */}
         <section className="w-full">
-          <div className="bg-sky-600 px-4 lg:px-6 py-2 lg:py-3 w-full text-left">
+          <div className="bg-brand-600 px-4 lg:px-6 py-2 lg:py-3 w-full text-left">
             <h2 className="text-sm lg:text-xl font-bold text-white">
               Cutis Path Lab
             </h2>

@@ -111,8 +111,8 @@ const ICON_ORDER = ["ai", "digital", "molecular", "automation", "pcr", "tracking
 
 function TechIcon({ iconKey, index }) {
   // Two-tone, matching the site: sky line work with coral detail accents.
-  const stroke = "#0284C7";
-  const accent = "#FF6B6B";
+  const stroke = "#3750A4";
+  const accent = "#C62F45";
 
   const icons = [
     <svg key="ai" viewBox="0 0 80 80" fill="none" aria-hidden="true">
@@ -231,13 +231,13 @@ export default function LabTechnology({ section, items }) {
             repeat. Flat below `sm`.
           */}
           <div
-            className="absolute inset-0 bg-gradient-to-r from-sky-900 via-sky-800 to-sky-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_0,100%_0,100%_84%,0_100%)] lg:rounded-tr-[8rem]"
+            className="absolute inset-0 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_0,100%_0,100%_84%,0_100%)] lg:rounded-tr-[8rem]"
             aria-hidden="true"
           />
 
           {/* Coral warmth, top-left — the corner the other two leave empty */}
           <div
-            className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-[#FF6B6B]/25 blur-3xl"
+            className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-accent-500/25 blur-3xl"
             aria-hidden="true"
           />
 
@@ -245,7 +245,7 @@ export default function LabTechnology({ section, items }) {
             <span className="absolute -right-16 top-20 h-64 w-64 rounded-full bg-white/[0.06]" />
             <span className="absolute left-1/3 top-10 h-40 w-40 rounded-full bg-white/[0.05]" />
             <span className="absolute bottom-10 right-1/4 h-72 w-72 rounded-full bg-white/[0.04]" />
-            <span className="absolute bottom-16 left-16 h-48 w-48 rounded-full bg-[#FF6B6B]/[0.12]" />
+            <span className="absolute bottom-16 left-16 h-48 w-48 rounded-full bg-accent-500/[0.12]" />
           </div>
         </>
       }
@@ -286,11 +286,11 @@ export default function LabTechnology({ section, items }) {
               style={cardWidthStyle}
               className={cardClassName}
             >
-              <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-card-hover">
+              <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover">
                 {/* Compact head: icon and title side by side on a light tint, so
                     the card leads with its name instead of a block of colour. */}
-                <div className="flex items-center gap-3.5 border-b border-slate-100 bg-sky-50/60 px-5 py-4">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white shadow-card ring-1 ring-sky-100 transition-transform duration-300 group-hover:scale-105">
+                <div className="flex items-center gap-3.5 border-b border-slate-100 bg-brand-50/60 px-5 py-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white shadow-card ring-1 ring-brand-100 transition-transform duration-300 group-hover:scale-105">
                     <span className="h-7 w-7">
                       <TechIcon iconKey={tech.iconKey} index={idx} />
                     </span>
@@ -301,10 +301,10 @@ export default function LabTechnology({ section, items }) {
                       {tech.title}
                     </h3>
                     <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs">
-                      <span className="font-semibold text-sky-600">
+                      <span className="font-semibold text-brand-600">
                         {tech.badge || tech.highlight}
                       </span>
-                      <span className="h-1 w-1 rounded-full bg-[#FF6B6B]" aria-hidden="true" />
+                      <span className="h-1 w-1 rounded-full bg-accent-500" aria-hidden="true" />
                       <span className="text-slate-500">{tech.note || tech.support}</span>
                     </p>
                   </div>
@@ -320,7 +320,7 @@ export default function LabTechnology({ section, items }) {
                     ).map((item) => (
                         <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
                           <span
-                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]"
+                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500"
                             aria-hidden="true"
                           />
                           <span>{item}</span>
@@ -330,7 +330,7 @@ export default function LabTechnology({ section, items }) {
                 </div>
 
                 {/* Coral foot — the site's established card close */}
-                <span className="block h-1 w-full bg-[#FF6B6B]" aria-hidden="true" />
+                <span className="block h-1 w-full bg-accent-500" aria-hidden="true" />
               </div>
             </article>
           ))}
@@ -360,7 +360,7 @@ export default function LabTechnology({ section, items }) {
       <div className="mt-8 flex justify-center">
         <Link
           href="/services"
-          className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-sky-700 shadow-card transition-all duration-300 hover:bg-sky-50 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-brand-700 shadow-card transition-all duration-300 hover:bg-brand-50 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           Explore all services
           <svg

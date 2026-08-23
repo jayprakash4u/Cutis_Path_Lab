@@ -72,7 +72,7 @@ export default function TestDetailPage() {
               The test you're looking for doesn't exist.
             </p>
             <Link href="/tests">
-              <button className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors">
+              <button className="bg-brand-600 text-white px-6 py-2 rounded-lg hover:bg-brand-700 transition-colors">
                 Back to Tests
               </button>
             </Link>
@@ -95,7 +95,7 @@ export default function TestDetailPage() {
         <div className="bg-slate-50 border-b border-slate-200">
           <div className="container mx-auto px-4 sm:px-6 py-4">
             <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Link href="/tests" className="hover:text-sky-600 transition-colors">
+              <Link href="/tests" className="hover:text-brand-600 transition-colors">
                 Tests
               </Link>
               <span className="text-slate-400">/</span>
@@ -113,15 +113,15 @@ export default function TestDetailPage() {
               <div className="mb-8">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-sky-100 text-sky-700 mb-4">
+                    <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-brand-100 text-brand-700 mb-4">
                       {test.category}
                     </span>
                     <h1 className="text-4xl font-bold text-slate-900">{test.name}</h1>
                   </div>
                   <div className="flex items-center gap-4">
                     {test.icon && (
-                      <div className="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center">
-                        <TestIcon iconPath={test.icon} className="w-10 h-10 text-sky-600" />
+                      <div className="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center">
+                        <TestIcon iconPath={test.icon} className="w-10 h-10 text-brand-600" />
                       </div>
                     )}
                     {test.popular && (
@@ -147,7 +147,7 @@ export default function TestDetailPage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`pb-4 font-semibold transition-all ${
                         activeTab === tab.id
-                          ? "border-b-2 border-sky-600 text-sky-600"
+                          ? "border-b-2 border-brand-600 text-brand-600"
                           : "text-slate-600 hover:text-slate-900"
                       }`}
                     >
@@ -161,7 +161,7 @@ export default function TestDetailPage() {
               <div>
                 {activeTab === "overview" && (
                   <div className="space-y-6">
-                    <div className="bg-gradient-to-br from-sky-50 to-sky-100/50 rounded-2xl p-6 border border-sky-200">
+                    <div className="bg-gradient-to-br from-brand-50 to-brand-100/50 rounded-2xl p-6 border border-brand-200">
                       <h3 className="text-lg font-bold text-slate-900 mb-4">What is this test?</h3>
                       <p className="text-slate-700 leading-relaxed">
                         {test.description} This test provides essential information about your
@@ -182,7 +182,7 @@ export default function TestDetailPage() {
                           className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-all"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="text-sky-600">{icons[item.icon]}</div>
+                            <div className="text-brand-600">{icons[item.icon]}</div>
                             <div className="flex-1">
                               <p className="text-sm text-slate-600 font-medium mb-1">
                                 {item.label}
@@ -203,12 +203,12 @@ export default function TestDetailPage() {
                     <div className="bg-white rounded-2xl border border-slate-200 p-6">
                       <h3 className="text-lg font-bold text-slate-900 mb-4">Test Components</h3>
                       <p className="text-slate-600 mb-4">
-                        This comprehensive test includes <span className="font-semibold text-sky-600">{test.parameters}</span> different parameters to provide a complete assessment.
+                        This comprehensive test includes <span className="font-semibold text-brand-600">{test.parameters}</span> different parameters to provide a complete assessment.
                       </p>
                       <ul className="space-y-2 px-4 md:px-0">
                         {[...Array(Math.min(test.parameters, 8))].map((_, i) => (
                           <li key={i} className="flex items-center gap-3 text-slate-700 min-h-[44px]">
-                            <span className="w-2 h-2 rounded-full bg-sky-500 flex-shrink-0 mt-1"></span>
+                            <span className="w-2 h-2 rounded-full bg-brand-500 flex-shrink-0 mt-1"></span>
                             Parameter {i + 1}
                           </li>
                         ))}
@@ -258,13 +258,13 @@ export default function TestDetailPage() {
                           <h4 className="font-semibold text-slate-900 mb-2">What to Bring</h4>
                           <ul className="space-y-2 text-slate-700 px-4 md:px-0">
                             <li className="flex items-center gap-2 min-h-[44px]">
-                              <span className="text-sky-600 flex-shrink-0">✓</span> Valid government-issued ID
+                              <span className="text-brand-600 flex-shrink-0">✓</span> Valid government-issued ID
                             </li>
                             <li className="flex items-center gap-2 min-h-[44px]">
-                              <span className="text-sky-600 flex-shrink-0">✓</span> Health insurance card (if applicable)
+                              <span className="text-brand-600 flex-shrink-0">✓</span> Health insurance card (if applicable)
                             </li>
                             <li className="flex items-center gap-2 min-h-[44px]">
-                              <span className="text-sky-600 flex-shrink-0">✓</span> Any relevant medical records
+                              <span className="text-brand-600 flex-shrink-0">✓</span> Any relevant medical records
                             </li>
                           </ul>
                         </div>
@@ -284,11 +284,11 @@ export default function TestDetailPage() {
 
             {/* Right Column - Booking Card */}
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-sky-50 to-sky-100/50 rounded-2xl border border-sky-200 p-6 sticky top-[120px]">
+              <div className="bg-gradient-to-br from-brand-50 to-brand-100/50 rounded-2xl border border-brand-200 p-6 sticky top-[120px]">
                 {/* Price Section */}
-                <div className="mb-6 pb-6 border-b border-sky-200">
+                <div className="mb-6 pb-6 border-b border-brand-200">
                   <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-3xl font-bold text-sky-600">₹{test.price}</span>
+                    <span className="text-3xl font-bold text-brand-600">₹{test.price}</span>
                     <span className="text-lg text-slate-500 line-through">₹{test.originalPrice}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -306,7 +306,7 @@ export default function TestDetailPage() {
                   <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 text-sky-600 hover:bg-sky-50 transition-colors"
+                      className="px-4 py-2 text-brand-600 hover:bg-brand-50 transition-colors"
                     >
                       −
                     </button>
@@ -315,7 +315,7 @@ export default function TestDetailPage() {
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 text-sky-600 hover:bg-sky-50 transition-colors"
+                      className="px-4 py-2 text-brand-600 hover:bg-brand-50 transition-colors"
                     >
                       +
                     </button>
@@ -323,7 +323,7 @@ export default function TestDetailPage() {
                 </div>
 
                 {/* Total Price */}
-                <div className="mb-6 pb-6 border-b border-sky-200 bg-white rounded-lg p-4">
+                <div className="mb-6 pb-6 border-b border-brand-200 bg-white rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-slate-600">Subtotal</span>
                     <span className="font-semibold text-slate-900">
@@ -336,7 +336,7 @@ export default function TestDetailPage() {
                   </div>
                   <div className="border-t border-slate-200 pt-3 flex justify-between items-center">
                     <span className="font-semibold text-slate-900">Total</span>
-                    <span className="text-xl font-bold text-sky-600">
+                    <span className="text-xl font-bold text-brand-600">
                       ₹{(test.price * quantity).toLocaleString()}
                     </span>
                   </div>
@@ -344,23 +344,23 @@ export default function TestDetailPage() {
 
                 {/* CTA Buttons */}
                 <div className="space-y-3">
-                  <button className="w-full bg-gradient-to-r from-sky-600 to-sky-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:from-sky-700 hover:to-sky-600 transition-all duration-300">
+                  <button className="w-full bg-gradient-to-r from-brand-600 to-brand-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:from-brand-700 hover:to-brand-600 transition-all duration-300">
                     Book This Test
                   </button>
-                  <button className="w-full border-2 border-sky-600 text-sky-600 font-semibold py-3 rounded-lg hover:bg-sky-50 transition-colors">
+                  <button className="w-full border-2 border-brand-600 text-brand-600 font-semibold py-3 rounded-lg hover:bg-brand-50 transition-colors">
                     Add to Cart
                   </button>
                 </div>
 
                 {/* Trust Badges */}
-                <div className="mt-6 space-y-3 pt-6 border-t border-sky-200">
+                <div className="mt-6 space-y-3 pt-6 border-t border-brand-200">
                   {[
                     { icon: "✓", text: "ISO Certified Laboratory" },
                     { icon: "✓", text: "Expert Phlebotomists" },
                     { icon: "✓", text: "Fast & Accurate Results" },
                   ].map((badge, index) => (
                     <div key={index} className="flex items-center gap-2 text-sm text-slate-700">
-                      <span className="text-sky-600 font-bold">{badge.icon}</span>
+                      <span className="text-brand-600 font-bold">{badge.icon}</span>
                       {badge.text}
                     </div>
                   ))}
@@ -381,16 +381,16 @@ export default function TestDetailPage() {
                 .map((relatedTest) => (
                   <Link key={relatedTest.id} href={`/tests/${relatedTest.id}`}>
                     <div className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-700 mb-4">
+                      <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-brand-100 text-brand-700 mb-4">
                         {relatedTest.category}
                       </span>
-                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-sky-600 transition-colors">
+                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-colors">
                         {relatedTest.name}
                       </h3>
                       <p className="text-sm text-slate-600 mb-4">
                         ₹{relatedTest.price}
                       </p>
-                      <button className="text-sky-600 font-semibold text-sm hover:text-sky-700 transition-colors">
+                      <button className="text-brand-600 font-semibold text-sm hover:text-brand-700 transition-colors">
                         View Details →
                       </button>
                     </div>

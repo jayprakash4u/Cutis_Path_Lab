@@ -133,7 +133,7 @@ export default async function BlogArticlePage({ params }) {
               <nav aria-label="Breadcrumb">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600 transition-colors hover:text-sky-700"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 transition-colors hover:text-brand-700"
                 >
                   <svg
                     className="h-3.5 w-3.5"
@@ -151,7 +151,7 @@ export default async function BlogArticlePage({ params }) {
 
               <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-10">
                 <div className="min-w-0">
-                  <span className="inline-block rounded-full bg-[#FF6B6B] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+                  <span className="inline-block rounded-full bg-accent-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
                     {post.category}
                   </span>
 
@@ -194,7 +194,7 @@ export default async function BlogArticlePage({ params }) {
             {/* Body — held to a comfortable measure inside the card */}
             <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8 lg:px-0 lg:py-10">
               {post.excerpt ? (
-                <p className="mb-6 border-l-4 border-sky-200 pl-4 text-[15px] italic leading-[1.85] text-slate-500">
+                <p className="mb-6 border-l-4 border-brand-200 pl-4 text-[15px] italic leading-[1.85] text-slate-500">
                   {post.excerpt}
                 </p>
               ) : null}
@@ -219,13 +219,13 @@ export default async function BlogArticlePage({ params }) {
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
                   <Link
                     href="/contact"
-                    className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sky-700"
+                    className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
                   >
                     Ask the lab
                   </Link>
                   <Link
                     href="/blog"
-                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-sky-300 hover:text-sky-700"
+                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-brand-300 hover:text-brand-700"
                   >
                     Browse other articles
                   </Link>
@@ -234,7 +234,7 @@ export default async function BlogArticlePage({ params }) {
             )}
 
               {/* General-interest health writing, not personal medical advice. */}
-              <p className="mt-10 rounded-xl border-l-4 border-[#FF6B6B] bg-gray-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
+              <p className="mt-10 rounded-xl border-l-4 border-accent-500 bg-gray-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
                 This article is for general information and is not a substitute for a
                 consultation. Talk to your doctor before acting on anything you read here.
               </p>
@@ -251,7 +251,7 @@ export default async function BlogArticlePage({ params }) {
               </h2>
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-sky-700"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-700"
               >
                 View all
                 <svg
@@ -285,16 +285,16 @@ export default async function BlogArticlePage({ params }) {
                       />
                     ) : (
                       <div
-                        className="h-full w-full bg-gradient-to-br from-sky-600 to-sky-800"
+                        className="h-full w-full bg-gradient-to-br from-brand-600 to-brand-800"
                         aria-hidden="true"
                       />
                     )}
                   </div>
                   <div className="flex flex-1 flex-col p-4">
-                    <span className="inline-block self-start rounded-full bg-sky-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-sky-700">
+                    <span className="inline-block self-start rounded-full bg-brand-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-brand-700">
                       {item.category}
                     </span>
-                    <h3 className="mt-2.5 text-sm font-bold leading-snug text-slate-900 transition-colors group-hover:text-sky-700">
+                    <h3 className="mt-2.5 text-sm font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-700">
                       {item.title}
                     </h3>
                     <p className="mt-2 flex-1 text-xs leading-relaxed text-slate-500 line-clamp-2">

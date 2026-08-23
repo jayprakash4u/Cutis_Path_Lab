@@ -26,7 +26,7 @@ const EMPTY_STATS = {
 function StatTile({ label, value, tone = "ink", loading }) {
   const toneClass = {
     urgent: "text-[var(--admin-pending)]",
-    sky: "text-[var(--admin-sky)]",
+    sky: "text-[var(--admin-brand)]",
     done: "text-[var(--admin-done)]",
     ink: "text-slate-900",
   }[tone];
@@ -127,7 +127,7 @@ export default function AdminDashboardPage() {
         subtitle="Pending bookings, oldest first"
         className="admin-panel--lead"
         actions={
-          <Link href="/admin/bookings" className="text-xs font-semibold text-[var(--admin-sky)] hover:underline">
+          <Link href="/admin/bookings" className="text-xs font-semibold text-[var(--admin-brand)] hover:underline">
             View all
           </Link>
         }
@@ -161,7 +161,7 @@ export default function AdminDashboardPage() {
                   <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-slate-500">
                     <a
                       href={`tel:${b.phone}`}
-                      className="admin-mono font-medium text-[var(--admin-sky)] hover:underline"
+                      className="admin-mono font-medium text-[var(--admin-brand)] hover:underline"
                     >
                       {b.phone}
                     </a>
@@ -215,7 +215,7 @@ export default function AdminDashboardPage() {
                 </p>
               )}
             </div>
-            <span className="text-xs font-semibold text-[var(--admin-sky)] group-hover:underline">
+            <span className="text-xs font-semibold text-[var(--admin-brand)] group-hover:underline">
               Manage
             </span>
           </Link>

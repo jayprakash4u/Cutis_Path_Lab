@@ -37,7 +37,7 @@ function TintTexture() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(2,132,199,0.07) 1px, transparent 1px)",
+            "radial-gradient(circle, rgba(55,80,164,0.07) 1px, transparent 1px)",
           backgroundSize: "22px 22px",
           maskImage: "linear-gradient(to bottom, black, transparent 85%)",
           WebkitMaskImage: "linear-gradient(to bottom, black, transparent 85%)",
@@ -45,11 +45,11 @@ function TintTexture() {
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-sky-200/25 blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-200/25 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#FF6B6B]/[0.07] blur-3xl"
+        className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-accent-500/[0.07] blur-3xl"
         aria-hidden="true"
       />
     </>
@@ -121,7 +121,7 @@ export function SectionHeading({
         </h2>
 
         <span
-          className={`mt-4 block h-1 w-12 rounded-full bg-[#FF6B6B] ${
+          className={`mt-4 block h-1 w-12 rounded-full bg-accent-500 ${
             centered ? "mx-auto" : ""
           }`}
           aria-hidden="true"
@@ -130,7 +130,7 @@ export function SectionHeading({
         {subtitle && (
           <p
             className={`mt-4 text-sm leading-relaxed sm:text-base ${
-              onDark ? "text-sky-100/90" : "text-slate-600"
+              onDark ? "text-brand-100/90" : "text-slate-600"
             } ${centered ? "" : "max-w-2xl"}`}
           >
             {subtitle}
@@ -154,7 +154,7 @@ export function CarouselButton({ direction = "right", disabled = false, onClick,
       className={`flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 md:h-11 md:w-11 ${
         disabled
           ? "cursor-not-allowed border-slate-100 bg-white text-slate-300 opacity-50"
-          : "border-slate-200 bg-white text-slate-500 shadow-card hover:border-sky-300 hover:text-sky-600 hover:shadow-card-hover"
+          : "border-slate-200 bg-white text-slate-500 shadow-card hover:border-brand-300 hover:text-brand-600 hover:shadow-card-hover"
       }`}
     >
       <svg className="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,7 +171,7 @@ export function CarouselButton({ direction = "right", disabled = false, onClick,
 
 /** Dot pager, shared by every carousel. */
 export function CarouselDots({ total, activeIndex, onSelect, onDark = false, className = "" }) {
-  const active = onDark ? "bg-white" : "bg-sky-600";
+  const active = onDark ? "bg-white" : "bg-brand-600";
   const idle = onDark ? "bg-white/35 hover:bg-white/60" : "bg-slate-300 hover:bg-slate-400";
 
   return (

@@ -54,7 +54,7 @@ export default function BookTest({ section }) {
     `w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 ${
       fieldErrors[key]
         ? "bg-red-50 border border-red-500 focus:border-red-500 focus:ring-red-100"
-        : "bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-sky-100"
+        : "bg-slate-50 border border-slate-200 focus:border-brand-500 focus:ring-brand-100"
     }`;
 
   const handleSubmit = async (e) => {
@@ -155,13 +155,13 @@ export default function BookTest({ section }) {
             rather than a repeated trick. Flat below `sm`.
           */}
           <div
-            className="absolute inset-0 bg-gradient-to-l from-sky-900 via-sky-800 to-sky-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_18%,100%_0,100%_100%,0_100%)] lg:rounded-bl-[8rem]"
+            className="absolute inset-0 bg-gradient-to-l from-brand-900 via-brand-800 to-brand-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_18%,100%_0,100%_100%,0_100%)] lg:rounded-bl-[8rem]"
             aria-hidden="true"
           />
 
           {/* Coral warmth, mirrored to the opposite corner from Testimonials */}
           <div
-            className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#FF6B6B]/25 blur-3xl"
+            className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-accent-500/25 blur-3xl"
             aria-hidden="true"
           />
 
@@ -169,7 +169,7 @@ export default function BookTest({ section }) {
             <span className="absolute -right-16 top-28 h-64 w-64 rounded-full bg-white/[0.06]" />
             <span className="absolute right-1/4 top-16 h-40 w-40 rounded-full bg-white/[0.05]" />
             <span className="absolute bottom-0 right-1/3 h-72 w-72 rounded-full bg-white/[0.04]" />
-            <span className="absolute -bottom-10 left-1/4 h-56 w-56 rounded-full bg-[#FF6B6B]/[0.12]" />
+            <span className="absolute -bottom-10 left-1/4 h-56 w-56 rounded-full bg-accent-500/[0.12]" />
           </div>
         </>
       }
@@ -200,8 +200,8 @@ export default function BookTest({ section }) {
                       cx="60"
                       cy="60"
                       r="56"
-                      fill="#e8f4fd"
-                      stroke="#0284c7"
+                      fill="#EFF2FB"
+                      stroke="#3750A4"
                       strokeWidth="2"
                     />
                     <circle
@@ -209,7 +209,7 @@ export default function BookTest({ section }) {
                       cy="60"
                       r="32"
                       fill="#fff"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2.5"
                     />
                     <circle
@@ -217,7 +217,7 @@ export default function BookTest({ section }) {
                       cy="60"
                       r="28"
                       fill="#fff"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="1"
                     />
                     <line
@@ -225,7 +225,7 @@ export default function BookTest({ section }) {
                       y1="32"
                       x2="60"
                       y2="38"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
@@ -234,7 +234,7 @@ export default function BookTest({ section }) {
                       y1="82"
                       x2="60"
                       y2="88"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
@@ -243,7 +243,7 @@ export default function BookTest({ section }) {
                       y1="60"
                       x2="38"
                       y2="60"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
@@ -252,7 +252,7 @@ export default function BookTest({ section }) {
                       y1="60"
                       x2="88"
                       y2="60"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                     />
@@ -261,7 +261,7 @@ export default function BookTest({ section }) {
                       y1="41"
                       x2="75.5"
                       y2="46"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2"
                       strokeLinecap="round"
                     />
@@ -270,7 +270,7 @@ export default function BookTest({ section }) {
                       y1="41"
                       x2="44.5"
                       y2="46"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2"
                       strokeLinecap="round"
                     />
@@ -279,7 +279,7 @@ export default function BookTest({ section }) {
                       y1="79"
                       x2="75.5"
                       y2="74"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2"
                       strokeLinecap="round"
                     />
@@ -288,7 +288,7 @@ export default function BookTest({ section }) {
                       y1="79"
                       x2="44.5"
                       y2="74"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="2"
                       strokeLinecap="round"
                     />
@@ -297,7 +297,7 @@ export default function BookTest({ section }) {
                       y1="60"
                       x2="60"
                       y2="40"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="3"
                       strokeLinecap="round"
                     />
@@ -306,18 +306,18 @@ export default function BookTest({ section }) {
                       y1="60"
                       x2="76"
                       y2="67"
-                      stroke="#FF6B6B"
+                      stroke="#C62F45"
                       strokeWidth="3"
                       strokeLinecap="round"
                     />
-                    <circle cx="60" cy="60" r="4" fill="#FF6B6B" />
+                    <circle cx="60" cy="60" r="4" fill="#C62F45" />
                   </svg>
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-white sm:text-sm">
                     Quick Results
                   </p>
-                  <p className="text-xs text-sky-100/80">
+                  <p className="text-xs text-brand-100/80">
                     Results within 24 hours
                   </p>
                 </div>
@@ -337,13 +337,13 @@ export default function BookTest({ section }) {
                       cx="60"
                       cy="60"
                       r="56"
-                      fill="#e8f4fd"
-                      stroke="#0284c7"
+                      fill="#EFF2FB"
+                      stroke="#3750A4"
                       strokeWidth="2"
                     />
                     <path
                       d="M28 64 L60 32 L92 64"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="3"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -355,8 +355,8 @@ export default function BookTest({ section }) {
                       width="48"
                       height="32"
                       rx="2"
-                      fill="#bae6fd"
-                      stroke="#0284c7"
+                      fill="#C3CDEE"
+                      stroke="#3750A4"
                       strokeWidth="2.5"
                     />
                     <rect
@@ -366,14 +366,14 @@ export default function BookTest({ section }) {
                       height="12"
                       rx="2"
                       fill="#fff"
-                      stroke="#0284c7"
+                      stroke="#3750A4"
                       strokeWidth="1.8"
                     />
                     <circle
                       cx="60"
                       cy="32"
                       r="7"
-                      fill="#FF6B6B"
+                      fill="#C62F45"
                       stroke="#fff"
                       strokeWidth="1.5"
                     />
@@ -384,7 +384,7 @@ export default function BookTest({ section }) {
                   <p className="text-xs font-semibold text-white sm:text-sm">
                     Home Sample Collection
                   </p>
-                  <p className="text-xs text-sky-100/80">
+                  <p className="text-xs text-brand-100/80">
                     We come to your doorstep
                   </p>
                 </div>
@@ -404,15 +404,15 @@ export default function BookTest({ section }) {
                       cx="60"
                       cy="60"
                       r="56"
-                      fill="#e8f4fd"
-                      stroke="#0284c7"
+                      fill="#EFF2FB"
+                      stroke="#3750A4"
                       strokeWidth="2"
                     />
-                    <circle cx="60" cy="60" r="5" fill="#FF6B6B" />
+                    <circle cx="60" cy="60" r="5" fill="#C62F45" />
                     <polyline
                       points="44,63 54,74 76,50"
                       fill="none"
-                      stroke="#FF6B6B"
+                      stroke="#C62F45"
                       strokeWidth="5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -423,7 +423,7 @@ export default function BookTest({ section }) {
                       textAnchor="middle"
                       fontSize="9"
                       fontWeight="800"
-                      fill="#0284c7"
+                      fill="#3750A4"
                       fontFamily="Arial,sans-serif"
                       letterSpacing="1"
                     >
@@ -435,7 +435,7 @@ export default function BookTest({ section }) {
                   <p className="text-xs font-semibold text-white sm:text-sm">
                     NABL Accredited
                   </p>
-                  <p className="text-xs text-sky-100/80">
+                  <p className="text-xs text-brand-100/80">
                     ISO certified lab
                   </p>
                 </div>
@@ -445,7 +445,7 @@ export default function BookTest({ section }) {
             <div className="mb-3 sm:mb-6">
               <Link
                 href="/tests"
-                className="inline-flex items-center gap-1 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-sky-700 shadow-card transition-colors hover:bg-sky-50 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
+                className="inline-flex items-center gap-1 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-brand-700 shadow-card transition-colors hover:bg-brand-50 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
               >
                 View All Tests
                 <svg
@@ -467,7 +467,7 @@ export default function BookTest({ section }) {
 
           {/* Right Side - Form */}
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5 md:p-6">
-            <div className="bg-[#FF6B6B] -mx-3 sm:-mx-4 md:-mx-6 -mt-3 sm:-mt-4 md:-mt-6 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 rounded-t-xl sm:rounded-t-2xl mb-3 sm:mb-4">
+            <div className="bg-accent-500 -mx-3 sm:-mx-4 md:-mx-6 -mt-3 sm:-mt-4 md:-mt-6 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 rounded-t-xl sm:rounded-t-2xl mb-3 sm:mb-4">
               <h3 className="text-sm sm:text-base md:text-xl font-semibold text-white">
                 Book Your Appointment
               </h3>
@@ -571,7 +571,7 @@ export default function BookTest({ section }) {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="float-right px-4 sm:px-6 py-2 sm:py-2.5 bg-sky-600 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-sky-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="float-right px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-600 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-brand-700 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {submitting ? "Saving..." : "Book Now"}{" "}
                   {!submitting && <span className="text-white">&gt;</span>}

@@ -414,7 +414,7 @@ export default function AdminCategoriesPage() {
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 onChange={onFileChange}
-                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-sky)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-sky-deep)]"
+                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-brand)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-brand-deep)]"
               />
             </Field>
           </div>
@@ -479,7 +479,7 @@ export default function AdminCategoriesPage() {
                   <label
                     key={t.id}
                     className={`flex cursor-pointer items-start gap-3 px-3 py-2.5 transition-colors hover:bg-[var(--admin-subtle)] ${
-                      checked ? "bg-[var(--admin-sky-wash)]" : ""
+                      checked ? "bg-[var(--admin-brand-wash)]" : ""
                     }`}
                   >
                     <input

@@ -7,8 +7,8 @@ import { Section, SectionHeading } from "@/components/ui/Section";
    editable rows pick by `iconKey`. */
 const DEFAULT_TIPS = [
   {
-    color: "#4a9aba",
-    borderColor: "#FF6B6B",
+    color: "#647DCE",
+    borderColor: "#C62F45",
     iconKey: "fasting",
     title: "FASTING",
     description:
@@ -19,8 +19,8 @@ const DEFAULT_TIPS = [
           cx="82"
           cy="82"
           r="60"
-          fill="#f0f9ff"
-          stroke="#4a9aba"
+          fill="#EFF2FB"
+          stroke="#647DCE"
           strokeWidth="2"
         />
         <line
@@ -28,7 +28,7 @@ const DEFAULT_TIPS = [
           y1="55"
           x2="62"
           y2="65"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -37,14 +37,14 @@ const DEFAULT_TIPS = [
           y1="55"
           x2="67"
           y2="65"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
         <path
           d="M62 65 Q65 70 67 65"
           fill="none"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -53,7 +53,7 @@ const DEFAULT_TIPS = [
           y1="68"
           x2="64"
           y2="110"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2.5"
           strokeLinecap="round"
         />
@@ -62,14 +62,14 @@ const DEFAULT_TIPS = [
           y1="55"
           x2="74"
           y2="110"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2.5"
           strokeLinecap="round"
         />
         <path
           d="M74 55 Q82 65 74 78"
-          fill="#4a9aba"
-          stroke="#4a9aba"
+          fill="#647DCE"
+          stroke="#647DCE"
           strokeWidth="1"
         />
         <circle
@@ -77,16 +77,16 @@ const DEFAULT_TIPS = [
           cy="83"
           r="18"
           fill="white"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="2"
         />
-        <circle cx="94" cy="83" r="2" fill="#FF6B6B" />
+        <circle cx="94" cy="83" r="2" fill="#C62F45" />
         <line
           x1="94"
           y1="83"
           x2="94"
           y2="72"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -95,7 +95,7 @@ const DEFAULT_TIPS = [
           y1="83"
           x2="103"
           y2="83"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -104,7 +104,7 @@ const DEFAULT_TIPS = [
           y1="79"
           x2="91"
           y2="87"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -113,7 +113,7 @@ const DEFAULT_TIPS = [
           y1="79"
           x2="97"
           y2="87"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -121,8 +121,8 @@ const DEFAULT_TIPS = [
     ),
   },
   {
-    color: "#4a9aba",
-    borderColor: "#FF6B6B",
+    color: "#647DCE",
+    borderColor: "#C62F45",
     iconKey: "hydration",
     title: "HYDRATION",
     description:
@@ -133,13 +133,13 @@ const DEFAULT_TIPS = [
           cx="82"
           cy="82"
           r="60"
-          fill="#f0f9ff"
-          stroke="#4a9aba"
+          fill="#EFF2FB"
+          stroke="#647DCE"
           strokeWidth="2"
         />
         <path
           d="M82 45 C82 45 62 70 62 85 C62 98 71 108 82 108 C93 108 102 98 102 85 C102 70 82 45 82 45 Z"
-          fill="#4a9aba"
+          fill="#647DCE"
           opacity="0.85"
         />
         <path
@@ -163,25 +163,25 @@ const DEFAULT_TIPS = [
         </text>
         <path
           d="M55 60 C55 60 52 65 52 68 C52 70 54 72 55 72 C56 72 58 70 58 68 C58 65 55 60 55 60 Z"
-          fill="#FF6B6B"
+          fill="#C62F45"
           opacity="0.85"
         />
         <path
           d="M110 62 C110 62 107 67 107 70 C107 71.8 108.8 73 110 73 C111.2 73 113 71.8 113 70 C113 67 110 62 110 62 Z"
-          fill="#FF6B6B"
+          fill="#C62F45"
           opacity="0.85"
         />
         <path
           d="M65 48 C65 48 63 51 63 53 C63 54.8 64.8 56 66 56 C67.2 56 69 54.8 69 53 C69 51 65 48 65 48 Z"
-          fill="#FF6B6B"
+          fill="#C62F45"
           opacity="0.7"
         />
       </svg>
     ),
   },
   {
-    color: "#4a9aba",
-    borderColor: "#FF6B6B",
+    color: "#647DCE",
+    borderColor: "#C62F45",
     iconKey: "alcohol",
     title: "NO ALCOHOL",
     description:
@@ -192,20 +192,20 @@ const DEFAULT_TIPS = [
           cx="82"
           cy="82"
           r="60"
-          fill="#f0f9ff"
-          stroke="#4a9aba"
+          fill="#EFF2FB"
+          stroke="#647DCE"
           strokeWidth="2"
         />
         <path
           d="M68 55 L96 55 L88 82 Q88 92 82 92 Q76 92 76 82 Z"
-          fill="#4a9aba"
+          fill="#647DCE"
           opacity="0.15"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2"
         />
         <path
           d="M70 68 L94 68 L88 82 Q88 90 82 90 Q76 90 76 82 Z"
-          fill="#4a9aba"
+          fill="#647DCE"
           opacity="0.3"
         />
         <line
@@ -213,7 +213,7 @@ const DEFAULT_TIPS = [
           y1="92"
           x2="82"
           y2="108"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -222,7 +222,7 @@ const DEFAULT_TIPS = [
           y1="108"
           x2="92"
           y2="108"
-          stroke="#4a9aba"
+          stroke="#647DCE"
           strokeWidth="2.5"
           strokeLinecap="round"
         />
@@ -231,7 +231,7 @@ const DEFAULT_TIPS = [
           cy="82"
           r="40"
           fill="none"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="4"
         />
         <line
@@ -239,7 +239,7 @@ const DEFAULT_TIPS = [
           y1="58"
           x2="106"
           y2="106"
-          stroke="#FF6B6B"
+          stroke="#C62F45"
           strokeWidth="4"
           strokeLinecap="round"
         />
@@ -283,7 +283,7 @@ export default function HealthTips({ section, items }) {
           {tips.map((tip, i) => (
             <StepCard
               key={tip.id || tip.title}
-              borderColor={tip.borderColor || "#FF6B6B"}
+              borderColor={tip.borderColor || "#C62F45"}
               title={tip.title}
               description={tip.description}
               icon={ICONS[tip.iconKey] || DEFAULT_TIPS[i % DEFAULT_TIPS.length].icon}

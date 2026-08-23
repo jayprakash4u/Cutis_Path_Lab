@@ -139,7 +139,7 @@ export default function BookOfferPage() {
           <div className="container mx-auto px-4 py-20 text-center">
             <h1 className="text-2xl font-bold text-slate-900 mb-3">Offer Not Found</h1>
             <p className="text-slate-600 mb-8">{error || "This offer is no longer available."}</p>
-            <Link href="/" className="text-sky-600 font-semibold hover:underline">
+            <Link href="/" className="text-brand-600 font-semibold hover:underline">
               Back to Home
             </Link>
           </div>
@@ -157,7 +157,7 @@ export default function BookOfferPage() {
           <div className="max-w-lg mx-auto px-4 py-20 text-center">
             <h1 className="text-2xl font-bold text-slate-900 mb-3">Offer Booked</h1>
             <p className="text-slate-600 mb-2">
-              Your booking for <span className="font-semibold text-sky-700">{offer.name}</span> at{" "}
+              Your booking for <span className="font-semibold text-brand-700">{offer.name}</span> at{" "}
               <span className="font-semibold">₹{offer.discountedPrice}</span> is saved.
             </p>
             <p className="text-sm text-slate-500 mb-8">
@@ -165,7 +165,7 @@ export default function BookOfferPage() {
             </p>
             <Link
               href="/"
-              className="inline-block px-5 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700"
+              className="inline-block px-5 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700"
             >
               Back to Home
             </Link>
@@ -181,10 +181,10 @@ export default function BookOfferPage() {
       <style>{datePickerStyles}</style>
       <Navbar />
       <main className="pt-[80px] lg:pt-[88px]">
-        <section className="relative h-40 lg:h-48 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400">
+        <section className="relative h-40 lg:h-48 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400">
           <div className="absolute inset-0 bg-black/20" />
           <div className="relative h-full max-w-3xl mx-auto px-6 flex flex-col items-center justify-center text-center">
-            <Link href="/" className="self-start text-sky-100 hover:text-white text-sm mb-2">
+            <Link href="/" className="self-start text-brand-100 hover:text-white text-sm mb-2">
               ← Back to Home
             </Link>
             <span className="text-xs font-semibold uppercase tracking-wider text-white/80 mb-1">
@@ -193,7 +193,7 @@ export default function BookOfferPage() {
             <h1 className="text-2xl lg:text-3xl font-bold text-white">{offer.name}</h1>
             <p className="mt-2 text-white text-lg font-semibold">
               ₹{offer.discountedPrice}{" "}
-              <span className="text-sky-100 text-sm line-through font-normal">
+              <span className="text-brand-100 text-sm line-through font-normal">
                 ₹{offer.originalPrice}
               </span>
             </p>
@@ -203,9 +203,9 @@ export default function BookOfferPage() {
         <div className="max-w-lg mx-auto px-4 py-8 lg:py-12">
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden"
+            className="bg-white rounded-2xl border border-brand-100 shadow-sm overflow-hidden"
           >
-            <div className="bg-[#FF6B6B] px-5 py-3">
+            <div className="bg-accent-500 px-5 py-3">
               <h2 className="text-sm font-bold text-white">Book This Offer</h2>
             </div>
 
@@ -235,7 +235,7 @@ export default function BookOfferPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                   placeholder="Your name"
                 />
               </div>
@@ -250,7 +250,7 @@ export default function BookOfferPage() {
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                   placeholder="98xxxxxxxx"
                 />
               </div>
@@ -264,7 +264,7 @@ export default function BookOfferPage() {
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                   placeholder="Home / collection address"
                 />
               </div>
@@ -281,7 +281,7 @@ export default function BookOfferPage() {
                   value={formData.date}
                   onChange={handleChange}
                   style={{ colorScheme: "light" }}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 cursor-pointer"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 cursor-pointer"
                 />
               </div>
 
@@ -294,7 +294,7 @@ export default function BookOfferPage() {
                   required
                   value={formData.time}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 bg-white"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 bg-white"
                 >
                   <option value="">Select time…</option>
                   {[
@@ -319,7 +319,7 @@ export default function BookOfferPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3 bg-[#FF6B6B] text-white font-semibold rounded-xl hover:bg-[#e55a5a] transition-colors text-sm disabled:opacity-60"
+                className="w-full py-3 bg-accent-500 text-white font-semibold rounded-xl hover:bg-accent-600 transition-colors text-sm disabled:opacity-60"
               >
                 {submitting
                   ? "Booking…"

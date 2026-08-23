@@ -241,7 +241,7 @@ export default function ArticleBody({ content }) {
           return (
             <blockquote
               key={i}
-              className="rounded-r-xl border-l-4 border-[#FF6B6B] bg-gray-50 px-5 py-4 text-[15px] italic leading-[1.8] text-slate-600"
+              className="rounded-r-xl border-l-4 border-accent-500 bg-gray-50 px-5 py-4 text-[15px] italic leading-[1.8] text-slate-600"
             >
               {renderInline(block.text)}
             </blockquote>
@@ -255,7 +255,7 @@ export default function ArticleBody({ content }) {
             <div key={i} className="-mx-1 overflow-x-auto pb-1">
               <table className="w-full min-w-[30rem] border-collapse overflow-hidden rounded-xl border border-slate-200 text-left text-sm">
                 <thead>
-                  <tr className="bg-sky-50">
+                  <tr className="bg-brand-50">
                     {block.head.map((cell, j) => (
                       <th
                         key={j}
@@ -295,12 +295,12 @@ export default function ArticleBody({ content }) {
               {block.items.map((item, j) => (
                 <li key={j} className="flex gap-3 text-[15px] leading-[1.75] text-slate-600">
                   {block.ordered ? (
-                    <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-sky-50 text-[11px] font-bold text-sky-700">
+                    <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-brand-50 text-[11px] font-bold text-brand-700">
                       {j + 1}
                     </span>
                   ) : (
                     <span
-                      className="mt-[0.55rem] h-1.5 w-1.5 flex-none rounded-full bg-[#FF6B6B]"
+                      className="mt-[0.55rem] h-1.5 w-1.5 flex-none rounded-full bg-accent-500"
                       aria-hidden="true"
                     />
                   )}

@@ -388,7 +388,7 @@ function BookPageContent() {
     `w-full px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl border bg-white text-slate-900 placeholder:text-slate-400 focus:ring-2 transition-colors outline-none text-sm ${
       fieldErrors[key]
         ? "border-red-500 bg-red-50/40 focus:border-red-500 focus:ring-red-100"
-        : "border-slate-200 focus:border-sky-500 focus:ring-sky-200"
+        : "border-slate-200 focus:border-brand-500 focus:ring-brand-200"
     }`;
 
   // ========== RENDER ==========
@@ -400,13 +400,13 @@ function BookPageContent() {
         
         {/* Hero Section - Gradient for mobile, image for bigger */}
         <section className="relative py-6 lg:py-12">
-          <div className="sm:hidden absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400"></div>
-          <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400">
+          <div className="sm:hidden absolute inset-0 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400"></div>
+          <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1920')] bg-cover bg-center opacity-10"></div>
           </div>
           <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 text-center">
             <h1 className="text-xl lg:text-4xl font-bold text-white mb-2 lg:mb-4">
-              {CONTENT.HERO.TITLE} <span className="text-sky-100">{CONTENT.HERO.SUBTITLE}</span>
+              {CONTENT.HERO.TITLE} <span className="text-brand-100">{CONTENT.HERO.SUBTITLE}</span>
             </h1>
             <p className="text-xs sm:text-sm lg:text-lg text-white/90 max-w-lg mx-auto">
               {CONTENT.HERO.TAGLINE}
@@ -422,12 +422,12 @@ function BookPageContent() {
             <div className="flex items-center justify-between">
               {STEPS.map((step, index) => (
                 <div key={step.number} className="flex items-center">
-                  <div className={`flex items-center gap-1 lg:gap-2 ${currentStep >= step.number ? 'text-sky-600' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-1 lg:gap-2 ${currentStep >= step.number ? 'text-brand-600' : 'text-slate-400'}`}>
                     <div className={`w-6 lg:w-8 h-6 lg:h-8 rounded-full flex items-center justify-center text-xs lg:text-sm font-semibold ${
                       currentStep > step.number 
-                        ? 'bg-sky-600 text-white' 
+                        ? 'bg-brand-600 text-white' 
                         : currentStep === step.number 
-                          ? 'bg-sky-100 text-sky-600 border-2 border-sky-600'
+                          ? 'bg-brand-100 text-brand-600 border-2 border-brand-600'
                           : 'bg-slate-100 text-slate-400'
                     }`}>
                       {currentStep > step.number ? (
@@ -439,7 +439,7 @@ function BookPageContent() {
                     <span className="hidden sm:inline text-xs lg:text-sm font-medium">{step.title}</span>
                   </div>
                   {index < STEPS.length - 1 && (
-                    <div className={`w-4 lg:w-8 sm:w-12 h-0.5 mx-1 lg:mx-2 ${currentStep > step.number ? 'bg-sky-600' : 'bg-slate-200'}`}></div>
+                    <div className={`w-4 lg:w-8 sm:w-12 h-0.5 mx-1 lg:mx-2 ${currentStep > step.number ? 'bg-brand-600' : 'bg-slate-200'}`}></div>
                   )}
                 </div>
               ))}
@@ -455,7 +455,7 @@ function BookPageContent() {
               {/* Step 1: Select Tests */}
 {currentStep === 1 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                  <div className="bg-accent-500 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                     <h2 className="text-sm lg:text-xl font-bold text-white">{CONTENT.STEP_TITLES[1].heading}</h2>
                   </div>
                   
@@ -468,8 +468,8 @@ function BookPageContent() {
                           onClick={() => setActiveCategory(category.id)}
                           className={`px-2 lg:px-4 py-1 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-all duration-200 ${
                             activeCategory === category.id
-                              ? "bg-sky-600 text-white"
-                              : "bg-slate-100 text-slate-600 hover:bg-sky-50 hover:text-sky-600"
+                              ? "bg-brand-600 text-white"
+                              : "bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-600"
                           }`}
                         >
                           {category.name}
@@ -498,7 +498,7 @@ function BookPageContent() {
                         value={testSearch}
                         onChange={(e) => setTestSearch(e.target.value)}
                         placeholder="Search tests by name or category..."
-                        className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-sky-500 focus:ring-2 focus:ring-sky-200 lg:rounded-xl lg:py-2.5"
+                        className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-200 lg:rounded-xl lg:py-2.5"
                         aria-label="Search tests"
                       />
                       {testSearch && (
@@ -541,7 +541,7 @@ function BookPageContent() {
                         <>
                           <div className="mb-2 lg:mb-4" data-field="tests" id="field-tests">
                             <p className="text-xs lg:text-sm text-slate-500">
-                              <span className="font-semibold text-sky-600">{filteredTests.length}</span>{" "}
+                              <span className="font-semibold text-brand-600">{filteredTests.length}</span>{" "}
                               {filteredTests.length === 1 ? "test" : "tests"}
                               {searchQuery ? " found" : ""}
                             </p>
@@ -557,7 +557,7 @@ function BookPageContent() {
                                 <button
                                   type="button"
                                   onClick={() => setTestSearch("")}
-                                  className="mt-3 text-xs font-medium text-sky-600 hover:text-sky-700"
+                                  className="mt-3 text-xs font-medium text-brand-600 hover:text-brand-700"
                                 >
                                   Clear search
                                 </button>
@@ -576,8 +576,8 @@ function BookPageContent() {
                                   onClick={() => toggleTest(test)}
                                   className={`flex items-center justify-between p-2 lg:p-4 rounded-lg lg:rounded-xl border transition-all duration-200 ${
                                     selectedTests.find((t) => t.id === test.id)
-                                      ? "border-sky-500 bg-sky-50 shadow-sm"
-                                      : "border-slate-200 hover:border-sky-300 hover:shadow-sm"
+                                      ? "border-brand-500 bg-brand-50 shadow-sm"
+                                      : "border-slate-200 hover:border-brand-300 hover:shadow-sm"
                                   }`}
                                 >
                                   <div className="text-left">
@@ -585,7 +585,7 @@ function BookPageContent() {
                                     <p className="text-[10px] lg:text-xs text-slate-500">{test.category}</p>
                                   </div>
                                   <div className="text-right">
-                                    <p className="text-xs lg:text-sm font-bold text-sky-600">₹{test.price}</p>
+                                    <p className="text-xs lg:text-sm font-bold text-brand-600">₹{test.price}</p>
                                   </div>
                                 </button>
                               ))}
@@ -598,17 +598,17 @@ function BookPageContent() {
                    
                     {/* Selection Summary */}
                     {selectedTests.length > 0 && (
-                      <div className="mt-3 lg:mt-6 p-2 lg:p-4 bg-sky-50 rounded-lg lg:rounded-xl flex items-center justify-between">
+                      <div className="mt-3 lg:mt-6 p-2 lg:p-4 bg-brand-50 rounded-lg lg:rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-1 lg:gap-2">
-                          <svg className="w-4 lg:w-5 h-4 lg:h-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 lg:w-5 h-4 lg:h-5 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                           </svg>
-                          <span className="text-xs lg:text-sm text-sky-700">
+                          <span className="text-xs lg:text-sm text-brand-700">
                             {selectedTests.length} test{selectedTests.length > 1 ? 's' : ''} selected
                           </span>
                         </div>
                         {selectedTests.length > CONTENT.DISCOUNT.THRESHOLD && (
-                          <span className="text-xs lg:text-sm font-medium text-sky-600">
+                          <span className="text-xs lg:text-sm font-medium text-brand-600">
                             🎉 {CONTENT.DISCOUNT.MESSAGE}
                           </span>
                         )}
@@ -621,7 +621,7 @@ function BookPageContent() {
               {/* Step 2: Personal Information */}
               {currentStep === 2 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                  <div className="bg-accent-500 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                     <h2 className="text-sm lg:text-xl font-bold text-white">{CONTENT.STEP_TITLES[2].heading}</h2>
                   </div>
                   
@@ -704,7 +704,7 @@ function BookPageContent() {
               {/* Step 3: Date & Time */}
               {currentStep === 3 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-4 py-2 rounded-tr-xl">
+                  <div className="bg-accent-500 w-full px-4 py-2 rounded-tr-xl">
                     <h2 className="text-xl font-bold text-white">{CONTENT.STEP_TITLES[3].heading}</h2>
                   </div>
                   
@@ -739,8 +739,8 @@ function BookPageContent() {
                               onClick={() => updateField("time", slot)}
                               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                                 formData.time === slot
-                                  ? "bg-[#FF6B6B] text-white"
-                                  : "bg-slate-100 text-slate-600 hover:bg-sky-50 hover:text-sky-600"
+                                  ? "bg-accent-500 text-white"
+                                  : "bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-600"
                               }`}
                             >
                               {slot}
@@ -770,7 +770,7 @@ function BookPageContent() {
               {/* Step 4: Confirmation */}
               {currentStep === 4 && (
                 <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                  <div className="bg-[#FF6B6B] w-full px-4 py-2 rounded-tr-xl">
+                  <div className="bg-accent-500 w-full px-4 py-2 rounded-tr-xl">
                     <h2 className="text-xl font-bold text-white">{CONTENT.STEP_TITLES[4].heading}</h2>
                   </div>
                   
@@ -811,7 +811,7 @@ function BookPageContent() {
                         <div className="border-t pt-2 mt-2">
                           <div className="flex justify-between font-semibold">
                             <span>Total</span>
-                            <span className="text-sky-600">₹{finalPrice}</span>
+                            <span className="text-brand-600">₹{finalPrice}</span>
                           </div>
                           {discount > 0 && (
                             <p className="text-xs text-green-600 mt-1">Bulk discount applied: -₹{discount}</p>
@@ -854,7 +854,7 @@ function BookPageContent() {
                   <button
                     type="button"
                     onClick={handleContinue}
-                    className="px-4 lg:px-6 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors hover:opacity-90"
+                    className="px-4 lg:px-6 py-2 lg:py-3 bg-accent-500 text-white text-xs lg:font-medium rounded-lg lg:rounded-xl transition-colors hover:opacity-90"
                   >
                     Continue →
                   </button>
@@ -862,7 +862,7 @@ function BookPageContent() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting}
-                    className="px-4 lg:px-8 py-2 lg:py-3 bg-[#FF6B6B] text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="px-4 lg:px-8 py-2 lg:py-3 bg-accent-500 text-white text-xs lg:font-semibold rounded-lg lg:rounded-xl hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {submitting ? "Saving..." : "Confirm Booking"}
                   </button>
@@ -874,7 +874,7 @@ function BookPageContent() {
             {/* Right Column - Booking Summary */}
             <div className="lg:col-span-1">
               <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100 sticky top-48">
-                <div className="bg-sky-600 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                <div className="bg-brand-600 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                   <h2 className="text-sm lg:text-lg font-bold text-white">Summary</h2>
                 </div>
                 
@@ -923,7 +923,7 @@ function BookPageContent() {
                         <div className="flex justify-between items-center">
                           <span className="text-sm lg:text-lg font-semibold text-slate-900">Total</span>
                           <div className="text-right">
-                            <span className="text-lg lg:text-2xl font-bold text-sky-600">₹{finalPrice}</span>
+                            <span className="text-lg lg:text-2xl font-bold text-brand-600">₹{finalPrice}</span>
                             {discount > 0 && (
                               <p className="text-[10px] lg:text-xs text-green-600">Saved ₹{discount}</p>
                             )}
@@ -932,7 +932,7 @@ function BookPageContent() {
                       </div>
                       
                       {/* Home Collection Badge */}
-                      <div className="p-2 lg:p-3 bg-[#FF6B6B] rounded-lg lg:rounded-xl mb-2 lg:mb-4">
+                      <div className="p-2 lg:p-3 bg-accent-500 rounded-lg lg:rounded-xl mb-2 lg:mb-4">
                         <div className="flex items-center gap-1 lg:gap-2 text-xs lg:text-sm text-white">
                           <svg className="w-3 lg:w-4 h-3 lg:h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

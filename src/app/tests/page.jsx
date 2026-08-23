@@ -230,9 +230,9 @@ function TestsPageContent() {
         <div className="min-h-screen bg-slate-50 pb-20 lg:pb-0">
           <div className="container mx-auto px-2 sm:px-6 py-4 sm:py-8">
             {diseaseSlug && (
-              <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sky-100 bg-white px-4 py-3 shadow-sm">
+              <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-100 bg-white px-4 py-3 shadow-sm">
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-700">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-700">
                     Disease category
                   </p>
                   <p className="text-sm sm:text-base font-semibold text-slate-900 mt-0.5">
@@ -241,7 +241,7 @@ function TestsPageContent() {
                 </div>
                 <Link
                   href="/tests"
-                  className="text-xs sm:text-sm font-semibold text-[#FF6B6B] hover:text-sky-700 transition-colors"
+                  className="text-xs sm:text-sm font-semibold text-accent-500 hover:text-brand-700 transition-colors"
                 >
                   Clear · View all tests
                 </Link>
@@ -258,7 +258,7 @@ function TestsPageContent() {
                       onClick={() => setActiveCategory(category.id)}
                       className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
                         activeCategory === category.id
-                          ? "bg-[#FF6B6B] text-white"
+                          ? "bg-accent-500 text-white"
                           : "bg-white text-slate-600 border border-slate-200"
                       }`}
                     >
@@ -270,7 +270,7 @@ function TestsPageContent() {
 
               <div className="hidden lg:block lg:w-64 flex-shrink-0">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden sticky top-24">
-                  <div className="bg-[#FF6B6B] px-4 py-3">
+                  <div className="bg-accent-500 px-4 py-3">
                     <h3 className="text-white font-semibold">All Filters</h3>
                   </div>
                   <div className="p-3 border-b border-slate-200">
@@ -279,7 +279,7 @@ function TestsPageContent() {
                       placeholder="Search tests..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-3 py-2 rounded-md border border-slate-200 focus:outline-none focus:border-sky-500 text-sm text-black"
+                      className="w-full px-3 py-2 rounded-md border border-slate-200 focus:outline-none focus:border-brand-500 text-sm text-black"
                     />
                   </div>
                   <div className="p-2">
@@ -289,8 +289,8 @@ function TestsPageContent() {
                         onClick={() => setActiveCategory(category.id)}
                         className={`w-full text-left px-4 py-3 rounded-md font-medium transition-all duration-300 ${
                           activeCategory === category.id
-                            ? "bg-sky-100 text-sky-700 border-l-4 border-sky-600"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-sky-600 border-l-4 border-transparent"
+                            ? "bg-brand-100 text-brand-700 border-l-4 border-brand-600"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-brand-600 border-l-4 border-transparent"
                         }`}
                       >
                         {category.name}
@@ -316,7 +316,7 @@ function TestsPageContent() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="px-1 sm:px-3 py-1 rounded-md border border-slate-200 focus:outline-none focus:border-sky-500 bg-white text-xs sm:text-sm text-slate-700 cursor-pointer"
+                      className="px-1 sm:px-3 py-1 rounded-md border border-slate-200 focus:outline-none focus:border-brand-500 bg-white text-xs sm:text-sm text-slate-700 cursor-pointer"
                     >
                       {SORT_OPTIONS.map((option) => (
                         <option
@@ -342,7 +342,7 @@ function TestsPageContent() {
                     No tests are linked to{" "}
                     <span className="font-semibold">{diseaseLabel || diseaseSlug}</span> yet.
                     Ask the lab admin to assign tests under Admin → Categories, or{" "}
-                    <Link href="/tests" className="underline font-semibold text-sky-700">
+                    <Link href="/tests" className="underline font-semibold text-brand-700">
                       browse all tests
                     </Link>
                     .
@@ -350,63 +350,104 @@ function TestsPageContent() {
                 )}
 
                 {loading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {/* Mirrors the real card so the grid doesn't jump on load */}
                     {Array.from({ length: 9 }).map((_, i) => (
                       <div
                         key={i}
-                        className="h-20 animate-pulse rounded-lg bg-slate-200"
-                      />
+                        className="flex items-stretch gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-card"
+                      >
+                        <div className="h-11 w-11 shrink-0 animate-pulse rounded-lg bg-slate-100" />
+                        <div className="flex min-w-0 flex-1 flex-col gap-2">
+                          <div className="h-4 w-3/4 animate-pulse rounded bg-slate-100" />
+                          <div className="mt-auto h-2.5 w-1/2 animate-pulse rounded bg-slate-100" />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
                     {paginatedTests.map((item) => {
                       const isSelected = selectedTests.find(
                         (t) => t.id === item.id,
                       );
                       return (
-                        <div
+                        /*
+                          A real <button>, not a clickable <div> — this toggles
+                          selection, so it needs to be reachable by keyboard and
+                          to report its state. `aria-pressed` carries that.
+                        */
+                        <button
                           key={item.id}
+                          type="button"
                           onClick={() => toggleTest(item)}
-                          className={`flex items-center group cursor-pointer ${
-                            isSelected ? "opacity-100" : ""
+                          aria-pressed={Boolean(isSelected)}
+                          title={item.text}
+                          className={`group flex w-full items-stretch gap-3 rounded-xl border bg-white p-3 text-left transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ${
+                            isSelected
+                              ? "border-brand-500 shadow-card-hover ring-1 ring-brand-500"
+                              : "border-slate-200 shadow-card hover:border-brand-300 hover:shadow-card-hover"
                           }`}
                         >
-                          <div
-                            className={`relative z-10 w-20 h-20 sm:w-[68px] sm:h-[68px] flex items-center justify-center rounded-full flex-shrink-0 shadow-md overflow-hidden ${
-                              isSelected
-                                ? "bg-sky-200 border border-sky-600"
-                                : "bg-sky-100 border border-[#FF6B6B]"
+                          <span
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                              isSelected ? "bg-brand-100" : "bg-brand-50 group-hover:bg-brand-100"
                             }`}
                           >
-                            <TestIconView
-                              test={item}
-                              size={36}
-                              className="sm:w-10 sm:h-10"
-                            />
-                          </div>
-                          <div
-                            className={`px-3 py-2 rounded-r-lg -ml-12 sm:-ml-12 shadow-md min-h-20 sm:min-h-14 w-full sm:w-52 flex items-center justify-between border-t-4 ${
-                              isSelected
-                                ? "bg-[#FF6B6B] border-sky-600"
-                                : "bg-sky-600 border-[#FF6B6B]"
-                            }`}
-                          >
-                            {/*
-                              `min-w-0` lets the name shrink — flex children
-                              default to min-width:auto and would otherwise push
-                              the price out of the card. `break-words` handles
-                              single long words like "Immunohistochemistry",
-                              which have no space to wrap at.
-                            */}
-                            <p className="ml-12 min-w-0 break-words text-xs font-medium leading-tight text-white sm:ml-10">
-                              {item.text}
-                            </p>
-                            <span className="ml-1.5 shrink-0 text-xs font-bold text-white mr-3 sm:mr-2">
-                              ₹{item.price}
+                            <TestIconView test={item} size={22} />
+                          </span>
+
+                          <span className="flex min-w-0 flex-1 flex-col">
+                            <span className="flex items-start gap-2">
+                              {/*
+                                `min-w-0` lets the name shrink — flex children
+                                default to min-width:auto and would otherwise
+                                push the price out of the card. Clamped to two
+                                lines so a name like "Immunohistochemistry",
+                                which has no space to wrap at, can never
+                                overflow; the full text is in `title`.
+                              */}
+                              <span className="min-w-0 flex-1 text-sm font-bold leading-snug text-slate-900 line-clamp-2">
+                                {item.text}
+                              </span>
+                              <span className="shrink-0 whitespace-nowrap text-sm font-bold text-slate-900">
+                                <span className="text-[11px] font-semibold text-slate-400">Rs</span>{" "}
+                                {item.price}
+                              </span>
                             </span>
-                          </div>
-                        </div>
+
+                            {/* Pushed to the bottom so cards line up on a row */}
+                            <span className="mt-auto flex items-end justify-between gap-2 pt-2">
+                              <span className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-400">
+                                {item.category}
+                              </span>
+                              <span
+                                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                                  isSelected
+                                    ? "border-brand-600 bg-brand-600"
+                                    : "border-slate-300 bg-white group-hover:border-brand-400"
+                                }`}
+                                aria-hidden="true"
+                              >
+                                {isSelected ? (
+                                  <svg
+                                    className="h-2.5 w-2.5 text-white"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={3.5}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                ) : null}
+                              </span>
+                            </span>
+                          </span>
+                        </button>
                       );
                     })}
                   </div>
@@ -428,7 +469,7 @@ function TestsPageContent() {
                         type="button"
                         onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                         disabled={currentPage === 1}
-                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium border border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                       >
                         Prev
                       </button>
@@ -440,8 +481,8 @@ function TestsPageContent() {
                           onClick={() => setCurrentPage(page)}
                           className={`min-w-8 h-8 sm:min-w-9 sm:h-9 rounded-md text-xs sm:text-sm font-semibold transition-colors ${
                             page === currentPage
-                              ? "bg-sky-600 text-white"
-                              : "border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700"
+                              ? "bg-brand-600 text-white"
+                              : "border border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700"
                           }`}
                         >
                           {page}
@@ -454,7 +495,7 @@ function TestsPageContent() {
                           setCurrentPage((p) => Math.min(totalPages, p + 1))
                         }
                         disabled={currentPage === totalPages}
-                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium border border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                       >
                         Next
                       </button>
@@ -465,7 +506,7 @@ function TestsPageContent() {
 
               <div className="hidden lg:block lg:w-72 flex-shrink-0">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden sticky top-24">
-                  <div className="bg-sky-600 px-4 py-3">
+                  <div className="bg-brand-600 px-4 py-3">
                     <h3 className="text-white font-semibold">
                       Selected Tests ({selectedTests.length})
                     </h3>
@@ -523,7 +564,7 @@ function TestsPageContent() {
                         <span className="text-sm font-semibold">
                           Final Price:
                         </span>
-                        <span className="text-sm font-bold text-sky-600">
+                        <span className="text-sm font-bold text-brand-600">
                           ₹{finalPrice}
                         </span>
                       </div>
@@ -531,7 +572,7 @@ function TestsPageContent() {
                         type="button"
                         onClick={handleBookNow}
                         disabled={bookingBusy}
-                        className="w-full bg-[#FF6B6B] text-white py-2.5 rounded-lg font-semibold hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait shadow-sm"
+                        className="w-full bg-accent-500 text-white py-2.5 rounded-lg font-semibold hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait shadow-sm"
                       >
                         {bookingBusy ? "Opening booking…" : "Book Now"}
                       </button>
@@ -549,7 +590,7 @@ function TestsPageContent() {
               <span className="text-xs text-slate-600">
                 {selectedTests.length} test{selectedTests.length > 1 ? "s" : ""} selected
               </span>
-              <span className="text-xs font-bold text-sky-600">
+              <span className="text-xs font-bold text-brand-600">
                 ₹{finalPrice}
               </span>
             </div>
@@ -557,7 +598,7 @@ function TestsPageContent() {
               type="button"
               onClick={handleBookNow}
               disabled={bookingBusy}
-              className="w-full bg-[#FF6B6B] text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait"
+              className="w-full bg-accent-500 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait"
             >
               {bookingBusy ? "Opening booking…" : "Book Now"}
             </button>
@@ -609,7 +650,7 @@ function TestsPageContent() {
                       }}
                       className={`w-full text-left px-3 py-2 rounded-md text-xs font-medium transition-all ${
                         activeCategory === category.id
-                          ? "bg-sky-100 text-sky-700 border-l-4 border-sky-600"
+                          ? "bg-brand-100 text-brand-700 border-l-4 border-brand-600"
                           : "text-slate-600 hover:bg-slate-50 border-l-4 border-transparent"
                       }`}
                     >

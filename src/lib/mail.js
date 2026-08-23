@@ -73,7 +73,7 @@ export async function sendBookingNotification(booking) {
       subject: `New booking — ${booking.name} (${booking.phone})`,
       text: lines.join("\n"),
       html: `
-        <h2 style="color:#0284c7;margin:0 0 12px;">New Booking</h2>
+        <h2 style="color:#3750A4;margin:0 0 12px;">New Booking</h2>
         <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">
           <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Booking ID</td><td>${e(booking.id)}</td></tr>
           <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Name</td><td><strong>${e(booking.name)}</strong></td></tr>
@@ -178,7 +178,7 @@ export async function sendContactNotification(message) {
         message.message,
       ].join("\n"),
       html: `
-        <h2 style="color:#0284c7;margin:0 0 12px;">New Contact Message</h2>
+        <h2 style="color:#3750A4;margin:0 0 12px;">New Contact Message</h2>
         <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">
           <tr><td style="padding:4px 12px 4px 0;color:#64748b;">ID</td><td>${e(message.id)}</td></tr>
           <tr><td style="padding:4px 12px 4px 0;color:#64748b;">Name</td><td><strong>${e(message.name)}</strong></td></tr>

@@ -176,7 +176,7 @@ export default function PackageDetailPage() {
         <main className="pt-20">
           <div className="max-w-4xl mx-auto px-6 py-16 text-center">
             <h1 className="text-h2 font-bold text-slate-900 mb-space-md">{CONTENT.NOT_FOUND.TITLE}</h1>
-            <Link href="/packages" className="text-sky-600 hover:underline">
+            <Link href="/packages" className="text-brand-600 hover:underline">
               {CONTENT.NOT_FOUND.LINK_TEXT}
             </Link>
           </div>
@@ -194,18 +194,18 @@ export default function PackageDetailPage() {
       <main className="pt-[80px] lg:pt-[88px]">
         
         {/* Hero Section with Background Image */}
-        <div className="relative h-72 lg:h-96 bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400 overflow-hidden">
+        <div className="relative h-72 lg:h-96 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400 overflow-hidden">
           <img 
             src={pkg.image} 
             alt={pkg.name}
             className="absolute inset-0 w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-sky-900/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-900/40 to-transparent"></div>
           
           {/* Breadcrumb Navigation */}
           <div className="absolute top-6 left-6 right-6">
             <div className="max-w-6xl mx-auto">
-              <Link href="/packages" className="text-sky-100 hover:text-white text-sm inline-flex items-center gap-1 transition-colors">
+              <Link href="/packages" className="text-brand-100 hover:text-white text-sm inline-flex items-center gap-1 transition-colors">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
@@ -220,7 +220,7 @@ export default function PackageDetailPage() {
               <h1 className="text-4xl lg:text-5xl font-bold text-white mb-2">
                 {pkg.name}
               </h1>
-              <p className="text-sky-100 text-lg">{pkg.description}</p>
+              <p className="text-brand-100 text-lg">{pkg.description}</p>
             </div>
           </div>
         </div>
@@ -235,16 +235,16 @@ export default function PackageDetailPage() {
               {/* Quick Stats Cards */}
               <div className="grid md:grid-cols-3 gap-4">
                 {/* Tests Count */}
-                <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-xl p-6 border border-sky-200">
+                <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-xl p-6 border border-brand-200">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 bg-sky-200 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-10 h-10 bg-brand-200 rounded-lg flex items-center justify-center">
+                      <svg className="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                     </div>
                     <div>
                       <p className="text-sm text-slate-600">Tests Included</p>
-                      <p className="text-2xl font-bold text-sky-600">{pkg.testsCount || 1}</p>
+                      <p className="text-2xl font-bold text-brand-600">{pkg.testsCount || 1}</p>
                     </div>
                   </div>
                 </div>
@@ -305,8 +305,8 @@ export default function PackageDetailPage() {
               {/* Included Tests List */}
               <div className="bg-white border border-slate-200 rounded-xl p-6 lg:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -314,8 +314,8 @@ export default function PackageDetailPage() {
                 </div>
                 <div className="grid md:grid-cols-2 gap-3">
                   {pkg.includedTests.map((test, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-sky-50 border border-sky-100 hover:border-sky-300 hover:bg-sky-100 transition-all">
-                      <span className="w-2 h-2 rounded-full bg-sky-600 flex-shrink-0"></span>
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-brand-50 border border-brand-100 hover:border-brand-300 hover:bg-brand-100 transition-all">
+                      <span className="w-2 h-2 rounded-full bg-brand-600 flex-shrink-0"></span>
                       <span className="text-slate-800 font-medium">{test}</span>
                     </div>
                   ))}
@@ -325,17 +325,17 @@ export default function PackageDetailPage() {
 
             {/* Right Sidebar - Booking Card */}
             <div>
-              <div className="bg-gradient-to-b from-sky-500 to-sky-600 rounded-2xl p-6 text-white sticky top-24 shadow-lg">
+              <div className="bg-gradient-to-b from-brand-500 to-brand-600 rounded-2xl p-6 text-white sticky top-24 shadow-lg">
                 {/* Price Section */}
                 <div className="mb-6 pb-6 border-b border-white/20">
-                  <p className="text-sky-100 text-sm mb-2">Package Price</p>
+                  <p className="text-brand-100 text-sm mb-2">Package Price</p>
                   <div className="flex items-baseline gap-2 mb-3">
                     <span className="text-4xl font-bold">₹{pkg.price}</span>
                   </div>
                 </div>
 
                 {/* Book Button */}
-                <button className="w-full bg-white text-sky-600 font-bold py-3 px-4 rounded-lg hover:bg-sky-50 transition-colors mb-4 text-lg shadow-md">
+                <button className="w-full bg-white text-brand-600 font-bold py-3 px-4 rounded-lg hover:bg-brand-50 transition-colors mb-4 text-lg shadow-md">
                   Book Now
                 </button>
 

@@ -27,7 +27,7 @@ export default function AdminPagination({ page, pageSize, total, onPageChange })
   const pageButton = (active) =>
     `admin-mono min-w-[2rem] rounded-md px-2 py-1.5 text-xs font-semibold transition-colors ${
       active
-        ? "bg-[var(--admin-sky)] text-white"
+        ? "bg-[var(--admin-brand)] text-white"
         : "text-slate-600 hover:bg-[var(--admin-subtle)] hover:text-slate-900"
     }`;
 

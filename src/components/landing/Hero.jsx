@@ -66,7 +66,7 @@ export default function Hero({ slides = [], section, items }) {
         Each artwork is held at its own native ratio so nothing is cropped:
         1024x506 for the phone art, 3:1 for the desktop art.
       */}
-      <div className="relative mx-auto aspect-[1024/506] w-full max-w-[1920px] bg-[#eef5fb] leading-none sm:aspect-[3/1] sm:bg-slate-900">
+      <div className="relative mx-auto aspect-[1024/506] w-full max-w-[1920px] bg-brand-50 leading-none sm:aspect-[3/1] sm:bg-slate-900">
         {heroImages.map((img, i) => (
           /*
             <picture> rather than two elements toggled with `hidden` — CSS only
@@ -103,8 +103,8 @@ export default function Hero({ slides = [], section, items }) {
         <div className="absolute inset-0 hidden bg-gradient-to-b from-transparent via-transparent to-slate-900/80 sm:block" />
 
         <div className="absolute inset-0 hidden overflow-hidden sm:block">
-          <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-sky-500/8 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-sky-400/5 blur-3xl" />
+          <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-brand-500/8 blur-3xl" />
+          <div className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-brand-400/5 blur-3xl" />
         </div>
 
         {/* Slide dots live on the image, so the mobile copy block below is clear */}
@@ -117,7 +117,7 @@ export default function Hero({ slides = [], section, items }) {
                  they only go white once the dark desktop overlay is in play. */
               className={`h-2 rounded-full transition-all duration-300 ${
                 i === index
-                  ? "w-4 bg-sky-600 sm:bg-sky-400"
+                  ? "w-4 bg-brand-600 sm:bg-brand-400"
                   : "w-2 bg-slate-400/70 hover:bg-slate-500 sm:bg-white/60 sm:hover:bg-white"
               }`}
               aria-label={`Go to slide ${i + 1}`}
@@ -136,10 +136,10 @@ export default function Hero({ slides = [], section, items }) {
         in the accessibility tree via sr-only rather than being removed with
         `hidden`, so the page still has a heading on phones.
       */}
-      <div className="relative z-10 flex flex-col items-center justify-center bg-[#eef5fb] px-4 py-4 text-center sm:absolute sm:inset-0 sm:bg-transparent sm:px-6 sm:py-0 lg:px-8">
+      <div className="relative z-10 flex flex-col items-center justify-center bg-brand-50 px-4 py-4 text-center sm:absolute sm:inset-0 sm:bg-transparent sm:px-6 sm:py-0 lg:px-8">
         <h1 className="sr-only sm:not-sr-only sm:mb-3 sm:text-2xl sm:text-white sm:drop-shadow-lg md:text-3xl lg:text-4xl">
           {before}
-          {accent ? <span className="sm:text-sky-400">{accent}</span> : null}
+          {accent ? <span className="sm:text-brand-400">{accent}</span> : null}
           {after}
         </h1>
         <p className="hidden max-w-xl sm:mb-4 sm:block sm:text-xs sm:text-slate-200 sm:drop-shadow-lg md:text-base">
@@ -147,7 +147,7 @@ export default function Hero({ slides = [], section, items }) {
         </p>
         <Link
           href={section?.ctaHref || "/book"}
-          className="whitespace-nowrap rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-sky-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-sky-600 hover:to-sky-700 hover:shadow-sky-500/60 sm:px-5 sm:py-2 sm:text-sm"
+          className="whitespace-nowrap rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-brand-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-brand-600 hover:to-brand-700 hover:shadow-brand-500/60 sm:px-5 sm:py-2 sm:text-sm"
         >
           {section?.ctaLabel || "Book Test Now"}
         </Link>
@@ -155,7 +155,7 @@ export default function Hero({ slides = [], section, items }) {
 
       <div className="absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 animate-bounce sm:block sm:bottom-12 lg:bottom-16">
         <svg
-          className="h-4 w-4 text-sky-400 sm:h-5 sm:w-5"
+          className="h-4 w-4 text-brand-400 sm:h-5 sm:w-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

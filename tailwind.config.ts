@@ -11,10 +11,50 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        /*
+          Brand — taken straight from the Cutis Path Lab seal. brand-600 is the
+          logo blue (#3750A4, sampled as #3650A4 across 83% of its opaque
+          pixels). Every step shares hue 226 so tints and shades stay in family.
+          Replaces the old sky-* palette, which failed WCAG AA on white at
+          4.10:1; brand-600 reaches 7.38:1.
+        */
+        brand: {
+          50: "#EFF2FB",
+          100: "#DFE4F6",
+          200: "#C3CDEE",
+          300: "#9DADE2",
+          400: "#647DCE",
+          500: "#3E5DC1",
+          600: "#3750A4",
+          700: "#2E438A",
+          800: "#26376D",
+          900: "#202D55",
+          950: "#161E36",
+        },
+        /*
+          Accent — deep crimson, hue 351, 125 degrees off the brand hue so it
+          still signals hard against royal blue. accent-500 passes AA on white
+          at 5.39:1, where the coral it replaces managed only 2.78:1.
+        */
+        accent: {
+          50: "#FCEDF0",
+          100: "#F9DCE0",
+          200: "#F1BBC3",
+          300: "#E58B98",
+          400: "#D5586A",
+          500: "#C62F45",
+          600: "#AB2639",
+          700: "#8D2030",
+          800: "#711E2A",
+          900: "#591C25",
+          950: "#361217",
+        },
         // Section background rhythm — alternate `white` and `tint`.
+        // The tint is nudged onto the brand hue (226) so page bands sit in the
+        // same family as the palette instead of the old sky-tinted grey.
         surface: {
           DEFAULT: "#FFFFFF",
-          tint: "#F6F9FE",
+          tint: "#F5F7FD",
           muted: "#F1F5F9",
         },
       },

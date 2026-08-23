@@ -400,7 +400,7 @@ export default function AdminBlogPage() {
                     ) : null}
                     <div className="min-w-0">
                       <p className="font-semibold text-slate-900">{p.title}</p>
-                      <p className="text-xs text-[var(--admin-sky)]">
+                      <p className="text-xs text-[var(--admin-brand)]">
                         {p.category} · {formatDate(p.date)} · {p.readMinutes} min
                       </p>
                       <p className="mt-0.5 truncate font-mono text-[11px] text-slate-400">
@@ -559,7 +559,7 @@ export default function AdminBlogPage() {
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 onChange={onFileChange}
-                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-sky)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-sky-deep)]"
+                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-brand)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-brand-deep)]"
               />
             </Field>
           </div>

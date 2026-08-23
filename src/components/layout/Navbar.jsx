@@ -126,7 +126,7 @@ export default function Navbar() {
     return (
       <>
         {text.slice(0, idx)}
-        <span className="text-[#FF6B6B] font-semibold">{text.slice(idx, idx + query.length)}</span>
+        <span className="text-accent-500 font-semibold">{text.slice(idx, idx + query.length)}</span>
         {text.slice(idx + query.length)}
       </>
     );
@@ -262,7 +262,7 @@ export default function Navbar() {
     <>
       {showSearchDropdown && searchResults.length > 0 && (
         <div
-          className={`absolute left-0 right-0 mt-2 bg-white border border-sky-100 rounded-2xl shadow-xl z-50 overflow-hidden ${
+          className={`absolute left-0 right-0 mt-2 bg-white border border-brand-100 rounded-2xl shadow-xl z-50 overflow-hidden ${
             compact ? "max-h-64" : "max-h-80"
           } overflow-y-auto`}
         >
@@ -272,14 +272,14 @@ export default function Navbar() {
               type="button"
               onClick={() => navigateToResult(item)}
               className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors ${
-                idx === searchActiveIdx ? "bg-sky-50" : "hover:bg-slate-50"
+                idx === searchActiveIdx ? "bg-brand-50" : "hover:bg-slate-50"
               }`}
             >
               <span
                 className={`flex-shrink-0 w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-bold ${
                   item.type === "test"
-                    ? "bg-sky-100 text-sky-700"
-                    : "bg-[#FF6B6B]/15 text-[#FF6B6B]"
+                    ? "bg-brand-100 text-brand-700"
+                    : "bg-accent-500/15 text-accent-500"
                 }`}
               >
                 {item.type === "test" ? "T" : "P"}
@@ -299,7 +299,7 @@ export default function Navbar() {
       {showSearchDropdown &&
         searchQuery.trim().length > 0 &&
         searchResults.length === 0 && (
-          <div className="absolute left-0 right-0 mt-2 bg-white border border-sky-100 rounded-2xl shadow-xl z-50 px-4 py-6 text-center">
+          <div className="absolute left-0 right-0 mt-2 bg-white border border-brand-100 rounded-2xl shadow-xl z-50 px-4 py-6 text-center">
             <p className="text-sm text-slate-500">
               No results for{" "}
               <span className="font-semibold text-slate-700">&quot;{searchQuery}&quot;</span>
@@ -318,7 +318,7 @@ export default function Navbar() {
         the two things a visitor actually taps: call and WhatsApp.
       */}
       <div
-        className="bg-sky-600 text-white py-1.5 border-b border-sky-700"
+        className="bg-brand-600 text-white py-1.5 border-b border-brand-700"
         /* Header settings can switch the whole strip off without clearing it. */
         hidden={site.isActive === false}
       >
@@ -346,7 +346,7 @@ export default function Navbar() {
               {site.phone && (
                 <a
                   href={telHref(site.phone)}
-                  className="flex shrink-0 items-center gap-1.5 hover:text-sky-100"
+                  className="flex shrink-0 items-center gap-1.5 hover:text-brand-100"
                 >
                   <PhoneIcon size={15} className="text-white" />
                   {site.phone}
@@ -357,7 +357,7 @@ export default function Navbar() {
                   <span className="hidden opacity-80 lg:inline">|</span>
                   <a
                     href={mailHref(site.email)}
-                    className="hidden truncate hover:text-sky-100 lg:flex lg:items-center lg:gap-1.5"
+                    className="hidden truncate hover:text-brand-100 lg:flex lg:items-center lg:gap-1.5"
                   >
                     <EmailIcon size={16} className="text-white" />
                     {site.email}
@@ -368,22 +368,22 @@ export default function Navbar() {
             {/* A social link with no URL saved simply drops out of the strip. */}
             <div className="flex shrink-0 items-center gap-3">
               {site.facebookUrl && (
-                <a href={site.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-sky-300">
+                <a href={site.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transition hover:text-brand-300">
                   <FacebookIcon size={18} />
                 </a>
               )}
               {site.instagramUrl && (
-                <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-sky-300">
+                <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition hover:text-brand-300">
                   <InstagramIcon size={18} />
                 </a>
               )}
               {site.xUrl && (
-                <a href={site.xUrl} target="_blank" rel="noopener noreferrer" aria-label="X" className="transition hover:text-sky-300">
+                <a href={site.xUrl} target="_blank" rel="noopener noreferrer" aria-label="X" className="transition hover:text-brand-300">
                   <TwitterIcon size={18} />
                 </a>
               )}
               {site.whatsappUrl && (
-                <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-sky-300">
+                <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="transition hover:text-brand-300">
                   <WhatsAppIcon size={17} />
                 </a>
               )}
@@ -393,7 +393,7 @@ export default function Navbar() {
       </div>
 
       {/* MAIN NAVBAR */}
-      <nav className="bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-[0_4px_24px_rgba(2,132,199,0.06)] relative z-[60]">
+      <nav className="bg-white/95 backdrop-blur-md border-b border-brand-100 shadow-[0_4px_24px_rgba(55,80,164,0.06)] relative z-[60]">
         {/* Same shell as every page section, so the logo lines up with the
             content below it instead of sitting against the viewport edge. */}
         <div className="relative z-[70] mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8">
@@ -406,15 +406,48 @@ export default function Navbar() {
               the full nav is inline.
             */}
             {/* Logo */}
-            <Link href="/" className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-              <Image
-                src="/images/cutis.png"
-                alt="CUTIS Lab"
-                width={120}
-                height={45}
-                className="w-[108px] sm:w-28 lg:w-32 h-auto"
-                priority
-              />
+            {/*
+              The new logo is a circular seal (966x964 after trimming), not the
+              4:1 wordmark it replaces — dropped into the old slot it rendered
+              108x113px and pushed the header open. So it becomes a lockup: the
+              seal at nav height, with the name set in type beside it. At 40px
+              the seal's ring text ("Pvt. Ltd.", "Mid Baneshwor, KTM") is far
+              too small to read, so the type carries the name instead.
+            */}
+            <Link
+              href="/"
+              className="flex shrink-0 items-center gap-2 sm:gap-2.5"
+              onClick={closeMobileMenu}
+            >
+              {/*
+                A white plate with a hair of padding and a brand ring. The seal
+                is blue right to its own edge, so on a white navbar it had
+                nothing to sit against — the gap plus ring gives it a defined
+                rim and it reads as a struck coin rather than a floating blob.
+              */}
+              <span className="flex shrink-0 items-center justify-center rounded-full bg-white p-[3px] shadow-sm ring-1 ring-brand-200">
+                <Image
+                  src="/images/logo/cutis-seal-192.png"
+                  alt=""
+                  width={192}
+                  height={192}
+                  /* Next re-encodes at quality 75 by default, which softens the
+                     seal's fine ring lettering at this size. 90 is allow-listed
+                     in next.config.mjs. */
+                  quality={90}
+                  className="h-10 w-10 rounded-full sm:h-11 sm:w-11 lg:h-12 lg:w-12"
+                  priority
+                />
+              </span>
+              <span className="flex min-w-0 flex-col leading-none">
+                <span className="text-[13px] font-bold tracking-tight text-brand-700 sm:text-[15px] lg:text-lg">
+                  CUTIS PATH LAB
+                </span>
+                {/* Too much for a phone header alongside the icons */}
+                <span className="mt-1 hidden text-[9px] font-medium uppercase tracking-[0.16em] text-slate-500 sm:block lg:text-[10px]">
+                  Mid Baneshwor, Kathmandu
+                </span>
+              </span>
             </Link>
 
             {/* Desktop Menu */}
@@ -427,13 +460,13 @@ export default function Navbar() {
                       href={link.href}
                       className={`px-4 py-2.5 text-base font-medium rounded-lg transition relative ${
                         pathname === link.href
-                          ? "text-sky-600"
-                          : "text-slate-800 hover:text-sky-600"
+                          ? "text-brand-600"
+                          : "text-slate-800 hover:text-brand-600"
                       }`}
                     >
                       {link.label}
                       {pathname === link.href && (
-                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-[#FF6B6B] rounded-full"></span>
+                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-accent-500 rounded-full"></span>
                       )}
                     </Link>
                   );
@@ -463,7 +496,7 @@ export default function Navbar() {
                         else setOpenMenu(link.label);
                       }}
                       className={`flex items-center gap-1.5 px-4 py-2.5 text-base font-medium rounded-lg transition relative ${
-                        active ? "text-sky-600" : "text-slate-800 hover:text-sky-600"
+                        active ? "text-brand-600" : "text-slate-800 hover:text-brand-600"
                       }`}
                     >
                       {link.label}
@@ -471,7 +504,7 @@ export default function Navbar() {
                         className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
                       />
                       {active && (
-                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-[#FF6B6B] rounded-full"></span>
+                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-accent-500 rounded-full"></span>
                       )}
                     </button>
 
@@ -489,14 +522,14 @@ export default function Navbar() {
                                 onClick={() => setOpenMenu(null)}
                                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.95rem] font-medium transition-colors ${
                                   childActive
-                                    ? "bg-sky-50 text-sky-700"
-                                    : "text-slate-700 hover:bg-slate-50 hover:text-sky-600"
+                                    ? "bg-brand-50 text-brand-700"
+                                    : "text-slate-700 hover:bg-slate-50 hover:text-brand-600"
                                 }`}
                               >
                                 <MobileNavIcon
                                   href={child.href}
                                   size={18}
-                                  className={childActive ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                                  className={childActive ? "shrink-0 text-brand-600" : "shrink-0 text-slate-400"}
                                 />
                                 {child.label}
                               </Link>
@@ -520,9 +553,9 @@ export default function Navbar() {
                     onChange={handleSearchChange}
                     onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
                     onKeyDown={searchKeyDown}
-                    className="w-64 px-4 py-2 pr-12 text-slate-900 border border-sky-300 rounded-lg bg-white focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                    className="w-64 px-4 py-2 pr-12 text-slate-900 border border-brand-300 rounded-lg bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
                   />
-                  <div className="absolute right-0 top-0 bottom-0 w-9 bg-[#FF6B6B] rounded-lg flex items-center justify-center pointer-events-none">
+                  <div className="absolute right-0 top-0 bottom-0 w-9 bg-accent-500 rounded-lg flex items-center justify-center pointer-events-none">
                     <SearchIcon size={16} className="text-white" />
                   </div>
                   {renderSearchResults()}
@@ -534,7 +567,7 @@ export default function Navbar() {
                 onClick={() => setReportOpen((v) => !v)}
                 aria-haspopup="dialog"
                 aria-expanded={reportOpen}
-                className="px-5 py-2 bg-transparent border-b-2 border-b-[#FF6B6B] rounded-lg text-base font-semibold text-[#FF6B6B] hover:bg-red-50 transition"
+                className="px-5 py-2 bg-transparent border-b-2 border-b-accent-500 rounded-lg text-base font-semibold text-accent-500 hover:bg-red-50 transition"
               >
                 Report
               </button>
@@ -559,7 +592,7 @@ export default function Navbar() {
                 }}
                 className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
                   mobileSearchOpen
-                    ? "border-sky-400 bg-sky-50 text-sky-700"
+                    ? "border-brand-400 bg-brand-50 text-brand-700"
                     : "border-slate-200 bg-white text-slate-600"
                 }`}
                 aria-label="Search tests"
@@ -570,7 +603,7 @@ export default function Navbar() {
               {/* Always the hamburger — closing is the drawer's job now */}
               <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-600 text-white transition-colors hover:bg-sky-700"
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-white transition-colors hover:bg-brand-700"
                 onClick={toggleMobileMenu}
                 aria-label="Open menu"
                 aria-expanded={isOpen}
@@ -587,7 +620,7 @@ export default function Navbar() {
         {/* Search sheet — expands under the header when the icon is tapped */}
         <div
           ref={mobileSearchRef}
-          className={`lg:hidden overflow-hidden border-t border-sky-50 transition-[max-height,opacity] duration-300 ease-out ${
+          className={`lg:hidden overflow-hidden border-t border-brand-50 transition-[max-height,opacity] duration-300 ease-out ${
             mobileSearchOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
@@ -601,9 +634,9 @@ export default function Navbar() {
                 onChange={handleSearchChange}
                 onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
                 onKeyDown={searchKeyDown}
-                className="w-full rounded-xl border border-sky-200 bg-white py-3 pl-4 pr-11 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                className="w-full rounded-xl border border-brand-200 bg-white py-3 pl-4 pr-11 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
               />
-              <div className="pointer-events-none absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg bg-sky-600">
+              <div className="pointer-events-none absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg bg-brand-600">
                 <SearchIcon size={14} className="text-white" />
               </div>
               {renderSearchResults(true)}
@@ -639,7 +672,7 @@ export default function Navbar() {
           aria-modal="true"
           aria-label="Site menu"
         >
-          <div className="flex shrink-0 items-center justify-between bg-sky-600 px-5 py-4">
+          <div className="flex shrink-0 items-center justify-between bg-brand-600 px-5 py-4">
             <span className="text-base font-bold text-white">Cutis Path Lab</span>
             <button
               type="button"
@@ -680,13 +713,13 @@ export default function Navbar() {
                           }
                           className={`flex w-full items-center gap-4 px-5 py-4 text-left text-[15px] transition-colors ${
                             groupActive
-                              ? "bg-sky-50/60 font-semibold text-sky-700"
+                              ? "bg-brand-50/60 font-semibold text-brand-700"
                               : "font-medium text-slate-700 active:bg-slate-50"
                           }`}
                         >
                           <MobileNavIcon
                             href={link.href}
-                            className={groupActive ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                            className={groupActive ? "shrink-0 text-brand-600" : "shrink-0 text-slate-400"}
                           />
                           <span className="flex-1">{link.label}</span>
                           <ChevronDown
@@ -707,18 +740,18 @@ export default function Navbar() {
                                   onClick={closeMobileMenu}
                                   className={`flex items-center gap-3 py-3 pl-14 pr-5 text-[14.5px] transition-colors ${
                                     childActive
-                                      ? "font-semibold text-sky-700"
+                                      ? "font-semibold text-brand-700"
                                       : "font-medium text-slate-600 active:bg-slate-100"
                                   }`}
                                 >
                                   <MobileNavIcon
                                     href={child.href}
                                     size={18}
-                                    className={childActive ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                                    className={childActive ? "shrink-0 text-brand-600" : "shrink-0 text-slate-400"}
                                   />
                                   <span className="flex-1">{child.label}</span>
                                   {childActive && (
-                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]" aria-hidden />
+                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" aria-hidden />
                                   )}
                                 </Link>
                               );
@@ -737,17 +770,17 @@ export default function Navbar() {
                       onClick={closeMobileMenu}
                       className={`flex items-center gap-4 px-5 py-4 text-[15px] transition-colors ${
                         active
-                          ? "bg-sky-50/60 font-semibold text-sky-700"
+                          ? "bg-brand-50/60 font-semibold text-brand-700"
                           : "font-medium text-slate-700 active:bg-slate-50"
                       }`}
                     >
                       <MobileNavIcon
                         href={link.href}
-                        className={active ? "shrink-0 text-sky-600" : "shrink-0 text-slate-400"}
+                        className={active ? "shrink-0 text-brand-600" : "shrink-0 text-slate-400"}
                       />
                       <span className="flex-1">{link.label}</span>
                       {active && (
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B6B]" aria-hidden />
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" aria-hidden />
                       )}
                     </Link>
                   );
@@ -763,7 +796,7 @@ export default function Navbar() {
                   closeMobileMenu();
                   setReportOpen(true);
                 }}
-                className="flex items-center justify-center rounded-xl border border-[#FF6B6B]/50 py-2.5 text-sm font-semibold text-[#FF6B6B]"
+                className="flex items-center justify-center rounded-xl border border-accent-500/50 py-2.5 text-sm font-semibold text-accent-500"
               >
                 Report
               </button>
@@ -803,12 +836,12 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors ${
-                  active ? "text-sky-600" : "text-slate-400"
+                  active ? "text-brand-600" : "text-slate-400"
                 }`}
               >
                 <span
                   className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-colors ${
-                    active ? "bg-sky-50" : ""
+                    active ? "bg-brand-50" : ""
                   }`}
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -818,7 +851,7 @@ export default function Navbar() {
                 <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
                 <span
                   className={`h-0.5 w-4 rounded-full transition-colors ${
-                    active ? "bg-[#FF6B6B]" : "bg-transparent"
+                    active ? "bg-accent-500" : "bg-transparent"
                   }`}
                 />
               </Link>
@@ -826,12 +859,12 @@ export default function Navbar() {
           })}
 
           <Link href="/book" className="flex flex-1 flex-col items-center justify-center -mt-5">
-            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-sky-600 text-white shadow-[0_8px_20px_rgba(2,132,199,0.35)] ring-4 ring-white">
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-[0_8px_20px_rgba(55,80,164,0.35)] ring-4 ring-white">
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </span>
-            <span className="mt-1.5 text-[10px] font-bold text-sky-700">Book</span>
+            <span className="mt-1.5 text-[10px] font-bold text-brand-700">Book</span>
           </Link>
 
           {[
@@ -856,12 +889,12 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors ${
-                  active ? "text-sky-600" : "text-slate-400"
+                  active ? "text-brand-600" : "text-slate-400"
                 }`}
               >
                 <span
                   className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-colors ${
-                    active ? "bg-sky-50" : ""
+                    active ? "bg-brand-50" : ""
                   }`}
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -871,7 +904,7 @@ export default function Navbar() {
                 <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
                 <span
                   className={`h-0.5 w-4 rounded-full transition-colors ${
-                    active ? "bg-[#FF6B6B]" : "bg-transparent"
+                    active ? "bg-accent-500" : "bg-transparent"
                   }`}
                 />
               </Link>

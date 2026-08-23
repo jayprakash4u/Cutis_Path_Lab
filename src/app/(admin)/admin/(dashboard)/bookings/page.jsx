@@ -216,7 +216,7 @@ export default function AdminBookingsPage() {
                           <p className="font-semibold text-slate-900">{b.name}</p>
                           <a
                             href={`tel:${b.phone}`}
-                            className="admin-mono text-sm font-medium text-[var(--admin-sky)] hover:underline"
+                            className="admin-mono text-sm font-medium text-[var(--admin-brand)] hover:underline"
                           >
                             {b.phone}
                           </a>
@@ -263,7 +263,7 @@ export default function AdminBookingsPage() {
                       <p className="truncate font-semibold text-slate-900">{b.name}</p>
                       <a
                         href={`tel:${b.phone}`}
-                        className="admin-mono text-sm font-medium text-[var(--admin-sky)]"
+                        className="admin-mono text-sm font-medium text-[var(--admin-brand)]"
                       >
                         {b.phone}
                       </a>

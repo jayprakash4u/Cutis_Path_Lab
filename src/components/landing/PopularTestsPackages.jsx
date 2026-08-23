@@ -150,7 +150,7 @@ export default function PopularTestsPackages({ section }) {
               {!loading && items.length === 0 && (
                 <p className="px-4 py-8 text-sm text-slate-500">
                   No popular tests or packages available.{" "}
-                  <Link href="/tests" className="text-sky-600 underline">
+                  <Link href="/tests" className="text-brand-600 underline">
                     Browse all tests
                   </Link>
                 </p>
@@ -165,7 +165,7 @@ export default function PopularTestsPackages({ section }) {
                       style={cardWidthStyle}
                       className={`flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover ${cardClassName}`}
                     >
-                      <div className="flex items-center justify-between gap-2 bg-[#FF6B6B] px-3 py-2">
+                      <div className="flex items-center justify-between gap-2 bg-accent-500 px-3 py-2">
                         <h3 className="w-full truncate text-xs font-semibold text-white sm:text-sm">
                           {item.name}
                         </h3>
@@ -179,26 +179,26 @@ export default function PopularTestsPackages({ section }) {
                             three unlabelled values otherwise. */}
                         <div className="mb-3 flex flex-col gap-1.5 text-xs text-slate-500">
                           <span className="flex items-center gap-1.5">
-                            <svg className="h-4 w-4 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             Reports: {item.reportsTime}
                           </span>
                           <span className="flex items-center gap-1.5">
-                            <svg className="h-4 w-4 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             Fasting: {item.fasting}
                           </span>
                           <span className="flex items-center gap-1.5">
-                            <svg className="h-4 w-4 shrink-0 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-4 w-4 shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                             </svg>
                             Sample: {item.sampleType}
                           </span>
                         </div>
 
-                        <div className="mt-auto border-t border-sky-600 pt-3">
+                        <div className="mt-auto border-t border-brand-600 pt-3">
                           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                               <div className="flex items-baseline gap-1.5">
@@ -220,7 +220,7 @@ export default function PopularTestsPackages({ section }) {
                             <button
                               type="button"
                               onClick={() => handleBook(item)}
-                              className="w-full rounded-lg bg-sky-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-sky-700 sm:w-auto md:px-4 md:text-sm"
+                              className="w-full rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-700 sm:w-auto md:px-4 md:text-sm"
                             >
                               Book
                             </button>

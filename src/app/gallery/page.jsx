@@ -74,8 +74,8 @@ export default function GalleryPage() {
           <div className="mx-auto max-w-7xl px-3 lg:px-6">
             <div className="overflow-hidden rounded-lg bg-white shadow-sm">
               <div className="relative px-4 py-4 lg:px-8 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 z-0 border-t border-[#FF6B6B]"></div>
-                <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-sky-600 px-3 py-1.5 lg:px-4 lg:py-2">
+                <div className="absolute left-0 right-0 top-1/2 z-0 border-t border-accent-500"></div>
+                <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-brand-600 px-3 py-1.5 lg:px-4 lg:py-2">
                   <h2 className="text-sm font-bold text-white md:text-xl lg:text-lg">
                     Our Gallery
                   </h2>

@@ -123,7 +123,7 @@ export default function ServiceDetailPage() {
             </p>
             <Link
               href="/services"
-              className="inline-flex px-5 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700"
+              className="inline-flex px-5 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700"
             >
               Back to Services
             </Link>
@@ -146,7 +146,7 @@ export default function ServiceDetailPage() {
           <div className="max-w-4xl mx-auto px-6 py-10 md:py-14">
             <Link
               href="/services"
-              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-sky-600 mb-8 transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-brand-600 mb-8 transition-colors"
             >
               <svg
                 className="w-4 h-4"
@@ -166,7 +166,7 @@ export default function ServiceDetailPage() {
             </Link>
 
             <div className="flex items-start gap-4 md:gap-5">
-              <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-sky-50 flex items-center justify-center">
+              <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-brand-50 flex items-center justify-center">
                 <IconComponent size={40} className="w-10 h-10" />
               </div>
               <div className="min-w-0 flex-1">
@@ -182,13 +182,13 @@ export default function ServiceDetailPage() {
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href={enquireHref}
-                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-colors"
               >
                 Book / Enquire
               </Link>
               <a
                 href="tel:+9779861848382"
-                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:border-sky-500 hover:text-sky-700 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg border border-slate-200 text-slate-700 text-sm font-semibold hover:border-brand-500 hover:text-brand-700 transition-colors"
               >
                 Call lab
               </a>
@@ -200,7 +200,7 @@ export default function ServiceDetailPage() {
                   key={item}
                   className="text-xs md:text-sm text-slate-500 flex items-center gap-1.5"
                 >
-                  <span className="text-sky-600" aria-hidden="true">
+                  <span className="text-brand-600" aria-hidden="true">
                     ●
                   </span>
                   {item}
@@ -232,7 +232,7 @@ export default function ServiceDetailPage() {
               <ol className="space-y-4">
                 {WHAT_TO_EXPECT.map((item, idx) => (
                   <li key={item.title} className="flex gap-4">
-                    <span className="shrink-0 w-8 h-8 rounded-full bg-sky-600 text-white text-sm font-bold flex items-center justify-center">
+                    <span className="shrink-0 w-8 h-8 rounded-full bg-brand-600 text-white text-sm font-bold flex items-center justify-center">
                       {idx + 1}
                     </span>
                     <div>

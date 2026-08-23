@@ -11,10 +11,10 @@ export default function ServicesGrid({ services = [] }) {
               About and Packages page headers. */}
           <div className="relative">
             <div
-              className="absolute left-0 right-0 top-1/2 z-0 border-t border-[#FF6B6B]"
+              className="absolute left-0 right-0 top-1/2 z-0 border-t border-accent-500"
               aria-hidden="true"
             ></div>
-            <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-sky-600 px-4 py-2">
+            <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-brand-600 px-4 py-2">
               <h2 className="text-lg font-bold text-white md:text-xl">Our Services</h2>
             </div>
           </div>

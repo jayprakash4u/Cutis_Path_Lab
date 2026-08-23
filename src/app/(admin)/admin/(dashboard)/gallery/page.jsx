@@ -249,7 +249,7 @@ export default function AdminGalleryPage() {
             accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={onFileChange}
             data-autofocus
-            className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-sky)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-sky-deep)]"
+            className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-brand)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-brand-deep)]"
           />
         </Field>
 

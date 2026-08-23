@@ -14,10 +14,10 @@ export function BuildingIcon({ size = 24, className = '' }) {
           dividers at x=10/14 but windows at x=6/12, so they never aligned. */}
       <rect x="4" y="3" width="16" height="18" rx="1.5" stroke="currentColor" strokeWidth="2" fill="none" />
       <path d="M3 21h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <rect x="7.5" y="6.5" width="3" height="3" rx="0.5" fill="#FF6B6B" />
-      <rect x="13.5" y="6.5" width="3" height="3" rx="0.5" fill="#FF6B6B" />
-      <rect x="7.5" y="11.5" width="3" height="3" rx="0.5" fill="#FF6B6B" />
-      <rect x="13.5" y="11.5" width="3" height="3" rx="0.5" fill="#FF6B6B" />
+      <rect x="7.5" y="6.5" width="3" height="3" rx="0.5" fill="#C62F45" />
+      <rect x="13.5" y="6.5" width="3" height="3" rx="0.5" fill="#C62F45" />
+      <rect x="7.5" y="11.5" width="3" height="3" rx="0.5" fill="#C62F45" />
+      <rect x="13.5" y="11.5" width="3" height="3" rx="0.5" fill="#C62F45" />
       <path d="M10 21v-3.5h4V21" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinejoin="round" />
     </svg>
   );
@@ -40,7 +40,7 @@ export function LocationIcon({ size = 24, className = '' }) {
         d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
         fill="currentColor"
       />
-      <circle cx="12" cy="9" r="2.5" fill="#FF6B6B" />
+      <circle cx="12" cy="9" r="2.5" fill="#C62F45" />
     </svg>
   );
 }
@@ -64,7 +64,7 @@ export function PhoneIcon({ size = 24, className = '' }) {
       />
       <path
         d="M15 3.2a6.2 6.2 0 0 1 5.8 5.8"
-        stroke="#FF6B6B"
+        stroke="#C62F45"
         strokeWidth="1.8"
         strokeLinecap="round"
         fill="none"
@@ -88,7 +88,7 @@ export function EmailIcon({ size = 24, className = '' }) {
       <rect x="2.5" y="5" width="19" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
       <path
         d="M3 6.5l9 6.4 9-6.4"
-        stroke="#FF6B6B"
+        stroke="#C62F45"
         strokeWidth="2"
         fill="none"
         strokeLinecap="round"

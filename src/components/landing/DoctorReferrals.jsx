@@ -24,7 +24,7 @@ function DoctorAvatar({ src, alt }) {
 
 function VerifiedBadge() {
   return (
-    <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-sky-600 text-white shadow-md ring-2 ring-white">
+    <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-white shadow-md ring-2 ring-white">
       <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
           fillRule="evenodd"
@@ -46,11 +46,11 @@ function DoctorCard({ doctor }) {
   const image = doctor.image || doctor.imageUrl || "/images/cutis.png";
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 border-t-[3px] border-t-sky-600 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 border-t-[3px] border-t-brand-600 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover">
       <div className="flex flex-1 flex-col p-4 sm:items-center sm:p-5 sm:text-center">
         <div className="mb-3 flex items-start gap-3.5 sm:mb-4 sm:flex-col sm:items-center sm:gap-3">
           <div className="relative shrink-0">
-            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl border-2 border-[#FF6B6B] bg-slate-100 shadow-sm sm:h-[88px] sm:w-[88px]">
+            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl border-2 border-accent-500 bg-slate-100 shadow-sm sm:h-[88px] sm:w-[88px]">
               <DoctorAvatar src={image} alt={doctor.name} />
             </div>
             <VerifiedBadge />
@@ -60,7 +60,7 @@ function DoctorCard({ doctor }) {
             <h3 className="text-[15px] font-bold leading-tight text-slate-900 sm:text-base">
               {doctor.name}
             </h3>
-            <p className="mt-0.5 text-xs font-semibold text-sky-600 sm:text-[13px]">
+            <p className="mt-0.5 text-xs font-semibold text-brand-600 sm:text-[13px]">
               {doctor.specialization}
             </p>
             {doctor.hospital && (
@@ -74,7 +74,7 @@ function DoctorCard({ doctor }) {
         {/* flex-1 + clamp keeps every card the same height */}
         <blockquote className="relative flex-1 rounded-xl bg-slate-50 px-3.5 py-3 sm:w-full">
           <svg
-            className="absolute left-3 top-2.5 h-4 w-4 text-[#FF6B6B]/40"
+            className="absolute left-3 top-2.5 h-4 w-4 text-accent-500/40"
             fill="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"
@@ -87,7 +87,7 @@ function DoctorCard({ doctor }) {
         </blockquote>
       </div>
 
-      <div className="h-1 shrink-0 bg-[#FF6B6B]" />
+      <div className="h-1 shrink-0 bg-accent-500" />
     </div>
   );
 }

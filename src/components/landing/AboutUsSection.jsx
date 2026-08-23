@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Section, SectionHeading } from "@/components/ui/Section";
 
-const SKY = "#0284C7";
-const CORAL = "#FF6B6B";
+const SKY = "#3750A4";
+const CORAL = "#C62F45";
 
 /**
  * Same construction as QuickIcon and TechIcon: 48px grid, 2px primary strokes,
@@ -160,9 +160,9 @@ export default function AboutUsSection({ section, items }) {
               {highlights.map((item, idx) => (
                 <div
                   key={item.id || item.title}
-                  className="group flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-card-hover"
+                  className="group flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-50 p-2 ring-1 ring-sky-100 transition duration-300 group-hover:bg-sky-100">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 p-2 ring-1 ring-brand-100 transition duration-300 group-hover:bg-brand-100">
                     <AboutIcon iconKey={item.iconKey} index={idx} />
                   </div>
                   <div className="min-w-0">
@@ -179,7 +179,7 @@ export default function AboutUsSection({ section, items }) {
 
             <Link
               href={section?.ctaHref || "/about"}
-              className="group mt-9 inline-flex items-center gap-3 rounded-full bg-sky-600 py-2.5 pl-7 pr-2.5 text-sm font-bold text-white shadow-lg shadow-sky-600/25 transition duration-300 hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 sm:text-base"
+              className="group mt-9 inline-flex items-center gap-3 rounded-full bg-brand-600 py-2.5 pl-7 pr-2.5 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition duration-300 hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:text-base"
             >
               {section?.ctaLabel || "Learn More About Us"}
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 transition duration-300 group-hover:translate-x-0.5">

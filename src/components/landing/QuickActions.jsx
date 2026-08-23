@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 
-const SKY = "#0284C7";
-const CORAL = "#FF6B6B";
+const SKY = "#3750A4";
+const CORAL = "#C62F45";
 
 /**
  * Purpose-drawn icons on a shared 48px grid, matching the site's two-tone
@@ -127,9 +127,9 @@ export default function QuickActions({ items }) {
           <li key={action.id || action.title}>
             <Link
               href={action.linkUrl || "/contact"}
-              className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-[#FF6B6B] hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 sm:p-5"
+              className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:p-5"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#FF6B6B] bg-white p-2 transition-colors duration-300 group-hover:bg-[#FF6B6B]/5">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-accent-500 bg-white p-2 transition-colors duration-300 group-hover:bg-accent-500/5">
                 <QuickIcon iconKey={action.iconKey} index={idx} />
               </span>
 
@@ -137,7 +137,7 @@ export default function QuickActions({ items }) {
                 <span className="block text-sm font-bold leading-snug text-slate-900">
                   {action.title}
                 </span>
-                <span className="mt-1 block text-xs leading-relaxed text-sky-600">
+                <span className="mt-1 block text-xs leading-relaxed text-brand-600">
                   {action.description}
                 </span>
               </span>

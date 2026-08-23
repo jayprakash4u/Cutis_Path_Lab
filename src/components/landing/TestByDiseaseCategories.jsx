@@ -40,9 +40,9 @@ export default function TestByDiseaseCategories({ section, items }) {
           <li key={cat.id || cat.linkUrl}>
             <Link
               href={cat.linkUrl || "/tests"}
-              className="group flex h-full items-center gap-3 rounded-full border border-slate-200 bg-white p-2 pr-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-card-hover"
+              className="group flex h-full items-center gap-3 rounded-full border border-slate-200 bg-white p-2 pr-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-card-hover"
             >
-              <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-[#FF6B6B]/25 transition-all duration-300 group-hover:ring-sky-500/40 sm:h-14 sm:w-14">
+              <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-accent-500/25 transition-all duration-300 group-hover:ring-brand-500/40 sm:h-14 sm:w-14">
                 <Image
                   src={cat.imageUrl || "/images/disease-categories/anemia.jpg"}
                   alt=""
@@ -52,12 +52,12 @@ export default function TestByDiseaseCategories({ section, items }) {
                 />
               </span>
 
-              <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-900 transition-colors duration-300 group-hover:text-sky-700">
+              <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-900 transition-colors duration-300 group-hover:text-brand-700">
                 {cat.title}
               </span>
 
               <svg
-                className="h-4 w-4 shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-sky-600"
+                className="h-4 w-4 shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

@@ -266,7 +266,7 @@ export default function AdminReferralsPage() {
                     ) : null}
                     <div className="min-w-0">
                       <p className="font-semibold text-slate-900">{d.name}</p>
-                      <p className="text-sm text-[var(--admin-sky)]">{d.specialization}</p>
+                      <p className="text-sm text-[var(--admin-brand)]">{d.specialization}</p>
                       {d.hospital ? (
                         <p className="text-xs text-slate-500">{d.hospital}</p>
                       ) : null}
@@ -378,7 +378,7 @@ export default function AdminReferralsPage() {
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 onChange={onFileChange}
-                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-sky)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-sky-deep)]"
+                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--admin-brand)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[var(--admin-brand-deep)]"
               />
             </Field>
           </div>

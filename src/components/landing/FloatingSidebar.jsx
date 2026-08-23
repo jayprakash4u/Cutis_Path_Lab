@@ -96,7 +96,7 @@ export default function FloatingSidebar() {
             group relative flex items-center rounded-full
             transition-all duration-300 ease-in-out
             shadow-lg hover:shadow-xl
-            bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700
+            bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700
             p-3 w-12 h-12
           `}
         >

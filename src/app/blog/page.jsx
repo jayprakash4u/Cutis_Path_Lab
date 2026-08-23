@@ -131,10 +131,10 @@ export default function BlogPage() {
             <div className="overflow-hidden rounded-lg bg-white shadow-sm">
               <div className="relative px-4 py-4 lg:px-8 lg:py-8">
                 <div
-                  className="absolute left-0 right-0 top-1/2 z-0 border-t border-[#FF6B6B]"
+                  className="absolute left-0 right-0 top-1/2 z-0 border-t border-accent-500"
                   aria-hidden="true"
                 ></div>
-                <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-sky-600 px-3 py-1.5 lg:px-4 lg:py-2">
+                <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-brand-600 px-3 py-1.5 lg:px-4 lg:py-2">
                   <h2 className="text-sm font-bold text-white md:text-xl lg:text-lg">
                     Health & Lab Insights
                   </h2>
@@ -171,13 +171,13 @@ export default function BlogPage() {
                     }}
                     className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
                       isActive
-                        ? "bg-sky-600 text-white"
+                        ? "bg-brand-600 text-white"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
                     {category}
                     {!loading ? (
-                      <span className={isActive ? "text-sky-100" : "text-slate-400"}> ({count})</span>
+                      <span className={isActive ? "text-brand-100" : "text-slate-400"}> ({count})</span>
                     ) : null}
                   </button>
                 );
@@ -211,7 +211,7 @@ export default function BlogPage() {
                 }}
                 placeholder="Search articles"
                 aria-label="Search articles"
-                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               />
               {search ? (
                 <button
@@ -283,7 +283,7 @@ export default function BlogPage() {
                         setActiveCategory("All");
                         setCurrentPage(1);
                       }}
-                      className="mt-4 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sky-700"
+                      className="mt-4 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
                     >
                       Clear search
                     </button>
@@ -299,7 +299,7 @@ export default function BlogPage() {
                   <Link
                     key={post.id}
                     href={`/blog/${post.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                       {post.image ? (
@@ -321,7 +321,7 @@ export default function BlogPage() {
                         /* Branded tile for posts with no photograph yet, so the
                            grid stays even instead of showing a grey gap. */
                         <div
-                          className="flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-600 to-sky-800"
+                          className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-600 to-brand-800"
                           aria-hidden="true"
                         >
                           <span className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10" />
@@ -350,7 +350,7 @@ export default function BlogPage() {
                           </svg>
                         </div>
                       )}
-                      <span className="absolute left-3 top-3 rounded-full bg-[#FF6B6B] px-2.5 py-1 text-[11px] font-bold text-white">
+                      <span className="absolute left-3 top-3 rounded-full bg-accent-500 px-2.5 py-1 text-[11px] font-bold text-white">
                         {post.category}
                       </span>
                     </div>
@@ -362,7 +362,7 @@ export default function BlogPage() {
                         <span>{post.readMinutes} min read</span>
                       </div>
 
-                      <h3 className="mt-2 text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-sky-700">
+                      <h3 className="mt-2 text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-700">
                         {post.title}
                       </h3>
 
@@ -370,7 +370,7 @@ export default function BlogPage() {
                         {post.excerpt}
                       </p>
 
-                      <span className="mt-4 inline-flex items-center gap-1.5 border-t border-slate-100 pt-3 text-xs font-semibold text-sky-600">
+                      <span className="mt-4 inline-flex items-center gap-1.5 border-t border-slate-100 pt-3 text-xs font-semibold text-brand-600">
                         Read article
                         <svg
                           className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
@@ -404,7 +404,7 @@ export default function BlogPage() {
                     type="button"
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-sky-300 hover:text-sky-700 disabled:cursor-not-allowed disabled:opacity-40 sm:text-sm"
+                    className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40 sm:text-sm"
                   >
                     Prev
                   </button>
@@ -417,8 +417,8 @@ export default function BlogPage() {
                       aria-current={page === currentPage ? "page" : undefined}
                       className={`h-8 min-w-8 rounded-md text-xs font-semibold transition-colors sm:h-9 sm:min-w-9 sm:text-sm ${
                         page === currentPage
-                          ? "bg-sky-600 text-white"
-                          : "border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700"
+                          ? "bg-brand-600 text-white"
+                          : "border border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700"
                       }`}
                     >
                       {page}
@@ -429,7 +429,7 @@ export default function BlogPage() {
                     type="button"
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-sky-300 hover:text-sky-700 disabled:cursor-not-allowed disabled:opacity-40 sm:text-sm"
+                    className="rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40 sm:text-sm"
                   >
                     Next
                   </button>

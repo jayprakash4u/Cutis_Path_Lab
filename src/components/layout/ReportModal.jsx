@@ -186,18 +186,18 @@ export default function ReportModal({ onClose, anchorRef }) {
       >
         {/* Caret into the Report button — popover only */}
         <div
-          className="absolute -top-1.5 right-10 hidden h-3 w-3 rotate-45 rounded-[2px] bg-sky-600 lg:block"
+          className="absolute -top-1.5 right-10 hidden h-3 w-3 rotate-45 rounded-[2px] bg-brand-600 lg:block"
           aria-hidden="true"
         />
         {/* Brand band — the site's two colours, coral underline on sky */}
-        <div className="relative rounded-t-2xl bg-sky-600 px-5 pb-5 pt-5 sm:px-6">
-          <div className="absolute inset-x-0 bottom-0 h-1 bg-[#FF6B6B]" aria-hidden="true" />
+        <div className="relative rounded-t-2xl bg-brand-600 px-5 pb-5 pt-5 sm:px-6">
+          <div className="absolute inset-x-0 bottom-0 h-1 bg-accent-500" aria-hidden="true" />
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h2 id={titleId} className="text-lg font-bold text-white sm:text-xl">
                 Get Your Report
               </h2>
-              <p id={descId} className="mt-1 text-sm leading-relaxed text-sky-100">
+              <p id={descId} className="mt-1 text-sm leading-relaxed text-brand-100">
                 Enter the mobile number your test was registered under and we&apos;ll
                 send the report to you on WhatsApp.
               </p>
@@ -218,8 +218,8 @@ export default function ReportModal({ onClose, anchorRef }) {
         <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
           {sent ? (
             <div className="text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sky-50">
-                <svg className="h-7 w-7 text-sky-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-50">
+                <svg className="h-7 w-7 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
@@ -227,7 +227,7 @@ export default function ReportModal({ onClose, anchorRef }) {
               <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
                 Send the message we&apos;ve prepared and our team will reply with your
                 report. If WhatsApp didn&apos;t open, call us on{" "}
-                <a href={`tel:${LAB_PHONE_TEL}`} className="font-semibold text-sky-600 hover:underline">
+                <a href={`tel:${LAB_PHONE_TEL}`} className="font-semibold text-brand-600 hover:underline">
                   {LAB_PHONE_DISPLAY}
                 </a>
                 .
@@ -243,7 +243,7 @@ export default function ReportModal({ onClose, anchorRef }) {
           ) : (
             <form onSubmit={handleSubmit} noValidate>
               <label htmlFor="report-phone" className="block text-sm font-semibold text-slate-700">
-                Mobile number <span className="text-[#FF6B6B]">*</span>
+                Mobile number <span className="text-accent-500">*</span>
               </label>
               <input
                 id="report-phone"
@@ -261,12 +261,12 @@ export default function ReportModal({ onClose, anchorRef }) {
                 aria-describedby={error ? errorId : undefined}
                 className={`mt-1.5 w-full rounded-lg border px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 ${
                   error
-                    ? "border-[#FF6B6B] focus:border-[#FF6B6B] focus:ring-[#FF6B6B]/20"
-                    : "border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
+                    ? "border-accent-500 focus:border-accent-500 focus:ring-accent-500/20"
+                    : "border-slate-200 focus:border-brand-500 focus:ring-brand-500/20"
                 }`}
               />
               {error ? (
-                <p id={errorId} role="alert" className="mt-1.5 text-xs font-medium text-[#FF6B6B]">
+                <p id={errorId} role="alert" className="mt-1.5 text-xs font-medium text-accent-500">
                   {error}
                 </p>
               ) : null}
@@ -284,12 +284,12 @@ export default function ReportModal({ onClose, anchorRef }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Helps us find your report faster"
-                className="mt-1.5 w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-colors placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                className="mt-1.5 w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
               />
 
               <button
                 type="submit"
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-[#FF6B6B] py-3 text-sm font-bold text-white transition-colors hover:bg-[#e55a5a]"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-accent-500 py-3 text-sm font-bold text-white transition-colors hover:bg-accent-600"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.174.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.82 9.82 0 0 1 6.988 2.896 9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.82 11.82 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413" />
@@ -300,11 +300,11 @@ export default function ReportModal({ onClose, anchorRef }) {
               {/* A phone in hand isn't always a phone with WhatsApp on it. */}
               <p className="mt-4 border-t border-slate-100 pt-4 text-center text-xs leading-relaxed text-slate-500">
                 Prefer to call?{" "}
-                <a href={`tel:${LAB_PHONE_TEL}`} className="font-semibold text-sky-600 hover:underline">
+                <a href={`tel:${LAB_PHONE_TEL}`} className="font-semibold text-brand-600 hover:underline">
                   {LAB_PHONE_DISPLAY}
                 </a>{" "}
                 &middot;{" "}
-                <a href={`mailto:${LAB_EMAIL}`} className="font-semibold text-sky-600 hover:underline">
+                <a href={`mailto:${LAB_EMAIL}`} className="font-semibold text-brand-600 hover:underline">
                   {LAB_EMAIL}
                 </a>
                 <br />

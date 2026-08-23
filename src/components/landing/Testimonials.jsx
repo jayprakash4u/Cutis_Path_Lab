@@ -91,14 +91,14 @@ export default function Reviews({ section }) {
             diagonal on a narrow screen eats the headline.
           */}
           <div
-            className="absolute inset-0 bg-gradient-to-r from-sky-900 via-sky-800 to-sky-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_0,100%_18%,100%_100%,0_100%)] lg:rounded-br-[8rem]"
+            className="absolute inset-0 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-600 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] sm:[clip-path:polygon(0_0,100%_18%,100%_100%,0_100%)] lg:rounded-br-[8rem]"
             aria-hidden="true"
           />
 
           {/* Coral warmth — the second brand colour, kept as a diffuse glow so
               the panel stays sky-led rather than turning muddy in a blend. */}
           <div
-            className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-[#FF6B6B]/25 blur-3xl"
+            className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-accent-500/25 blur-3xl"
             aria-hidden="true"
           />
 
@@ -107,7 +107,7 @@ export default function Reviews({ section }) {
             <span className="absolute -left-16 top-24 h-64 w-64 rounded-full bg-white/[0.06]" />
             <span className="absolute left-1/4 top-12 h-40 w-40 rounded-full bg-white/[0.05]" />
             <span className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-white/[0.04]" />
-            <span className="absolute -bottom-10 right-1/4 h-56 w-56 rounded-full bg-[#FF6B6B]/[0.12]" />
+            <span className="absolute -bottom-10 right-1/4 h-56 w-56 rounded-full bg-accent-500/[0.12]" />
             <span className="absolute right-10 top-1/3 h-32 w-32 rounded-full bg-white/[0.06]" />
           </div>
         </>
@@ -162,14 +162,14 @@ export default function Reviews({ section }) {
                       style={cardWidthStyle}
                       className={cardClassName}
                     >
-                      <div className="flex h-full flex-col rounded-2xl border border-slate-200 border-b-4 border-b-[#FF6B6B] bg-white p-5 shadow-card transition-shadow duration-300 hover:shadow-card-hover sm:p-6">
+                      <div className="flex h-full flex-col rounded-2xl border border-slate-200 border-b-4 border-b-accent-500 bg-white p-5 shadow-card transition-shadow duration-300 hover:shadow-card-hover sm:p-6">
                         <Stars rating={review.rating} />
 
                         <p className="mb-4 line-clamp-4 flex-1 text-xs leading-snug text-slate-600 sm:mb-6 sm:line-clamp-none sm:text-[15px] sm:leading-relaxed">
                           &ldquo;{review.content}&rdquo;
                         </p>
 
-                        <div className="mt-auto flex items-center gap-2.5 border-t border-sky-100 pt-3 sm:gap-3 sm:pt-4">
+                        <div className="mt-auto flex items-center gap-2.5 border-t border-brand-100 pt-3 sm:gap-3 sm:pt-4">
                           <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl sm:h-11 sm:w-11">
                             <img
                               src={review.image}
@@ -181,7 +181,7 @@ export default function Reviews({ section }) {
                             <h3 className="truncate text-sm font-bold text-slate-900 sm:text-base">
                               {review.name}
                             </h3>
-                            <p className="truncate text-xs font-medium uppercase tracking-wider text-sky-600">
+                            <p className="truncate text-xs font-medium uppercase tracking-wider text-brand-600">
                               {review.role}
                             </p>
                           </div>
