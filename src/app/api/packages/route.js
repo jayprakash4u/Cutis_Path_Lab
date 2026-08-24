@@ -35,6 +35,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const limit = safeLimit(searchParams.get("limit"), 100);
     const limitClause = limit ? `LIMIT ${limit}` : "";
+    const isAdmin = !requireAdmin(request);
 
     const packages = await sqlQuery(
       `SELECT \`id\`, \`code\`, \`name\`, \`category\`, \`description\`, \`price\`,
@@ -45,7 +46,10 @@ export async function GET(request) {
     );
 
     if (packages.length === 0) {
-      return NextResponse.json({ success: true, data: [] }, publicCatalogCache());
+      return NextResponse.json(
+        { success: true, data: [] },
+        isAdmin ? undefined : publicCatalogCache(),
+      );
     }
 
     // One round trip for every package's includes, then group in JS.
@@ -77,7 +81,7 @@ export async function GET(request) {
         success: true,
         data: packages.map((p) => normalizePackage(p, byPackage.get(p.id) || [])),
       },
-      publicCatalogCache(),
+      isAdmin ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load packages", 500);

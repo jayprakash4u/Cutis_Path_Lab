@@ -20,6 +20,7 @@ export async function GET(request) {
     if (activeOnly) where.push("`isActive` = 1");
     if (featured === "true") where.push("`featured` = 1");
     const whereClause = where.length ? `WHERE ${where.join(" AND ")}` : "";
+    const isAdmin = !requireAdmin(request);
 
     const rows = await sqlQuery(
       `SELECT \`id\`, \`name\`, \`role\`, \`content\`, \`rating\`,
@@ -39,7 +40,7 @@ export async function GET(request) {
           isActive: toBool(r.isActive),
         })),
       },
-      publicCatalogCache(),
+      isAdmin ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load testimonials", 500);

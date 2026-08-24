@@ -26,6 +26,7 @@ export async function GET(request) {
     const disease = searchParams.get("disease");
     const limit = safeLimit(searchParams.get("limit"), 100);
     const limitClause = limit ? `LIMIT ${limit}` : "";
+    const isAdmin = !requireAdmin(request);
 
     const diseaseSlug = String(disease || "").trim();
 
@@ -66,7 +67,7 @@ export async function GET(request) {
 
     return NextResponse.json(
       { success: true, data: rows.map(normalizeTest) },
-      publicCatalogCache(),
+      isAdmin ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load tests", 500);

@@ -19,6 +19,7 @@ export async function GET(request) {
     if (denied) return denied;
 
     const where = activeOnly ? "WHERE `isActive` = 1" : "";
+    const isAdmin = !requireAdmin(request);
 
     const sections = await sqlQuery(
       `SELECT ${SECTION_COLUMNS} FROM \`HomeSection\` ${where} ORDER BY \`sortOrder\``,
@@ -41,7 +42,7 @@ export async function GET(request) {
           items: bySection.get(row.sectionKey) || [],
         })),
       },
-      publicCatalogCache(),
+      isAdmin ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load home sections", 500);

@@ -25,6 +25,7 @@ export async function GET(request) {
       params.push(category);
     }
     const whereClause = where.length ? `WHERE ${where.join(" AND ")}` : "";
+    const isAdmin = !requireAdmin(request);
 
     const rows = await sqlQuery(
       `SELECT ${SERVICE_COLUMNS}
@@ -37,7 +38,7 @@ export async function GET(request) {
 
     return NextResponse.json(
       { success: true, data: rows.map(normalizeService) },
-      publicCatalogCache(),
+      isAdmin ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load services", 500);

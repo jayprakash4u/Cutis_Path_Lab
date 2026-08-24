@@ -12,6 +12,7 @@ export async function GET(request) {
     const limit = safeLimit(searchParams.get("limit"), 100);
     const limitClause = limit ? `LIMIT ${limit}` : "";
     const whereClause = activeOnly ? "WHERE `isActive` = 1" : "";
+    const isAdmin = !requireAdmin(request);
 
     const rows = await sqlQuery(
       `SELECT \`id\`, \`name\`, \`category\`, \`originalPrice\`, \`discountedPrice\`,
@@ -28,7 +29,7 @@ export async function GET(request) {
         success: true,
         data: rows.map((r) => ({ ...r, isActive: toBool(r.isActive) })),
       },
-      publicCatalogCache(),
+      isAdmin ? undefined : publicCatalogCache(),
     );
   } catch (error) {
     return apiErrorResponse(error, "Failed to load offers", 500);
