@@ -34,6 +34,13 @@ export const CAROUSEL_BREAKPOINTS = {
     { minWidth: 620, cards: 2 },
     { minWidth: 0, cards: 1 },
   ],
+  diseaseCategories: [
+    { minWidth: 1280, cards: 5 },
+    { minWidth: 1024, cards: 4 },
+    { minWidth: 768, cards: 3 },
+    { minWidth: 480, cards: 2 },
+    { minWidth: 0, cards: 1 },
+  ],
 };
 
 export function useFullCardCarousel({

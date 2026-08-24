@@ -11,7 +11,7 @@ export default function ServicesGrid({ services = [] }) {
               About and Packages page headers. */}
           <div className="relative">
             <div
-              className="absolute left-0 right-0 top-1/2 z-0 border-t border-accent-500"
+              className="absolute left-0 right-0 top-1/2 z-0 border-t border-brand-200"
               aria-hidden="true"
             ></div>
             <div className="relative z-10 inline-block rounded-bl-2xl rounded-tr-2xl bg-brand-600 px-4 py-2">

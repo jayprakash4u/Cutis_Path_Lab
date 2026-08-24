@@ -127,9 +127,9 @@ export default function QuickActions({ items }) {
           <li key={action.id || action.title}>
             <Link
               href={action.linkUrl || "/contact"}
-              className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:p-5"
+              className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-card-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:p-5"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-accent-500 bg-white p-2 transition-colors duration-300 group-hover:bg-accent-500/5">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-brand-400 bg-white p-2 transition-colors duration-300 group-hover:bg-brand-500/5">
                 <QuickIcon iconKey={action.iconKey} index={idx} />
               </span>
 

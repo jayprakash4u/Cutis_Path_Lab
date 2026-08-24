@@ -241,7 +241,7 @@ export default function ArticleBody({ content }) {
           return (
             <blockquote
               key={i}
-              className="rounded-r-xl border-l-4 border-accent-500 bg-gray-50 px-5 py-4 text-[15px] italic leading-[1.8] text-slate-600"
+              className="rounded-r-xl border-l-4 border-brand-500 bg-gray-50 px-5 py-4 text-[15px] italic leading-[1.8] text-slate-600"
             >
               {renderInline(block.text)}
             </blockquote>
@@ -300,7 +300,7 @@ export default function ArticleBody({ content }) {
                     </span>
                   ) : (
                     <span
-                      className="mt-[0.55rem] h-1.5 w-1.5 flex-none rounded-full bg-accent-500"
+                      className="mt-[0.55rem] h-1.5 w-1.5 flex-none rounded-full bg-brand-500"
                       aria-hidden="true"
                     />
                   )}

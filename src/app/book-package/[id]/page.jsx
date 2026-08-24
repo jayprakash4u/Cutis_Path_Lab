@@ -228,7 +228,7 @@ export default function BookPackagePage() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white rounded-2xl border border-brand-100 shadow-sm overflow-hidden">
-                <div className="bg-accent-500 px-5 py-2">
+                <div className="bg-brand-600 px-5 py-2">
                   <h2 className="text-sm lg:text-base font-bold text-white">What&apos;s Included</h2>
                 </div>
                 <div className="p-5">
@@ -393,7 +393,7 @@ export default function BookPackagePage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3 bg-accent-500 text-white font-semibold rounded-xl hover:bg-accent-600 transition-colors text-sm disabled:opacity-60"
+                    className="w-full py-3 bg-brand-600 text-white font-semibold rounded-xl hover:bg-brand-700 transition-colors text-sm disabled:opacity-60"
                   >
                     {submitting ? "Booking…" : `Book Package (Rs. ${pkg.price})`}
                   </button>

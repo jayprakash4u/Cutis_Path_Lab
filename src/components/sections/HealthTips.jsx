@@ -8,7 +8,7 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 const DEFAULT_TIPS = [
   {
     color: "#647DCE",
-    borderColor: "#C62F45",
+    borderColor: "#647DCE",
     iconKey: "fasting",
     title: "FASTING",
     description:
@@ -77,16 +77,17 @@ const DEFAULT_TIPS = [
           cy="83"
           r="18"
           fill="white"
-          stroke="#C62F45"
+          stroke="#647DCE"
           strokeWidth="2"
         />
+        {/* Clock centre — the one detail, same language as the site's other icon sets */}
         <circle cx="94" cy="83" r="2" fill="#C62F45" />
         <line
           x1="94"
           y1="83"
           x2="94"
           y2="72"
-          stroke="#C62F45"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -95,7 +96,7 @@ const DEFAULT_TIPS = [
           y1="83"
           x2="103"
           y2="83"
-          stroke="#C62F45"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -104,7 +105,7 @@ const DEFAULT_TIPS = [
           y1="79"
           x2="91"
           y2="87"
-          stroke="#C62F45"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -113,7 +114,7 @@ const DEFAULT_TIPS = [
           y1="79"
           x2="97"
           y2="87"
-          stroke="#C62F45"
+          stroke="#647DCE"
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -122,7 +123,7 @@ const DEFAULT_TIPS = [
   },
   {
     color: "#647DCE",
-    borderColor: "#C62F45",
+    borderColor: "#647DCE",
     iconKey: "hydration",
     title: "HYDRATION",
     description:
@@ -163,25 +164,26 @@ const DEFAULT_TIPS = [
         </text>
         <path
           d="M55 60 C55 60 52 65 52 68 C52 70 54 72 55 72 C56 72 58 70 58 68 C58 65 55 60 55 60 Z"
-          fill="#C62F45"
+          fill="#647DCE"
           opacity="0.85"
         />
         <path
           d="M110 62 C110 62 107 67 107 70 C107 71.8 108.8 73 110 73 C111.2 73 113 71.8 113 70 C113 67 110 62 110 62 Z"
-          fill="#C62F45"
+          fill="#647DCE"
           opacity="0.85"
         />
+        {/* One satellite droplet in accent — the one detail, rest of the icon stays brand blue */}
         <path
           d="M65 48 C65 48 63 51 63 53 C63 54.8 64.8 56 66 56 C67.2 56 69 54.8 69 53 C69 51 65 48 65 48 Z"
           fill="#C62F45"
-          opacity="0.7"
+          opacity="0.85"
         />
       </svg>
     ),
   },
   {
     color: "#647DCE",
-    borderColor: "#C62F45",
+    borderColor: "#647DCE",
     iconKey: "alcohol",
     title: "NO ALCOHOL",
     description:
@@ -226,6 +228,8 @@ const DEFAULT_TIPS = [
           strokeWidth="2.5"
           strokeLinecap="round"
         />
+        {/* The prohibition ring and slash, in accent — the universal "no" mark,
+            same one-detail language as the rest of the icon set. */}
         <circle
           cx="82"
           cy="82"
@@ -283,7 +287,7 @@ export default function HealthTips({ section, items }) {
           {tips.map((tip, i) => (
             <StepCard
               key={tip.id || tip.title}
-              borderColor={tip.borderColor || "#C62F45"}
+              borderColor={tip.borderColor || "#647DCE"}
               title={tip.title}
               description={tip.description}
               icon={ICONS[tip.iconKey] || DEFAULT_TIPS[i % DEFAULT_TIPS.length].icon}

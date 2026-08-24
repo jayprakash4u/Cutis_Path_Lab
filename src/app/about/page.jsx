@@ -30,7 +30,7 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="bg-slate-50 rounded-lg shadow-sm overflow-hidden">
               <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 border-t-4 border-accent-500 z-0"></div>
+                <div className="absolute left-0 right-0 top-1/2 border-t-4 border-brand-200 z-0"></div>
                 <div className="relative z-10 inline-block bg-brand-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
                   <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                     About Us
@@ -64,7 +64,7 @@ export default function AboutPage() {
                   {/* Right Side - Content with Header */}
                   <div className="order-1 md:order-2">
                     <div className="relative px-3 lg:px-4 py-2 lg:py-3 text-right">
-                      <div className="absolute left-0 right-0 top-1/2 border-t-4 border-accent-500"></div>
+                      <div className="absolute left-0 right-0 top-1/2 border-t-4 border-brand-200"></div>
                       <div className="relative z-10 inline-block bg-brand-600 px-4 lg:px-6 py-1.5 lg:py-2 rounded-tr-xl rounded-bl-xl">
                         <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                           Our Mission
@@ -90,7 +90,7 @@ export default function AboutPage() {
                   {/* Left Side - Content with Header */}
                   <div>
                     <div className="relative px-3 lg:px-4 py-1.5 lg:py-2">
-                      <div className="absolute left-0 right-0 top-1/2 border-t-4 border-accent-500 z-0"></div>
+                      <div className="absolute left-0 right-0 top-1/2 border-t-4 border-brand-200 z-0"></div>
                       <div className="relative z-10 inline-block bg-brand-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
                         <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                           Our Vision
@@ -121,7 +121,7 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="bg-white rounded-lg overflow-hidden">
               <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 border-t-4 border-accent-500 z-0"></div>
+                <div className="absolute left-0 right-0 top-1/2 border-t-4 border-brand-200 z-0"></div>
                 <div className="relative z-10 inline-block bg-brand-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
                   <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                     Our Achievements
@@ -201,7 +201,7 @@ export default function AboutPage() {
                       )
                     },
                   ].map((cert, index) => (
-                    <div key={index} className="bg-white rounded-lg p-4 border border-slate-200 border-l-4 border-l-accent-500">
+                    <div key={index} className="bg-white rounded-lg p-4 border border-slate-200 border-l-4 border-l-brand-500">
                       <div className="w-32 h-32 mx-auto flex items-center justify-center mb-3">
                         {cert.icon}
                       </div>

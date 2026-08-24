@@ -36,6 +36,7 @@ export const FOOTER_DEFAULTS = {
   facebookUrl: "https://facebook.com",
   instagramUrl: "https://instagram.com",
   whatsappUrl: "https://wa.me/9779861848382",
+  tiktokUrl: "https://tiktok.com",
 };
 
 /** `tel:` needs the digits, not the display formatting. */

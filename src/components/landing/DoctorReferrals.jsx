@@ -50,7 +50,7 @@ function DoctorCard({ doctor }) {
       <div className="flex flex-1 flex-col p-4 sm:items-center sm:p-5 sm:text-center">
         <div className="mb-3 flex items-start gap-3.5 sm:mb-4 sm:flex-col sm:items-center sm:gap-3">
           <div className="relative shrink-0">
-            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl border-2 border-accent-500 bg-slate-100 shadow-sm sm:h-[88px] sm:w-[88px]">
+            <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl border-2 border-brand-300 bg-slate-100 shadow-sm sm:h-[88px] sm:w-[88px]">
               <DoctorAvatar src={image} alt={doctor.name} />
             </div>
             <VerifiedBadge />
@@ -60,7 +60,7 @@ function DoctorCard({ doctor }) {
             <h3 className="text-[15px] font-bold leading-tight text-slate-900 sm:text-base">
               {doctor.name}
             </h3>
-            <p className="mt-0.5 text-xs font-semibold text-brand-600 sm:text-[13px]">
+            <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-accent-500 sm:text-[13px]">
               {doctor.specialization}
             </p>
             {doctor.hospital && (
@@ -87,7 +87,7 @@ function DoctorCard({ doctor }) {
         </blockquote>
       </div>
 
-      <div className="h-1 shrink-0 bg-accent-500" />
+      <div className="h-1 shrink-0 bg-brand-500" />
     </div>
   );
 }

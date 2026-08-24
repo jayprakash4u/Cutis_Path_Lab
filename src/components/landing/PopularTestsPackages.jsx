@@ -55,6 +55,7 @@ export default function PopularTestsPackages({ section }) {
         const tests = (testsJson.success ? testsJson.data : []).map((t) => ({
           id: t.id,
           name: t.name,
+          category: t.category,
           price: t.price,
           originalPrice: t.originalPrice,
           reportsTime: t.reportTime || "24-48 hrs",
@@ -67,6 +68,7 @@ export default function PopularTestsPackages({ section }) {
           (p) => ({
             id: p.id,
             name: p.name,
+            category: p.category,
             price: p.price,
             originalPrice: p.originalPrice,
             reportsTime: p.reportsTime || "24-48 hrs",
@@ -165,7 +167,7 @@ export default function PopularTestsPackages({ section }) {
                       style={cardWidthStyle}
                       className={`flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-shadow duration-300 hover:shadow-card-hover ${cardClassName}`}
                     >
-                      <div className="flex items-center justify-between gap-2 bg-accent-500 px-3 py-2">
+                      <div className="flex items-center justify-between gap-2 bg-brand-600 px-3 py-2">
                         <h3 className="w-full truncate text-xs font-semibold text-white sm:text-sm">
                           {item.name}
                         </h3>
@@ -175,6 +177,15 @@ export default function PopularTestsPackages({ section }) {
                       </div>
 
                       <div className="flex flex-1 flex-col p-3 md:p-5">
+                        {/* Category tag — same treatment as the one on Tests in
+                            Offers and package cards, so it reads the same way
+                            sitewide. */}
+                        {item.category && (
+                          <span className="mb-2 inline-block w-fit truncate rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-accent-500">
+                            {item.category}
+                          </span>
+                        )}
+
                         {/* Labels shown at every width — on mobile these read as
                             three unlabelled values otherwise. */}
                         <div className="mb-3 flex flex-col gap-1.5 text-xs text-slate-500">

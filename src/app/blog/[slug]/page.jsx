@@ -151,7 +151,7 @@ export default async function BlogArticlePage({ params }) {
 
               <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-10">
                 <div className="min-w-0">
-                  <span className="inline-block rounded-full bg-accent-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+                  <span className="inline-block rounded-full bg-brand-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
                     {post.category}
                   </span>
 
@@ -234,7 +234,7 @@ export default async function BlogArticlePage({ params }) {
             )}
 
               {/* General-interest health writing, not personal medical advice. */}
-              <p className="mt-10 rounded-xl border-l-4 border-accent-500 bg-gray-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
+              <p className="mt-10 rounded-xl border-l-4 border-brand-500 bg-gray-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
                 This article is for general information and is not a substitute for a
                 consultation. Talk to your doctor before acting on anything you read here.
               </p>

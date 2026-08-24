@@ -126,7 +126,7 @@ export default function Navbar() {
     return (
       <>
         {text.slice(0, idx)}
-        <span className="text-accent-500 font-semibold">{text.slice(idx, idx + query.length)}</span>
+        <span className="text-brand-600 font-semibold">{text.slice(idx, idx + query.length)}</span>
         {text.slice(idx + query.length)}
       </>
     );
@@ -466,7 +466,7 @@ export default function Navbar() {
                     >
                       {link.label}
                       {pathname === link.href && (
-                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-accent-500 rounded-full"></span>
+                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-brand-500 rounded-full"></span>
                       )}
                     </Link>
                   );
@@ -504,7 +504,7 @@ export default function Navbar() {
                         className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
                       />
                       {active && (
-                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-accent-500 rounded-full"></span>
+                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-brand-500 rounded-full"></span>
                       )}
                     </button>
 
@@ -555,7 +555,7 @@ export default function Navbar() {
                     onKeyDown={searchKeyDown}
                     className="w-64 px-4 py-2 pr-12 text-slate-900 border border-brand-300 rounded-lg bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
                   />
-                  <div className="absolute right-0 top-0 bottom-0 w-9 bg-accent-500 rounded-lg flex items-center justify-center pointer-events-none">
+                  <div className="absolute right-0 top-0 bottom-0 w-9 bg-brand-600 rounded-lg flex items-center justify-center pointer-events-none">
                     <SearchIcon size={16} className="text-white" />
                   </div>
                   {renderSearchResults()}
@@ -751,7 +751,7 @@ export default function Navbar() {
                                   />
                                   <span className="flex-1">{child.label}</span>
                                   {childActive && (
-                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" aria-hidden />
+                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" aria-hidden />
                                   )}
                                 </Link>
                               );
@@ -780,7 +780,7 @@ export default function Navbar() {
                       />
                       <span className="flex-1">{link.label}</span>
                       {active && (
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500" aria-hidden />
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" aria-hidden />
                       )}
                     </Link>
                   );
@@ -851,7 +851,7 @@ export default function Navbar() {
                 <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
                 <span
                   className={`h-0.5 w-4 rounded-full transition-colors ${
-                    active ? "bg-accent-500" : "bg-transparent"
+                    active ? "bg-brand-500" : "bg-transparent"
                   }`}
                 />
               </Link>
@@ -904,7 +904,7 @@ export default function Navbar() {
                 <span className="text-[10px] font-semibold tracking-wide">{item.label}</span>
                 <span
                   className={`h-0.5 w-4 rounded-full transition-colors ${
-                    active ? "bg-accent-500" : "bg-transparent"
+                    active ? "bg-brand-500" : "bg-transparent"
                   }`}
                 />
               </Link>

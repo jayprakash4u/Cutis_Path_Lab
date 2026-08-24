@@ -48,13 +48,15 @@ export const PackageCard = ({
       href={actionHref}
       className={`block bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden ${className}`}
     >
-      <div className="bg-accent-500 px-4 py-2">
+      <div className="bg-brand-600 px-4 py-2">
         <h3 className="text-base font-medium text-white line-clamp-1">{title}</h3>
       </div>
 
       <div className="p-4">
         {badge && (
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-700 mb-3">
+          /* Category tag — same treatment as the one on Tests in Offers
+             cards, so the same kind of label reads the same way sitewide. */
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-accent-500 mb-3">
             {badge}
           </span>
         )}

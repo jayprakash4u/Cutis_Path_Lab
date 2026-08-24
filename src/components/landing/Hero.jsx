@@ -145,12 +145,23 @@ export default function Hero({ slides = [], section, items }) {
         <p className="hidden max-w-xl sm:mb-4 sm:block sm:text-xs sm:text-slate-200 sm:drop-shadow-lg md:text-base">
           {section?.subtitle || "Accurate diagnostics delivered with speed & precision"}
         </p>
-        <Link
-          href={section?.ctaHref || "/book"}
-          className="whitespace-nowrap rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-brand-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-brand-600 hover:to-brand-700 hover:shadow-brand-500/60 sm:px-5 sm:py-2 sm:text-sm"
-        >
-          {section?.ctaLabel || "Book Test Now"}
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href={section?.ctaHref || "/book"}
+            className="whitespace-nowrap rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-brand-500/40 transition-all duration-300 hover:-translate-y-1 hover:from-brand-600 hover:to-brand-700 hover:shadow-brand-500/60 sm:px-5 sm:py-2 sm:text-sm"
+          >
+            {section?.ctaLabel || "Book Test Now"}
+          </Link>
+          {/* Secondary action, deliberately in the accent colour — the one
+              spot on the banner that isn't brand blue, so it reads as the
+              alternate path (talk to us) rather than competing with Book. */}
+          <Link
+            href={section?.secondaryCtaHref || "/contact"}
+            className="whitespace-nowrap rounded-lg bg-accent-500 px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-accent-500/30 transition-all duration-300 hover:-translate-y-1 hover:bg-accent-600 sm:px-5 sm:py-2 sm:text-sm"
+          >
+            {section?.secondaryCtaLabel || "Contact Us"}
+          </Link>
+        </div>
       </div>
 
       <div className="absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 animate-bounce sm:block sm:bottom-12 lg:bottom-16">

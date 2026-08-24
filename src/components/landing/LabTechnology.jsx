@@ -235,9 +235,9 @@ export default function LabTechnology({ section, items }) {
             aria-hidden="true"
           />
 
-          {/* Coral warmth, top-left — the corner the other two leave empty */}
+          {/* Soft warmth, top-left — the corner the other two leave empty */}
           <div
-            className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-accent-500/25 blur-3xl"
+            className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-brand-400/25 blur-3xl"
             aria-hidden="true"
           />
 
@@ -245,7 +245,7 @@ export default function LabTechnology({ section, items }) {
             <span className="absolute -right-16 top-20 h-64 w-64 rounded-full bg-white/[0.06]" />
             <span className="absolute left-1/3 top-10 h-40 w-40 rounded-full bg-white/[0.05]" />
             <span className="absolute bottom-10 right-1/4 h-72 w-72 rounded-full bg-white/[0.04]" />
-            <span className="absolute bottom-16 left-16 h-48 w-48 rounded-full bg-accent-500/[0.12]" />
+            <span className="absolute bottom-16 left-16 h-48 w-48 rounded-full bg-brand-400/[0.12]" />
           </div>
         </>
       }
@@ -304,7 +304,7 @@ export default function LabTechnology({ section, items }) {
                       <span className="font-semibold text-brand-600">
                         {tech.badge || tech.highlight}
                       </span>
-                      <span className="h-1 w-1 rounded-full bg-accent-500" aria-hidden="true" />
+                      <span className="h-1 w-1 rounded-full bg-brand-500" aria-hidden="true" />
                       <span className="text-slate-500">{tech.note || tech.support}</span>
                     </p>
                   </div>
@@ -320,7 +320,7 @@ export default function LabTechnology({ section, items }) {
                     ).map((item) => (
                         <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
                           <span
-                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500"
+                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500"
                             aria-hidden="true"
                           />
                           <span>{item}</span>
@@ -329,8 +329,8 @@ export default function LabTechnology({ section, items }) {
                   </ul>
                 </div>
 
-                {/* Coral foot — the site's established card close */}
-                <span className="block h-1 w-full bg-accent-500" aria-hidden="true" />
+                {/* Brand foot — the site's established card close */}
+                <span className="block h-1 w-full bg-brand-500" aria-hidden="true" />
               </div>
             </article>
           ))}

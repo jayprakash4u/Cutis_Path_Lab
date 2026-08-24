@@ -20,10 +20,12 @@ const ICONS = {
     </svg>
   ),
   quality: (
+    // Two nodes in line-work blue, the third — the one the other two connect
+    // to — in accent, the same "one detail" language as the other icon sets.
     <svg width="36" height="36" viewBox="0 0 24 24" fill="#647DCE">
       <circle cx="18" cy="5" r="3"/>
       <circle cx="6" cy="12" r="3"/>
-      <circle cx="18" cy="19" r="3"/>
+      <circle cx="18" cy="19" r="3" fill="#C62F45"/>
       <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="#647DCE" strokeWidth="1.5" fill="none"/>
       <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="#647DCE" strokeWidth="1.5" fill="none"/>
     </svg>
@@ -75,7 +77,7 @@ export default function Stats({ section, items }) {
           {/* Image - Hidden on very small screens, visible on sm+ */}
           <div className="relative hidden h-48 overflow-hidden rounded-2xl shadow-card sm:block sm:h-64 lg:h-full lg:min-h-[420px]">
             <Image
-              src="/images/home/stats-image.jpg"
+              src="/images/home/why-patients.png"
               alt="Cutis Path Lab team"
               fill
               className="object-cover"
@@ -94,7 +96,7 @@ export default function Stats({ section, items }) {
                 key={s.id || s.title}
                 className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card transition-shadow duration-300 hover:shadow-card-hover sm:p-5"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-500 text-sm font-bold text-white sm:text-base">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-sm font-bold text-white sm:text-base">
                   {/* Rows added later get their number from their position. */}
                   {s.badge || String(i + 1).padStart(2, "0")}
                 </span>

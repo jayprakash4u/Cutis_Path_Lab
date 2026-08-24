@@ -1,76 +1,149 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Section, SectionHeading } from "@/components/ui/Section";
+import {
+  useFullCardCarousel,
+  CAROUSEL_BREAKPOINTS,
+} from "@/lib/useFullCardCarousel";
+import {
+  Section,
+  SectionHeading,
+  CarouselButton,
+  CarouselDots,
+} from "@/components/ui/Section";
 
-/* Shown when the section has no rows — an empty table must not blank the page. */
+/* Shown when the section has no rows — an empty table must not blank the page.
+   Images match the real files in public/images/disease-categories (PascalCase,
+   .png — the folder the client supplied), and each row carries a short
+   "why get tested" line the card needs but the DB rows don't have yet. */
 const DEFAULT_CATEGORIES = [
-  "anemia",
-  "diabetes",
-  "heart",
-  "thyroid",
-  "kidney",
-  "liver",
-  "bone",
-  "fever",
-  "cancer",
-  "gut-health",
-].map((slug) => ({
-  title: slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-  imageUrl: `/images/disease-categories/${slug}.jpg`,
-  linkUrl: `/tests?category=${slug}`,
+  { slug: "anemia", title: "Anemia", file: "Anemia.png", description: "Detect low haemoglobin levels" },
+  { slug: "diabetes", title: "Diabetes", file: "Diabetes.png", description: "Manage your blood sugar" },
+  { slug: "heart", title: "Heart", file: "Heart.png", description: "Track your heart health" },
+  { slug: "thyroid", title: "Thyroid", file: "Thyroid.png", description: "Monitor your hormone balance" },
+  { slug: "kidney", title: "Kidney", file: "Kidney.png", description: "Keep your kidneys healthy" },
+  { slug: "liver", title: "Liver", file: "Liver.png", description: "A healthy liver keeps you healthy" },
+  { slug: "bone", title: "Bone", file: "Bone.png", description: "Strengthen your bone health" },
+  { slug: "fever", title: "Fever", file: "Fever.png", description: "Identify the cause of fever" },
+  { slug: "cancer", title: "Cancer", file: "Cancer.png", description: "Early detection saves lives" },
+  { slug: "gut-health", title: "Gut Health", file: "GutHealth.png", description: "Support your digestive wellness" },
+].map((c) => ({
+  title: c.title,
+  description: c.description,
+  imageUrl: `/images/disease-categories/${c.file}`,
+  linkUrl: `/tests?category=${c.slug}`,
 }));
+
+function CategoryCard({ category }) {
+  return (
+    <Link
+      href={category.linkUrl || "/tests"}
+      className="group flex h-full flex-col items-center rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
+    >
+      <span className="relative aspect-square w-full max-w-[140px] overflow-hidden">
+        <Image
+          src={category.imageUrl || "/images/disease-categories/Anemia.png"}
+          alt=""
+          fill
+          sizes="140px"
+          className="object-contain"
+        />
+      </span>
+
+      {/* Category name — the caption naming what the card is, same red as the
+          doctor-specialty and testimonial-role captions elsewhere on the site. */}
+      <span className="mt-3 text-sm font-bold uppercase tracking-wide text-accent-500">
+        {category.title}
+      </span>
+      <span className="mt-1 text-xs leading-snug text-slate-600 sm:text-[13px]">
+        {category.description}
+      </span>
+    </Link>
+  );
+}
 
 export default function TestByDiseaseCategories({ section, items }) {
   const categories = items?.length ? items : DEFAULT_CATEGORIES;
+
+  const {
+    scrollRef,
+    viewportRef,
+    activeIndex,
+    cardWidthStyle,
+    scrollClassName,
+    cardClassName,
+    totalDots,
+    handleScroll,
+    scroll,
+    scrollToDot,
+    canScrollLeft,
+    canScrollRight,
+    gap,
+  } = useFullCardCarousel({
+    gap: 16,
+    breakpoints: CAROUSEL_BREAKPOINTS.diseaseCategories,
+    itemCount: categories.length,
+    deps: [categories.length],
+  });
 
   return (
     <Section tone="tint" size="compact">
       <SectionHeading
         title={section?.title || "Find the right test for your condition"}
         subtitle={section?.subtitle || "Browse our most requested diagnostic panels by health concern."}
+        actions={
+          <div className="hidden items-center gap-3 sm:flex">
+            <CarouselButton
+              direction="left"
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              label="Previous conditions"
+            />
+            <CarouselButton
+              direction="right"
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              label="Next conditions"
+            />
+          </div>
+        }
       />
 
-      {/*
-        A grid, not a scroll strip. Ten items never overflow a desktop viewport,
-        so the old horizontal rail simply ran out halfway across and left a void.
-        Five per row fills the shell and wraps cleanly down to two on mobile.
-      */}
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-        {categories.map((cat) => (
-          <li key={cat.id || cat.linkUrl}>
-            <Link
-              href={cat.linkUrl || "/tests"}
-              className="group flex h-full items-center gap-3 rounded-full border border-slate-200 bg-white p-2 pr-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-card-hover"
-            >
-              <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-accent-500/25 transition-all duration-300 group-hover:ring-brand-500/40 sm:h-14 sm:w-14">
-                <Image
-                  src={cat.imageUrl || "/images/disease-categories/anemia.jpg"}
-                  alt=""
-                  fill
-                  sizes="56px"
-                  className="object-cover"
-                />
-              </span>
+      <div ref={viewportRef} className="w-full overflow-hidden py-2">
+        <ul
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className={`${scrollClassName} items-stretch`}
+          style={{ gap: `${gap}px`, scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {categories.map((cat) => (
+            <li key={cat.id || cat.linkUrl} style={cardWidthStyle} className={cardClassName}>
+              <CategoryCard category={cat} />
+            </li>
+          ))}
+        </ul>
+      </div>
 
-              <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-900 transition-colors duration-300 group-hover:text-brand-700">
-                {cat.title}
-              </span>
-
-              <svg
-                className="h-4 w-4 shrink-0 text-slate-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-brand-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <div className="sm:hidden">
+          <CarouselButton
+            direction="left"
+            onClick={() => scroll("left")}
+            disabled={!canScrollLeft}
+            label="Previous conditions"
+          />
+        </div>
+        <CarouselDots total={totalDots} activeIndex={activeIndex} onSelect={scrollToDot} />
+        <div className="sm:hidden">
+          <CarouselButton
+            direction="right"
+            onClick={() => scroll("right")}
+            disabled={!canScrollRight}
+            label="Next conditions"
+          />
+        </div>
+      </div>
     </Section>
   );
 }
-
-

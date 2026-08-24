@@ -55,6 +55,7 @@ const GROUPS = [
       { name: "facebookUrl", label: "Facebook URL", placeholder: "https://facebook.com/…" },
       { name: "instagramUrl", label: "Instagram URL", placeholder: "https://instagram.com/…" },
       { name: "whatsappUrl", label: "WhatsApp link", placeholder: "https://wa.me/9779861848382" },
+      { name: "tiktokUrl", label: "TikTok URL", placeholder: "https://tiktok.com/@…" },
     ],
   },
 ];

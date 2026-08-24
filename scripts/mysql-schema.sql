@@ -362,13 +362,26 @@ CREATE TABLE IF NOT EXISTS `SiteFooter` (
   `facebookUrl`  VARCHAR(500) NULL,
   `instagramUrl` VARCHAR(500) NULL,
   `whatsappUrl`  VARCHAR(500) NULL,
+  `tiktokUrl`    VARCHAR(500) NULL,
   `updatedAt`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Databases created before TikTok joined the social row get the column here —
+-- the INSERT just below already references it, so this has to run first.
+SET @ddl := IF(
+  (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'SiteFooter'
+      AND COLUMN_NAME = 'tiktokUrl') = 0,
+  'ALTER TABLE `SiteFooter` ADD COLUMN `tiktokUrl` VARCHAR(500) NULL AFTER `whatsappUrl`',
+  'DO 0');
+PREPARE addTiktokUrl FROM @ddl;
+EXECUTE addTiktokUrl;
+DEALLOCATE PREPARE addTiktokUrl;
+
 INSERT IGNORE INTO `SiteFooter`
   (`id`, `brandName`, `tagline`, `address`, `phone`, `email`, `hours`, `note`,
-   `facebookUrl`, `instagramUrl`, `whatsappUrl`)
+   `facebookUrl`, `instagramUrl`, `whatsappUrl`, `tiktokUrl`)
 VALUES (
   'default',
   'Cutis Path Lab',
@@ -380,7 +393,8 @@ VALUES (
   'Pathology lab · Kathmandu, Nepal',
   'https://facebook.com',
   'https://instagram.com',
-  'https://wa.me/9779861848382'
+  'https://wa.me/9779861848382',
+  'https://tiktok.com'
 );
 
 CREATE TABLE IF NOT EXISTS `ContactFaq` (
@@ -564,16 +578,16 @@ VALUES
 ('stats-2', 'stats', 'Accurate Reports', 'We provide accurate and reliable test reports', '02', NULL, 'report', NULL, NULL, 1, 1),
 ('stats-3', 'stats', '24/7 Support', 'We are available 24/7 for your support', '03', NULL, 'support', NULL, NULL, 1, 2),
 ('stats-4', 'stats', 'Quality Assurance', 'International quality standards with NABL accreditation', '04', NULL, 'quality', NULL, NULL, 1, 3),
-('diseaseCategories-1', 'diseaseCategories', 'Anemia', NULL, NULL, NULL, NULL, '/images/disease-categories/anemia.jpg', '/tests?category=anemia', 1, 0),
-('diseaseCategories-2', 'diseaseCategories', 'Diabetes', NULL, NULL, NULL, NULL, '/images/disease-categories/diabetes.jpg', '/tests?category=diabetes', 1, 1),
-('diseaseCategories-3', 'diseaseCategories', 'Heart', NULL, NULL, NULL, NULL, '/images/disease-categories/heart.jpg', '/tests?category=heart', 1, 2),
-('diseaseCategories-4', 'diseaseCategories', 'Thyroid', NULL, NULL, NULL, NULL, '/images/disease-categories/thyroid.jpg', '/tests?category=thyroid', 1, 3),
-('diseaseCategories-5', 'diseaseCategories', 'Kidney', NULL, NULL, NULL, NULL, '/images/disease-categories/kidney.jpg', '/tests?category=kidney', 1, 4),
-('diseaseCategories-6', 'diseaseCategories', 'Liver', NULL, NULL, NULL, NULL, '/images/disease-categories/liver.jpg', '/tests?category=liver', 1, 5),
-('diseaseCategories-7', 'diseaseCategories', 'Bone', NULL, NULL, NULL, NULL, '/images/disease-categories/bone.jpg', '/tests?category=bone', 1, 6),
-('diseaseCategories-8', 'diseaseCategories', 'Fever', NULL, NULL, NULL, NULL, '/images/disease-categories/fever.jpg', '/tests?category=fever', 1, 7),
-('diseaseCategories-9', 'diseaseCategories', 'Cancer', NULL, NULL, NULL, NULL, '/images/disease-categories/cancer.jpg', '/tests?category=cancer', 1, 8),
-('diseaseCategories-10', 'diseaseCategories', 'Gut Health', NULL, NULL, NULL, NULL, '/images/disease-categories/gut-health.jpg', '/tests?category=gut-health', 1, 9),
+('diseaseCategories-1', 'diseaseCategories', 'Anemia', 'Detect low haemoglobin levels', NULL, NULL, NULL, '/images/disease-categories/Anemia.png', '/tests?category=anemia', 1, 0),
+('diseaseCategories-2', 'diseaseCategories', 'Diabetes', 'Manage your blood sugar', NULL, NULL, NULL, '/images/disease-categories/Diabetes.png', '/tests?category=diabetes', 1, 1),
+('diseaseCategories-3', 'diseaseCategories', 'Heart', 'Track your heart health', NULL, NULL, NULL, '/images/disease-categories/Heart.png', '/tests?category=heart', 1, 2),
+('diseaseCategories-4', 'diseaseCategories', 'Thyroid', 'Monitor your hormone balance', NULL, NULL, NULL, '/images/disease-categories/Thyroid.png', '/tests?category=thyroid', 1, 3),
+('diseaseCategories-5', 'diseaseCategories', 'Kidney', 'Keep your kidneys healthy', NULL, NULL, NULL, '/images/disease-categories/Kidney.png', '/tests?category=kidney', 1, 4),
+('diseaseCategories-6', 'diseaseCategories', 'Liver', 'A healthy liver keeps you healthy', NULL, NULL, NULL, '/images/disease-categories/Liver.png', '/tests?category=liver', 1, 5),
+('diseaseCategories-7', 'diseaseCategories', 'Bone', 'Strengthen your bone health', NULL, NULL, NULL, '/images/disease-categories/Bone.png', '/tests?category=bone', 1, 6),
+('diseaseCategories-8', 'diseaseCategories', 'Fever', 'Identify the cause of fever', NULL, NULL, NULL, '/images/disease-categories/Fever.png', '/tests?category=fever', 1, 7),
+('diseaseCategories-9', 'diseaseCategories', 'Cancer', 'Early detection saves lives', NULL, NULL, NULL, '/images/disease-categories/Cancer.png', '/tests?category=cancer', 1, 8),
+('diseaseCategories-10', 'diseaseCategories', 'Gut Health', 'Support your digestive wellness', NULL, NULL, NULL, '/images/disease-categories/GutHealth.png', '/tests?category=gut-health', 1, 9),
 ('healthTips-1', 'healthTips', 'FASTING', 'Fast for 8-12 hours before blood tests. Only water is allowed during fasting period.', NULL, NULL, 'fasting', NULL, NULL, 1, 0),
 ('healthTips-2', 'healthTips', 'HYDRATION', 'Drink plenty of water before your test to make blood draw easier.', NULL, NULL, 'hydration', NULL, NULL, 1, 1),
 ('healthTips-3', 'healthTips', 'NO ALCOHOL', 'Refrain from alcohol consumption 24 hours before your health checkup.', NULL, NULL, 'alcohol', NULL, NULL, 1, 2),
@@ -611,6 +625,21 @@ Fewer lost samples', 'Full visibility', 'Collection to report', 'tracking', NULL
 ('about-2', 'about', 'Expert Professionals', 'Qualified pathologists and technicians with years of hands-on experience.', NULL, NULL, 'people', NULL, NULL, 1, 1),
 ('about-3', 'about', 'Quality Assurance', 'NABL accredited and ISO 15189:2012 compliant to maintain the highest testing standards.', NULL, NULL, 'quality', NULL, NULL, 1, 2),
 ('about-4', 'about', 'Timely & Reliable', 'Quick turnaround without compromising accuracy, because every result matters.', NULL, NULL, 'timely', NULL, NULL, 1, 3);
+
+-- Databases seeded before the disease-category artwork and captions shipped
+-- have these 10 rows already, so INSERT IGNORE above is a no-op for them —
+-- fix the image path (the real files are PascalCase .png, not slug.jpg) and
+-- add the caption each card now shows. Safe to re-run.
+UPDATE `HomeSectionItem` SET `description` = 'Detect low haemoglobin levels', `imageUrl` = '/images/disease-categories/Anemia.png' WHERE `id` = 'diseaseCategories-1';
+UPDATE `HomeSectionItem` SET `description` = 'Manage your blood sugar', `imageUrl` = '/images/disease-categories/Diabetes.png' WHERE `id` = 'diseaseCategories-2';
+UPDATE `HomeSectionItem` SET `description` = 'Track your heart health', `imageUrl` = '/images/disease-categories/Heart.png' WHERE `id` = 'diseaseCategories-3';
+UPDATE `HomeSectionItem` SET `description` = 'Monitor your hormone balance', `imageUrl` = '/images/disease-categories/Thyroid.png' WHERE `id` = 'diseaseCategories-4';
+UPDATE `HomeSectionItem` SET `description` = 'Keep your kidneys healthy', `imageUrl` = '/images/disease-categories/Kidney.png' WHERE `id` = 'diseaseCategories-5';
+UPDATE `HomeSectionItem` SET `description` = 'A healthy liver keeps you healthy', `imageUrl` = '/images/disease-categories/Liver.png' WHERE `id` = 'diseaseCategories-6';
+UPDATE `HomeSectionItem` SET `description` = 'Strengthen your bone health', `imageUrl` = '/images/disease-categories/Bone.png' WHERE `id` = 'diseaseCategories-7';
+UPDATE `HomeSectionItem` SET `description` = 'Identify the cause of fever', `imageUrl` = '/images/disease-categories/Fever.png' WHERE `id` = 'diseaseCategories-8';
+UPDATE `HomeSectionItem` SET `description` = 'Early detection saves lives', `imageUrl` = '/images/disease-categories/Cancer.png' WHERE `id` = 'diseaseCategories-9';
+UPDATE `HomeSectionItem` SET `description` = 'Support your digestive wellness', `imageUrl` = '/images/disease-categories/GutHealth.png' WHERE `id` = 'diseaseCategories-10';
 
 -- Databases created before hero slides moved into this table get the column
 -- here. MySQL has no ADD COLUMN IF NOT EXISTS, so it is guarded by a lookup and

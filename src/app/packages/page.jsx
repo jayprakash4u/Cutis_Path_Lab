@@ -93,7 +93,7 @@ export default function PackagesPage() {
           <div className="max-w-7xl mx-auto px-3 lg:px-6">
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
               <div className="relative px-4 lg:px-8 py-4 lg:py-8">
-                <div className="absolute left-0 right-0 top-1/2 border-t border-accent-500 z-0"></div>
+                <div className="absolute left-0 right-0 top-1/2 border-t border-brand-200 z-0"></div>
                 <div className="relative z-10 inline-block bg-brand-600 px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-2xl rounded-bl-2xl">
                   <h2 className="text-sm lg:text-lg md:text-xl font-bold text-white">
                     Our Packages
@@ -252,7 +252,7 @@ export default function PackagesPage() {
                 <button
                   type="button"
                   onClick={() => handleBookPackage(selectedPackage)}
-                  className="w-full rounded-lg bg-accent-500 py-3 font-semibold text-white transition-colors hover:bg-accent-600"
+                  className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white transition-colors hover:bg-brand-700"
                 >
                   Book This Package
                 </button>

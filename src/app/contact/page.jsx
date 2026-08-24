@@ -536,7 +536,7 @@ function ContactPageContent() {
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-16">
               {/* Contact Form - title changes based on activeTab */}
               <div className="bg-slate-50 rounded-2xl p-0 border border-slate-100">
-                <div className="bg-accent-500 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
+                <div className="bg-brand-600 w-full px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-xl">
                   <h2 className="text-sm lg:text-xl font-bold text-white">
                     {CONTENT.FORM_TITLES[activeTab]}
                   </h2>
@@ -1257,7 +1257,7 @@ function ContactPageContent() {
         <section className="py-8 lg:py-24 bg-slate-50">
           <div className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="text-center mb-6 lg:mb-12">
-              <h2 className="text-lg lg:text-3xl font-bold text-slate-900 mb-2 lg:mb-4 border-b-2 lg:border-b-4 border-accent-500 inline-block pb-1 lg:pb-2">
+              <h2 className="text-lg lg:text-3xl font-bold text-slate-900 mb-2 lg:mb-4 border-b-2 lg:border-b-4 border-brand-500 inline-block pb-1 lg:pb-2">
                 FAQs
               </h2>
             </div>

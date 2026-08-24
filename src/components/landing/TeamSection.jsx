@@ -58,7 +58,7 @@ function MemberPhoto({ src, name }) {
 
 function MemberCard({ member }) {
   const card = (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-accent-500 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 border-t-4 border-t-brand-500 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover">
       {/*
         Square, not the 4:5 portrait this used to be. At a card width of ~250px
         on a phone that ratio made a 312px-tall photo before a word of text had
@@ -75,7 +75,7 @@ function MemberCard({ member }) {
         </h3>
 
         {member.badge ? (
-          <p className="mt-0.5 text-xs font-semibold text-brand-600">{member.badge}</p>
+          <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-accent-500">{member.badge}</p>
         ) : null}
 
         {member.note ? (

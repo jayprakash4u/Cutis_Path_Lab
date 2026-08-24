@@ -49,7 +49,7 @@ function TintTexture() {
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-accent-500/[0.07] blur-3xl"
+        className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-brand-400/[0.07] blur-3xl"
         aria-hidden="true"
       />
     </>
@@ -121,7 +121,7 @@ export function SectionHeading({
         </h2>
 
         <span
-          className={`mt-4 block h-1 w-12 rounded-full bg-accent-500 ${
+          className={`mt-4 block h-1 w-12 rounded-full bg-brand-500 ${
             centered ? "mx-auto" : ""
           }`}
           aria-hidden="true"

@@ -159,9 +159,9 @@ export default function BookTest({ section }) {
             aria-hidden="true"
           />
 
-          {/* Coral warmth, mirrored to the opposite corner from Testimonials */}
+          {/* Soft glow, mirrored to the opposite corner from Testimonials */}
           <div
-            className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-accent-500/25 blur-3xl"
+            className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-brand-400/25 blur-3xl"
             aria-hidden="true"
           />
 
@@ -169,7 +169,7 @@ export default function BookTest({ section }) {
             <span className="absolute -right-16 top-28 h-64 w-64 rounded-full bg-white/[0.06]" />
             <span className="absolute right-1/4 top-16 h-40 w-40 rounded-full bg-white/[0.05]" />
             <span className="absolute bottom-0 right-1/3 h-72 w-72 rounded-full bg-white/[0.04]" />
-            <span className="absolute -bottom-10 left-1/4 h-56 w-56 rounded-full bg-accent-500/[0.12]" />
+            <span className="absolute -bottom-10 left-1/4 h-56 w-56 rounded-full bg-brand-400/[0.12]" />
           </div>
         </>
       }
@@ -467,7 +467,7 @@ export default function BookTest({ section }) {
 
           {/* Right Side - Form */}
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5 md:p-6">
-            <div className="bg-accent-500 -mx-3 sm:-mx-4 md:-mx-6 -mt-3 sm:-mt-4 md:-mt-6 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 rounded-t-xl sm:rounded-t-2xl mb-3 sm:mb-4">
+            <div className="bg-brand-600 -mx-3 sm:-mx-4 md:-mx-6 -mt-3 sm:-mt-4 md:-mt-6 px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4 rounded-t-xl sm:rounded-t-2xl mb-3 sm:mb-4">
               <h3 className="text-sm sm:text-base md:text-xl font-semibold text-white">
                 Book Your Appointment
               </h3>

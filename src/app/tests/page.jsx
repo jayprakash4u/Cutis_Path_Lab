@@ -241,7 +241,7 @@ function TestsPageContent() {
                 </div>
                 <Link
                   href="/tests"
-                  className="text-xs sm:text-sm font-semibold text-accent-500 hover:text-brand-700 transition-colors"
+                  className="text-xs sm:text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors"
                 >
                   Clear · View all tests
                 </Link>
@@ -258,7 +258,7 @@ function TestsPageContent() {
                       onClick={() => setActiveCategory(category.id)}
                       className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
                         activeCategory === category.id
-                          ? "bg-accent-500 text-white"
+                          ? "bg-brand-600 text-white"
                           : "bg-white text-slate-600 border border-slate-200"
                       }`}
                     >
@@ -270,7 +270,7 @@ function TestsPageContent() {
 
               <div className="hidden lg:block lg:w-64 flex-shrink-0">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden sticky top-24">
-                  <div className="bg-accent-500 px-4 py-3">
+                  <div className="bg-brand-600 px-4 py-3">
                     <h3 className="text-white font-semibold">All Filters</h3>
                   </div>
                   <div className="p-3 border-b border-slate-200">
@@ -572,7 +572,7 @@ function TestsPageContent() {
                         type="button"
                         onClick={handleBookNow}
                         disabled={bookingBusy}
-                        className="w-full bg-accent-500 text-white py-2.5 rounded-lg font-semibold hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait shadow-sm"
+                        className="w-full bg-brand-600 text-white py-2.5 rounded-lg font-semibold hover:bg-brand-700 transition-colors disabled:opacity-60 disabled:cursor-wait shadow-sm"
                       >
                         {bookingBusy ? "Opening booking…" : "Book Now"}
                       </button>
@@ -598,7 +598,7 @@ function TestsPageContent() {
               type="button"
               onClick={handleBookNow}
               disabled={bookingBusy}
-              className="w-full bg-accent-500 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-wait"
+              className="w-full bg-brand-600 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-brand-700 transition-colors disabled:opacity-60 disabled:cursor-wait"
             >
               {bookingBusy ? "Opening booking…" : "Book Now"}
             </button>

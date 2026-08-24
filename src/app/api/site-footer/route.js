@@ -14,6 +14,7 @@ const { GET: get, PUT: put } = siteSettingsHandlers({
     "facebookUrl",
     "instagramUrl",
     "whatsappUrl",
+    "tiktokUrl",
   ],
 });
 

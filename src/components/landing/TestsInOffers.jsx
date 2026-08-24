@@ -105,7 +105,7 @@ export default function TestsInOffers({ section }) {
                     style={cardWidthStyle}
                     className={`flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition-all duration-300 hover:shadow-card-hover ${cardClassName}`}
                   >
-                    <div className="bg-accent-500 px-3 py-2">
+                    <div className="bg-brand-600 px-3 py-2">
                       <h3 className="truncate text-center text-xs font-semibold text-white sm:text-sm">
                         {test.name}
                       </h3>
