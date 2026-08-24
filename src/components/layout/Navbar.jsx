@@ -665,7 +665,7 @@ export default function Navbar() {
         />
         <div
           id="mobile-nav-panel"
-          className={`lg:hidden fixed inset-y-0 left-0 z-[65] flex w-[82%] max-w-[320px] flex-col bg-white shadow-2xl transition-[transform,visibility] duration-300 ease-out ${
+          className={`lg:hidden fixed inset-y-0 left-0 z-[65] flex w-[74%] max-w-[290px] flex-col bg-white shadow-2xl transition-[transform,visibility] duration-300 ease-out ${
             isOpen ? "visible translate-x-0" : "invisible -translate-x-full"
           }`}
           role="dialog"
