@@ -168,10 +168,21 @@ export default function Navbar() {
     [router]
   );
 
-  // Close desktop search dropdown on outside click
+  // Close search dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
+      /*
+        Two separate search boxes share this one dropdown-dismissal effect:
+        the desktop bar (searchRef) and the mobile sheet (mobileSearchRef) —
+        both mounted in the DOM at every width, just CSS-hidden by `lg:flex`
+        / the collapse transition. Checking only searchRef meant every tap
+        inside the *mobile* box — focusing it, tapping a result, dragging to
+        scroll the list — read as "outside" and closed the dropdown before
+        results could ever show.
+      */
+      const insideDesktopSearch = searchRef.current?.contains(e.target);
+      const insideMobileSearch = mobileSearchRef.current?.contains(e.target);
+      if (!insideDesktopSearch && !insideMobileSearch) {
         setShowSearchDropdown(false);
       }
       // Pointer users can open the dropdown by click as well as hover, so it
@@ -262,7 +273,7 @@ export default function Navbar() {
     <>
       {showSearchDropdown && searchResults.length > 0 && (
         <div
-          className={`absolute left-0 right-0 mt-2 bg-white border border-brand-100 rounded-2xl shadow-xl z-50 overflow-hidden ${
+          className={`absolute left-0 right-0 top-full mt-2 bg-white border border-brand-100 rounded-2xl shadow-xl z-50 overflow-hidden ${
             compact ? "max-h-64" : "max-h-80"
           } overflow-y-auto`}
         >
@@ -299,7 +310,7 @@ export default function Navbar() {
       {showSearchDropdown &&
         searchQuery.trim().length > 0 &&
         searchResults.length === 0 && (
-          <div className="absolute left-0 right-0 mt-2 bg-white border border-brand-100 rounded-2xl shadow-xl z-50 px-4 py-6 text-center">
+          <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-brand-100 rounded-2xl shadow-xl z-50 px-4 py-6 text-center">
             <p className="text-sm text-slate-500">
               No results for{" "}
               <span className="font-semibold text-slate-700">&quot;{searchQuery}&quot;</span>
@@ -545,7 +556,7 @@ export default function Navbar() {
 
              {/* Desktop Right */}
              <div className="hidden lg:flex items-center gap-4">
-                <div className="relative flex items-center" ref={searchRef}>
+                <div className="relative flex w-64 items-center" ref={searchRef}>
                   <input
                     type="text"
                     placeholder="Search tests & packages"
@@ -617,31 +628,50 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Search sheet — expands under the header when the icon is tapped */}
-        <div
-          ref={mobileSearchRef}
-          className={`lg:hidden overflow-hidden border-t border-brand-50 transition-[max-height,opacity] duration-300 ease-out ${
-            mobileSearchOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="bg-slate-50 px-4 py-3">
-            <div className="relative">
-              <input
-                ref={mobileSearchInputRef}
-                type="search"
-                placeholder="Search tests & packages"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
-                onKeyDown={searchKeyDown}
-                className="w-full rounded-xl border border-brand-200 bg-white py-3 pl-4 pr-11 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
-              />
-              <div className="pointer-events-none absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg bg-brand-600">
-                <SearchIcon size={14} className="text-white" />
+        {/* Search sheet — expands under the header when the icon is tapped.
+            The ref moved to this outer div: it now wraps both the collapsing
+            input box below and the results dropdown beside it, so the
+            outside-click handler still treats taps on either as "inside". */}
+        <div ref={mobileSearchRef} className="lg:hidden border-t border-brand-50">
+          <div
+            className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+              mobileSearchOpen ? "max-h-28 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="bg-slate-50 px-4 py-3">
+              <div className="relative">
+                <input
+                  ref={mobileSearchInputRef}
+                  type="search"
+                  placeholder="Search tests & packages"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
+                  onKeyDown={searchKeyDown}
+                  className="w-full rounded-xl border border-brand-200 bg-white py-3 pl-4 pr-11 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+                />
+                <div className="pointer-events-none absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg bg-brand-600">
+                  <SearchIcon size={14} className="text-white" />
+                </div>
               </div>
-              {renderSearchResults(true)}
             </div>
           </div>
+
+          {/*
+            Results render as a sibling of the collapse box above, not nested
+            inside it. That box's `overflow-hidden` only clips its own in-flow
+            content (the input) — an absolutely-positioned dropdown nested
+            inside it doesn't add to the box's height at all, so no matter how
+            tall max-height was set, the dropdown rendered entirely outside
+            the box's actual (input-only) size and got clipped away wholesale.
+            This wrapper isn't animated or clipped, so the dropdown (itself
+            absolutely positioned, anchored via top-full) can render freely.
+          */}
+          {mobileSearchOpen && (
+            <div className="relative bg-slate-50 px-4">
+              {renderSearchResults(true)}
+            </div>
+          )}
         </div>
         </nav>
 
