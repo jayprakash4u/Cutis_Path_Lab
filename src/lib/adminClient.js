@@ -3,6 +3,17 @@
 export async function adminFetch(url, options = {}) {
   const res = await fetch(url, {
     credentials: "include",
+    /*
+      The GET routes this hits are the same public-catalog endpoints the main
+      site reads, which intentionally send `Cache-Control: public, max-age=60,
+      stale-while-revalidate=300` (see publicApiCache.js) — a good trade for
+      public traffic, but it meant the admin's own list, re-fetched right after
+      a save, could replay a browser-cached response up to a minute stale. The
+      admin panel always needs the authoritative row it just wrote, so every
+      admin request bypasses the HTTP cache entirely rather than opting each
+      GET call out individually.
+    */
+    cache: "no-store",
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {}),

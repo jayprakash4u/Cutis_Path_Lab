@@ -7,7 +7,6 @@ import AdminPagination, {
   ADMIN_PAGE_SIZE,
   paginate,
 } from "@/components/admin/AdminPagination";
-import ImageField from "@/components/admin/ImageField";
 import {
   AdminCard,
   BusyButton,
@@ -28,7 +27,6 @@ const emptyForm = {
   price: "",
   originalPrice: "",
   description: "",
-  imageUrl: "",
   reportsTime: "24-48 hrs",
   fasting: "10-12 hrs",
   sampleType: "Blood",
@@ -93,7 +91,6 @@ export default function AdminPackagesPage() {
       price: p.price ?? "",
       originalPrice: p.originalPrice ?? "",
       description: p.description || "",
-      imageUrl: p.imageUrl || p.image || "",
       reportsTime: p.reportsTime || "24-48 hrs",
       fasting: p.fasting || "10-12 hrs",
       sampleType: p.sampleType || "Blood",
@@ -119,7 +116,6 @@ export default function AdminPackagesPage() {
         price: Number(form.price),
         originalPrice: form.originalPrice === "" ? null : Number(form.originalPrice),
         description: form.description,
-        imageUrl: form.imageUrl,
         reportsTime: form.reportsTime,
         fasting: form.fasting,
         sampleType: form.sampleType,
@@ -319,12 +315,6 @@ export default function AdminPackagesPage() {
               onChange={onChange}
             />
           </Field>
-          <ImageField
-            label="Image"
-            folder="packages"
-            value={form.imageUrl}
-            onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
-          />
           <Field label="Report time">
             <input
               name="reportsTime"
