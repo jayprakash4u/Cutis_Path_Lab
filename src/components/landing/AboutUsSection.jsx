@@ -114,8 +114,18 @@ export default function AboutUsSection({ section, items }) {
     <Section tone="white">
       <div>
         <div className="grid items-center gap-12 lg:grid-cols-[45fr_55fr] lg:gap-14 xl:gap-20">
-          {/* Left 45% — image collage */}
-          <div className="relative mx-auto w-full max-w-lg pb-16 sm:pb-20 lg:max-w-none">
+          {/*
+            Left 45% — two photographs in a fixed frame.
+
+            This was a 4:5 portrait with a grey offset shape behind it and a
+            second photo floating outside the column on a negative bottom
+            offset. At 45% of the shell that portrait came to roughly 620x775,
+            taller than the whole right-hand column, and the overhang needed
+            pb-20 of dead space underneath while still clipping at the section
+            edge. Both photos now sit inside one 4:3 frame — about 465px tall,
+            which balances the content beside it — with nothing overflowing.
+          */}
+          <div className="relative mx-auto w-full max-w-lg pb-12 sm:pb-14 lg:max-w-none">
             {/* Soft offset shape behind the main image */}
             <div
               className="pointer-events-none absolute -left-4 -top-6 z-0 h-1/2 w-3/4 rounded-2xl bg-slate-200/50 sm:-left-6 sm:-top-8"
@@ -123,25 +133,36 @@ export default function AboutUsSection({ section, items }) {
             />
 
             <div className="relative z-10">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-float">
+              {/*
+                4:3, not the 4:5 this was. At 45% of the shell that portrait
+                came to roughly 620x775 — taller than the entire column beside
+                it, which is what made the section read as one big photograph.
+              */}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-float">
                 <Image
-                  src="/images/home/abouthomepage/pathlab1.jpg"
+                  src="/images/home/AboutHomePage/main-image.png"
                   alt="Cutis Path Lab pathologist at work"
                   fill
                   className="object-cover object-center"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  sizes="(min-width: 1024px) 45vw, 100vw"
                 />
               </div>
 
-              {/* Floating secondary image */}
-              <div className="absolute -bottom-12 right-0 z-20 w-[56%] overflow-hidden rounded-2xl border-[6px] border-white bg-white shadow-float sm:-bottom-14 sm:w-[52%] sm:translate-x-[10%]">
+              {/*
+                Floating secondary image, overlapping the corner. Anchored at
+                right-0 then nudged out by translate-x-[20%] — a percentage
+                transform is relative to the element's own width, so exactly
+                80% of it sits over the main photo and 20% spills past the
+                column's right edge into the gap before the text column.
+              */}
+              <div className="absolute -bottom-10 right-0 z-20 w-[46%] translate-x-[20%] overflow-hidden rounded-2xl border-[6px] border-white bg-white shadow-float sm:-bottom-12 sm:w-[42%]">
                 <div className="relative aspect-[4/3]">
                   <Image
-                    src="/images/home/abouthomepage/pathlab2.jpg"
+                    src="/images/home/AboutHomePage/sub-image.png"
                     alt="Cutis Path Lab samples and equipment"
                     fill
                     className="object-cover object-center"
-                    sizes="300px"
+                    sizes="(min-width: 1024px) 20vw, 46vw"
                   />
                 </div>
               </div>
@@ -156,20 +177,20 @@ export default function AboutUsSection({ section, items }) {
               className="!mb-0"
             />
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-5">
+            <div className="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-4">
               {highlights.map((item, idx) => (
                 <div
                   key={item.id || item.title}
-                  className="group flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
+                  className="group flex gap-3.5 rounded-xl border border-slate-200 bg-white p-4 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 p-2 ring-1 ring-brand-100 transition duration-300 group-hover:bg-brand-100">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 p-1.5 ring-1 ring-brand-100 transition duration-300 group-hover:bg-brand-100">
                     <AboutIcon iconKey={item.iconKey} index={idx} />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-base font-bold text-slate-900">
+                    <h3 className="text-[15px] font-bold leading-snug text-slate-900">
                       {item.title}
                     </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-500">
+                    <p className="mt-1 text-[13px] leading-relaxed text-slate-500">
                       {item.description}
                     </p>
                   </div>
@@ -179,25 +200,26 @@ export default function AboutUsSection({ section, items }) {
 
             <Link
               href={section?.ctaHref || "/about"}
-              className="group mt-9 inline-flex items-center gap-3 rounded-full bg-brand-600 py-2.5 pl-7 pr-2.5 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition duration-300 hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:text-base"
+              /* Matches the button the rest of the site settled on — the
+                 rounded-full pill with a circled arrow inside a tinted disc was
+                 the only one of its kind on the page. */
+              className="group mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
             >
               {section?.ctaLabel || "Learn More About Us"}
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 transition duration-300 group-hover:translate-x-0.5">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </span>
+              <svg
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
             </Link>
           </div>
         </div>

@@ -55,7 +55,7 @@ function FooterLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="text-[11px] text-slate-400 transition-colors hover:text-white sm:text-sm"
+      className="text-[11px] text-brand-100 transition-colors hover:text-white sm:text-sm"
     >
       {children}
     </Link>
@@ -70,9 +70,9 @@ export default function Footer() {
   })).filter((social) => social.href);
 
   return (
-    <footer className="relative overflow-hidden bg-slate-950 text-slate-300">
+    <footer className="relative overflow-hidden bg-brand-600 text-brand-100">
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/60 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
         aria-hidden="true"
       />
 
@@ -82,15 +82,29 @@ export default function Footer() {
           <div className="flex items-center justify-between gap-2">
             <Link
               href="/"
-              className="inline-flex items-center rounded-lg bg-white px-2 py-1 shadow-sm"
+              className="inline-flex min-w-0 shrink items-center gap-2.5"
             >
-              <Image
-                src="/images/cutis.png"
-                alt="Cutis Path Lab"
-                width={100}
-                height={36}
-                className="h-6 w-auto sm:h-8"
-              />
+              {/* Round plate — the seal is blue to its own edge, so on a blue
+                  footer it needs something to sit against. Same lockup as the
+                  navbar: mark, then the name in type. */}
+              <span className="flex shrink-0 items-center justify-center rounded-full bg-white p-[3px] shadow-sm">
+                <Image
+                  src="/images/logo/cutis-seal-192.png"
+                  alt=""
+                  width={192}
+                  height={192}
+                  quality={90}
+                  className="h-9 w-9 rounded-full sm:h-11 sm:w-11"
+                />
+              </span>
+              <span className="flex min-w-0 flex-col leading-none">
+                <span className="truncate text-[13px] font-bold tracking-tight text-white sm:text-[15px]">
+                  CUTIS PATH LAB
+                </span>
+                <span className="mt-1 text-[9px] font-medium uppercase tracking-[0.14em] text-brand-200">
+                  Pvt. Ltd. &middot; Estd. 2017
+                </span>
+              </span>
             </Link>
             <div className="flex items-center gap-1.5">
               {socialLinks.map((social) => (
@@ -99,7 +113,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-brand-500 hover:bg-brand-600 hover:text-white sm:h-8 sm:w-8"
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-white/10 text-brand-100 transition-all hover:border-accent-500 hover:bg-accent-500 hover:text-white sm:h-8 sm:w-8"
                   aria-label={social.name}
                 >
                   {social.icon}
@@ -110,7 +124,7 @@ export default function Footer() {
 
           <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 sm:mt-5 sm:gap-4">
             <div>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-400">
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-200">
                 Explore
               </h3>
               <ul className="mt-1.5 space-y-1 sm:mt-2.5 sm:space-y-1.5">
@@ -122,7 +136,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-400">
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-200">
                 Company
               </h3>
               <ul className="mt-1.5 space-y-1 sm:mt-2.5 sm:space-y-1.5">
@@ -135,23 +149,23 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-3 space-y-1 border-t border-slate-800/80 pt-3 text-[11px] leading-snug text-slate-400 sm:mt-5 sm:space-y-1.5 sm:pt-4 sm:text-sm">
+          <div className="mt-3 space-y-1 border-t border-white/15 pt-3 text-[11px] leading-snug text-brand-100 sm:mt-5 sm:space-y-1.5 sm:pt-4 sm:text-sm">
             <p className="line-clamp-2">{site.address}</p>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <a href={telHref(site.phone)} className="hover:text-white">
                 {site.phone}
               </a>
-              <span className="text-slate-700" aria-hidden="true">
+              <span className="text-brand-300" aria-hidden="true">
                 ·
               </span>
               <a href={mailHref(site.email)} className="truncate hover:text-white">
                 {site.email}
               </a>
             </div>
-            <p className="text-slate-500">{site.hours}</p>
+            <p className="text-brand-200">{site.hours}</p>
           </div>
 
-          <p className="mt-2.5 border-t border-slate-800/80 pt-2.5 text-center text-[10px] text-slate-500 sm:mt-4 sm:pt-3 sm:text-xs">
+          <p className="mt-2.5 border-t border-white/15 pt-2.5 text-center text-[10px] text-brand-200 sm:mt-4 sm:pt-3 sm:text-xs">
             © {new Date().getFullYear()} {site.brandName}
           </p>
         </div>
@@ -162,17 +176,28 @@ export default function Footer() {
             <div className="lg:col-span-4">
               <Link
                 href="/"
-                className="inline-flex items-center rounded-xl bg-white px-3 py-2 shadow-sm"
+                className="inline-flex items-center gap-3"
               >
-                <Image
-                  src="/images/cutis.png"
-                  alt="Cutis Path Lab"
-                  width={120}
-                  height={44}
-                  className="h-10 w-auto"
-                />
+                <span className="flex shrink-0 items-center justify-center rounded-full bg-white p-1 shadow-sm">
+                  <Image
+                    src="/images/logo/cutis-seal-192.png"
+                    alt=""
+                    width={192}
+                    height={192}
+                    quality={90}
+                    className="h-16 w-16 rounded-full"
+                  />
+                </span>
+                <span className="flex flex-col leading-none">
+                  <span className="text-xl font-bold tracking-tight text-white">
+                    CUTIS PATH LAB
+                  </span>
+                  <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-brand-200">
+                    Pvt. Ltd. &middot; Estd. 2017
+                  </span>
+                </span>
               </Link>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-brand-100">
                 {site.tagline}
               </p>
               <div className="mt-6 flex items-center gap-2.5">
@@ -182,7 +207,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-brand-500 hover:bg-brand-600 hover:text-white"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-brand-100 transition-all hover:border-accent-500 hover:bg-accent-500 hover:text-white"
                     aria-label={social.name}
                   >
                     {social.icon}
@@ -192,7 +217,7 @@ export default function Footer() {
             </div>
 
             <div className="lg:col-span-2">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-400">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-200">
                 Explore
               </h3>
               <ul className="mt-4 space-y-3">
@@ -205,7 +230,7 @@ export default function Footer() {
             </div>
 
             <div className="lg:col-span-2">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-400">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-200">
                 Company
               </h3>
               <ul className="mt-4 space-y-3">
@@ -218,10 +243,10 @@ export default function Footer() {
             </div>
 
             <div className="lg:col-span-4">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-400">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-200">
                 Visit & contact
               </h3>
-              <ul className="mt-4 space-y-3.5 text-sm text-slate-400">
+              <ul className="mt-4 space-y-3.5 text-sm text-brand-100">
                 <li className="flex gap-3">
                   <span className="mt-0.5 text-accent-500" aria-hidden="true">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,11 +288,11 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-12 flex items-center justify-between border-t border-slate-800/80 pt-6">
-            <p className="text-sm text-slate-500">
+          <div className="mt-12 flex items-center justify-between border-t border-white/15 pt-6">
+            <p className="text-sm text-brand-200">
               © {new Date().getFullYear()} {site.brandName}. All rights reserved.
             </p>
-            <p className="text-sm text-slate-500">{site.note}</p>
+            <p className="text-sm text-brand-200">{site.note}</p>
           </div>
         </div>
       </div>

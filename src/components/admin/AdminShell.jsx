@@ -299,8 +299,9 @@ export default function AdminShell({ children }) {
               </svg>
             </button>
 
+            {/* Mark only — the page title sits immediately to its right */}
             <div className="shrink-0 lg:hidden">
-              <AdminLogo size="sm" priority />
+              <AdminLogo size="sm" priority showName={false} />
             </div>
 
             <h1 className="admin-display hidden truncate text-base text-slate-900 sm:block">

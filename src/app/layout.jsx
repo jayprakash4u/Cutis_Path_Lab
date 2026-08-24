@@ -20,7 +20,8 @@ export const metadata = {
     "Cutis Path Lab",
   ],
   icons: {
-    icon: "/cutis.png",
+    icon: "/favicon-32.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     type: "website",

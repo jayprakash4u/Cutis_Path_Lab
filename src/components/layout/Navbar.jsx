@@ -435,16 +435,16 @@ export default function Navbar() {
                      seal's fine ring lettering at this size. 90 is allow-listed
                      in next.config.mjs. */
                   quality={90}
-                  className="h-10 w-10 rounded-full sm:h-11 sm:w-11 lg:h-12 lg:w-12"
+                  className="h-11 w-11 rounded-full sm:h-12 sm:w-12 lg:h-14 lg:w-14"
                   priority
                 />
               </span>
               <span className="flex min-w-0 flex-col leading-none">
-                <span className="text-[13px] font-bold tracking-tight text-brand-700 sm:text-[15px] lg:text-lg">
+                <span className="text-[15px] font-bold tracking-tight text-brand-700 sm:text-lg lg:text-xl">
                   CUTIS PATH LAB
                 </span>
                 {/* Too much for a phone header alongside the icons */}
-                <span className="mt-1 hidden text-[9px] font-medium uppercase tracking-[0.16em] text-slate-500 sm:block lg:text-[10px]">
+                <span className="mt-1 hidden text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500 sm:block lg:text-[11px]">
                   Mid Baneshwor, Kathmandu
                 </span>
               </span>
