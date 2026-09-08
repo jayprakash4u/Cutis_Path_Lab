@@ -491,7 +491,7 @@ export default function AdminCategoriesPage() {
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-medium text-slate-800">{t.name}</span>
                       <span className="mt-0.5 block text-xs text-slate-400">
-                        {t.category} · <Mono>₹{t.price}</Mono>
+                        {t.category} · <Mono>Rs. {t.price}</Mono>
                       </span>
                     </span>
                   </label>

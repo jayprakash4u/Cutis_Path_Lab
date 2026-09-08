@@ -214,11 +214,11 @@ export default function PopularTestsPackages({ section }) {
                             <div>
                               <div className="flex items-baseline gap-1.5">
                                 <span className="text-base font-bold text-slate-900 md:text-xl">
-                                  ₹{item.price}
+                                  Rs. {item.price}
                                 </span>
                                 {item.originalPrice && (
                                   <span className="text-xs text-slate-500 line-through">
-                                    ₹{item.originalPrice}
+                                    Rs. {item.originalPrice}
                                   </span>
                                 )}
                               </div>

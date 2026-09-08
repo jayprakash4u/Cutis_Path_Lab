@@ -274,7 +274,7 @@ export default function PackageDetailPage() {
                     </div>
                     <div>
                       <p className="text-sm text-slate-600">Starting Price</p>
-                      <p className="text-2xl font-bold text-green-600">₹{pkg.price}</p>
+                      <p className="text-2xl font-bold text-green-600">Rs. {pkg.price}</p>
                     </div>
                   </div>
                 </div>
@@ -330,7 +330,7 @@ export default function PackageDetailPage() {
                 <div className="mb-6 pb-6 border-b border-white/20">
                   <p className="text-brand-100 text-sm mb-2">Package Price</p>
                   <div className="flex items-baseline gap-2 mb-3">
-                    <span className="text-4xl font-bold">₹{pkg.price}</span>
+                    <span className="text-4xl font-bold">Rs. {pkg.price}</span>
                   </div>
                 </div>
 

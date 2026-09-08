@@ -288,12 +288,12 @@ export default function TestDetailPage() {
                 {/* Price Section */}
                 <div className="mb-6 pb-6 border-b border-brand-200">
                   <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-3xl font-bold text-brand-600">₹{test.price}</span>
-                    <span className="text-lg text-slate-500 line-through">₹{test.originalPrice}</span>
+                    <span className="text-3xl font-bold text-brand-600">Rs. {test.price}</span>
+                    <span className="text-lg text-slate-500 line-through">Rs. {test.originalPrice}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
-                      Save ₹{test.originalPrice - test.price} ({discount}%)
+                      Save Rs. {test.originalPrice - test.price} ({discount}%)
                     </span>
                   </div>
                 </div>
@@ -327,7 +327,7 @@ export default function TestDetailPage() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-slate-600">Subtotal</span>
                     <span className="font-semibold text-slate-900">
-                      ₹{(test.price * quantity).toLocaleString()}
+                      Rs. {(test.price * quantity).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm text-slate-600 mb-3">
@@ -337,7 +337,7 @@ export default function TestDetailPage() {
                   <div className="border-t border-slate-200 pt-3 flex justify-between items-center">
                     <span className="font-semibold text-slate-900">Total</span>
                     <span className="text-xl font-bold text-brand-600">
-                      ₹{(test.price * quantity).toLocaleString()}
+                      Rs. {(test.price * quantity).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -388,7 +388,7 @@ export default function TestDetailPage() {
                         {relatedTest.name}
                       </h3>
                       <p className="text-sm text-slate-600 mb-4">
-                        ₹{relatedTest.price}
+                        Rs. {relatedTest.price}
                       </p>
                       <button className="text-brand-600 font-semibold text-sm hover:text-brand-700 transition-colors">
                         View Details →

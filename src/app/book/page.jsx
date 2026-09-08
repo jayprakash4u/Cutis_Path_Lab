@@ -585,7 +585,7 @@ function BookPageContent() {
                                     <p className="text-[10px] lg:text-xs text-slate-500">{test.category}</p>
                                   </div>
                                   <div className="text-right">
-                                    <p className="text-xs lg:text-sm font-bold text-brand-600">₹{test.price}</p>
+                                    <p className="text-xs lg:text-sm font-bold text-brand-600">Rs. {test.price}</p>
                                   </div>
                                 </button>
                               ))}
@@ -805,16 +805,16 @@ function BookPageContent() {
                         {selectedTests.map((test) => (
                           <div key={test.id} className="flex justify-between text-sm">
                             <span className="text-slate-600">{test.name}</span>
-                            <span className="text-slate-900 font-medium">₹{test.price}</span>
+                            <span className="text-slate-900 font-medium">Rs. {test.price}</span>
                           </div>
                         ))}
                         <div className="border-t pt-2 mt-2">
                           <div className="flex justify-between font-semibold">
                             <span>Total</span>
-                            <span className="text-brand-600">₹{finalPrice}</span>
+                            <span className="text-brand-600">Rs. {finalPrice}</span>
                           </div>
                           {discount > 0 && (
-                            <p className="text-xs text-green-600 mt-1">Bulk discount applied: -₹{discount}</p>
+                            <p className="text-xs text-green-600 mt-1">Bulk discount applied: -Rs. {discount}</p>
                           )}
                         </div>
                       </div>
@@ -899,7 +899,7 @@ function BookPageContent() {
                             <div>
                               <p className="text-xs lg:text-sm font-medium text-slate-900">{test.name}</p>
                             </div>
-                            <span className="text-xs lg:text-sm font-semibold text-slate-900">₹{test.price}</span>
+                            <span className="text-xs lg:text-sm font-semibold text-slate-900">Rs. {test.price}</span>
                           </div>
                         ))}
                       </div>
@@ -908,12 +908,12 @@ function BookPageContent() {
                       <div className="space-y-1 lg:space-y-2 border-t border-slate-200 pt-2 lg:pt-4 mb-2 lg:mb-4">
                         <div className="flex justify-between text-xs lg:text-sm">
                           <span className="text-slate-600">Subtotal</span>
-                          <span className="text-slate-900">₹{totalPrice}</span>
+                          <span className="text-slate-900">Rs. {totalPrice}</span>
                         </div>
                         {discount > 0 && (
                           <div className="flex justify-between text-xs lg:text-sm">
                             <span className="text-green-600">Discount</span>
-                            <span className="text-green-600">-₹{discount}</span>
+                            <span className="text-green-600">-Rs. {discount}</span>
                           </div>
                         )}
                       </div>
@@ -923,9 +923,9 @@ function BookPageContent() {
                         <div className="flex justify-between items-center">
                           <span className="text-sm lg:text-lg font-semibold text-slate-900">Total</span>
                           <div className="text-right">
-                            <span className="text-lg lg:text-2xl font-bold text-brand-600">₹{finalPrice}</span>
+                            <span className="text-lg lg:text-2xl font-bold text-brand-600">Rs. {finalPrice}</span>
                             {discount > 0 && (
-                              <p className="text-[10px] lg:text-xs text-green-600">Saved ₹{discount}</p>
+                              <p className="text-[10px] lg:text-xs text-green-600">Saved Rs. {discount}</p>
                             )}
                           </div>
                         </div>

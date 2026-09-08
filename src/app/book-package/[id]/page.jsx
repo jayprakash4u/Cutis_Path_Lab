@@ -253,7 +253,7 @@ export default function BookPackagePage() {
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
                           {item.price != null && (
-                            <span className="text-sm font-bold text-brand-600">₹{item.price}</span>
+                            <span className="text-sm font-bold text-brand-600">Rs. {item.price}</span>
                           )}
                           {item.testId && (
                             <button

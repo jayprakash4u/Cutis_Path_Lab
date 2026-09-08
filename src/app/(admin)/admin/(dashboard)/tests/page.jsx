@@ -244,7 +244,7 @@ export default function AdminTestsPage() {
                       <td className="font-medium text-slate-900">{t.name}</td>
                       <td className="text-slate-600">{t.category}</td>
                       <td>
-                        <Mono>₹{t.price}</Mono>
+                        <Mono>Rs. {t.price}</Mono>
                       </td>
                       <td>
                         {t.popular ? (

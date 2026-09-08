@@ -228,7 +228,7 @@ export default function AdminPackagesPage() {
                         <p className="text-xs text-slate-500">{p.category}</p>
                       </td>
                       <td>
-                        <Mono>₹{p.price}</Mono>
+                        <Mono>Rs. {p.price}</Mono>
                       </td>
                       <td>
                         <Mono className="text-slate-600">{(p.includes || []).length}</Mono>

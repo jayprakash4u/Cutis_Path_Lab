@@ -409,7 +409,7 @@ function TestsPageContent() {
                                 {item.text}
                               </span>
                               <span className="shrink-0 whitespace-nowrap text-sm font-bold text-slate-900">
-                                <span className="text-[11px] font-semibold text-slate-400">Rs</span>{" "}
+                                <span className="text-[11px] font-semibold text-slate-400">Rs.</span>{" "}
                                 {item.price}
                               </span>
                             </span>
@@ -526,7 +526,7 @@ function TestsPageContent() {
                                 {test.text}
                               </p>
                               <p className="text-xs text-slate-500">
-                                ₹{test.price}
+                                Rs. {test.price}
                               </p>
                             </div>
                             <button
@@ -547,7 +547,7 @@ function TestsPageContent() {
                           Total Price:
                         </span>
                         <span className="text-sm font-bold text-brand-600">
-                          ₹{totalPrice}
+                          Rs. {totalPrice}
                         </span>
                       </div>
                       <button
@@ -573,7 +573,7 @@ function TestsPageContent() {
                 {selectedTests.length} test{selectedTests.length > 1 ? "s" : ""} selected
               </span>
               <span className="text-xs font-bold text-brand-600">
-                ₹{totalPrice}
+                Rs. {totalPrice}
               </span>
             </div>
             <button

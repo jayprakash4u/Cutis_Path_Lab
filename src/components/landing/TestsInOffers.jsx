@@ -135,10 +135,10 @@ export default function TestsInOffers({ section }) {
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-base font-bold text-brand-600">
-                              ₹{test.discountedPrice}
+                              Rs. {test.discountedPrice}
                             </span>
                             <span className="text-xs text-slate-400 line-through">
-                              ₹{test.originalPrice}
+                              Rs. {test.originalPrice}
                             </span>
                           </div>
                           <Link

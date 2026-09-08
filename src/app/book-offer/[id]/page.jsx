@@ -90,7 +90,7 @@ export default function BookOfferPage() {
       offerId: offer.id,
       packageId: offer.packageId || null,
       testId: offer.testId || null,
-      notes: `Special Offer: ${offer.name} — ₹${offer.discountedPrice} (${offer.discount}% OFF)`,
+      notes: `Special Offer: ${offer.name} — Rs. ${offer.discountedPrice} (${offer.discount}% OFF)`,
     });
     if (!payload.ok) {
       setFieldErrors(payload.errors);
@@ -158,7 +158,7 @@ export default function BookOfferPage() {
             <h1 className="text-2xl font-bold text-slate-900 mb-3">Offer Booked</h1>
             <p className="text-slate-600 mb-2">
               Your booking for <span className="font-semibold text-brand-700">{offer.name}</span> at{" "}
-              <span className="font-semibold">₹{offer.discountedPrice}</span> is saved.
+              <span className="font-semibold">Rs. {offer.discountedPrice}</span> is saved.
             </p>
             <p className="text-sm text-slate-500 mb-8">
               We will contact you shortly to confirm.
@@ -192,9 +192,9 @@ export default function BookOfferPage() {
             </span>
             <h1 className="text-2xl lg:text-3xl font-bold text-white">{offer.name}</h1>
             <p className="mt-2 text-white text-lg font-semibold">
-              ₹{offer.discountedPrice}{" "}
+              Rs. {offer.discountedPrice}{" "}
               <span className="text-brand-100 text-sm line-through font-normal">
-                ₹{offer.originalPrice}
+                Rs. {offer.originalPrice}
               </span>
             </p>
           </div>
@@ -323,7 +323,7 @@ export default function BookOfferPage() {
               >
                 {submitting
                   ? "Booking…"
-                  : `Confirm Booking — ₹${offer.discountedPrice}`}
+                  : `Confirm Booking — Rs. ${offer.discountedPrice}`}
               </button>
             </div>
           </form>

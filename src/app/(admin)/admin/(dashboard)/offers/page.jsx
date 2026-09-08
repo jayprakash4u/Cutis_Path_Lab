@@ -212,9 +212,9 @@ export default function AdminOffersPage() {
                         <p className="text-xs text-slate-500">{o.category}</p>
                       </td>
                       <td className="whitespace-nowrap">
-                        <Mono className="font-medium text-slate-900">₹{o.discountedPrice}</Mono>{" "}
+                        <Mono className="font-medium text-slate-900">Rs. {o.discountedPrice}</Mono>{" "}
                         <Mono className="text-xs text-slate-400 line-through">
-                          ₹{o.originalPrice}
+                          Rs. {o.originalPrice}
                         </Mono>
                       </td>
                       <td>
