@@ -12,6 +12,29 @@ import {
   CarouselDots,
 } from "@/components/ui/Section";
 
+function ReviewPhoto({ src, name }) {
+  const [failed, setFailed] = useState(false);
+  const photo = src && !failed ? src : "";
+  const initial = (name || "?").trim().charAt(0).toUpperCase();
+
+  if (!photo) {
+    return (
+      <span className="flex h-full w-full items-center justify-center bg-brand-100 text-sm font-semibold text-brand-700">
+        {initial}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={photo}
+      alt={name}
+      className="h-full w-full object-cover"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 function Stars({ rating }) {
   return (
     <div className="mb-3 flex gap-1 sm:mb-4" aria-label={`${rating} out of 5 stars`}>
@@ -170,11 +193,7 @@ export default function Reviews({ section }) {
 
                         <div className="mt-auto flex items-center gap-2.5 border-t border-brand-100 pt-3 sm:gap-3 sm:pt-4">
                           <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl sm:h-11 sm:w-11">
-                            <img
-                              src={review.image}
-                              alt={review.name}
-                              className="h-full w-full object-cover"
-                            />
+                            <ReviewPhoto src={review.image || review.imageUrl} name={review.name} />
                           </div>
                           <div className="min-w-0">
                             <h3 className="truncate text-sm font-bold text-slate-900 sm:text-base">

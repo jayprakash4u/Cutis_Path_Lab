@@ -722,3 +722,16 @@ CREATE TABLE IF NOT EXISTS `BlogPost` (
   KEY `IX_BlogPost_active` (`isActive`, `publishedAt`),
   KEY `IX_BlogPost_category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Admin uploads (gallery, referrals, categories, …). Source of truth so live
+-- can serve files that were uploaded from a different machine.
+CREATE TABLE IF NOT EXISTS `UploadedImage` (
+  `id`        VARCHAR(50)  NOT NULL,
+  `folder`    VARCHAR(64)  NOT NULL,
+  `filename`  VARCHAR(255) NOT NULL,
+  `mimeType`  VARCHAR(64)  NOT NULL,
+  `bytes`     MEDIUMBLOB   NOT NULL,
+  `createdAt` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_UploadedImage_folder_filename` (`folder`, `filename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

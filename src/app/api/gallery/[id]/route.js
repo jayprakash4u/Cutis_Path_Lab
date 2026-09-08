@@ -1,21 +1,9 @@
-import { unlink } from "fs/promises";
-import path from "path";
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { buildUpdate, toBit, toIntOr } from "@/lib/adminSql";
 import { sqlExec, sqlOne, toBool } from "@/lib/mysql";
-
-async function removeLocalGalleryFile(imageUrl) {
-  if (!imageUrl || typeof imageUrl !== "string") return;
-  if (!imageUrl.startsWith("/images/gallery/")) return;
-
-  const filename = path.basename(imageUrl);
-  if (!filename || filename.includes("..")) return;
-
-  const filePath = path.join(process.cwd(), "public", "images", "gallery", filename);
-  await unlink(filePath).catch(() => {});
-}
+import { deleteUploadedImage } from "@/lib/uploadedImages";
 
 export async function GET(_request, { params }) {
   try {
@@ -103,7 +91,7 @@ export async function PATCH(request, { params }) {
     const oldImageUrl = existing.imageUrl;
     const newImageUrl = fields.imageUrl;
     if (oldImageUrl && newImageUrl && oldImageUrl !== newImageUrl) {
-      await removeLocalGalleryFile(oldImageUrl);
+      await deleteUploadedImage(oldImageUrl);
     }
 
     return NextResponse.json({
@@ -136,7 +124,7 @@ export async function DELETE(request, { params }) {
     }
 
     await sqlExec("DELETE FROM `GalleryImage` WHERE `id` = ?", [galleryId]);
-    await removeLocalGalleryFile(existing.imageUrl);
+    await deleteUploadedImage(existing.imageUrl);
 
     return NextResponse.json({
       success: true,

@@ -148,8 +148,6 @@ function TestsPageContent() {
   }, [selectedTests, bookingBusy, router]);
 
   const totalPrice = selectedTests.reduce((sum, test) => sum + test.price, 0);
-  const discount = Math.round(totalPrice * 0.1);
-  const finalPrice = totalPrice - discount;
 
   const filteredTests = useMemo(() => {
     let result = [...testsWithIcons];
@@ -544,28 +542,12 @@ function TestsPageContent() {
                   </div>
                   {selectedTests.length > 0 && (
                     <div className="border-t border-slate-200 p-4">
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm text-slate-600">
-                          Total Price:
-                        </span>
-                        <span className="text-sm font-medium">
-                          ₹{totalPrice}
-                        </span>
-                      </div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm text-slate-600">
-                          Discount (10%):
-                        </span>
-                        <span className="text-sm text-green-600">
-                          -₹{discount}
-                        </span>
-                      </div>
                       <div className="flex justify-between mb-4">
                         <span className="text-sm font-semibold">
-                          Final Price:
+                          Total Price:
                         </span>
                         <span className="text-sm font-bold text-brand-600">
-                          ₹{finalPrice}
+                          ₹{totalPrice}
                         </span>
                       </div>
                       <button
@@ -591,7 +573,7 @@ function TestsPageContent() {
                 {selectedTests.length} test{selectedTests.length > 1 ? "s" : ""} selected
               </span>
               <span className="text-xs font-bold text-brand-600">
-                ₹{finalPrice}
+                ₹{totalPrice}
               </span>
             </div>
             <button

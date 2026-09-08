@@ -15,11 +15,24 @@ import {
 import { canUseNextImage } from "@/lib/optimisableImage";
 
 function DoctorAvatar({ src, alt }) {
-  if (canUseNextImage(src)) {
-    return <Image src={src} alt={alt} fill className="object-cover" sizes="88px" />;
+  const [failed, setFailed] = useState(false);
+  const image = src && !failed ? src : "/images/cutis.png";
+
+  if (image !== "/images/cutis.png" && canUseNextImage(image)) {
+    return <Image src={image} alt={alt} fill className="object-cover" sizes="88px" />;
   }
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} className="h-full w-full object-cover" />;
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={image}
+      alt={alt}
+      className="h-full w-full object-cover"
+      onError={() => {
+        if (image !== "/images/cutis.png") setFailed(true);
+      }}
+    />
+  );
 }
 
 function VerifiedBadge() {

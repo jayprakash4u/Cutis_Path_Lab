@@ -206,13 +206,27 @@ export default function AdminTestimonialsPage() {
         ) : (
           <>
             <ul className="space-y-2.5">
-              {items.map((t) => (
+              {items.map((t) => {
+                const photo = t.image || t.imageUrl;
+                return (
                 <li
                   key={t.id}
                   className="flex flex-col justify-between gap-3 rounded-lg border border-[var(--admin-line)] p-3.5 sm:flex-row sm:items-start"
                 >
-                  <div className="min-w-0">
-                    <p className="font-semibold text-slate-900">
+                  <div className="flex min-w-0 gap-3">
+                    {photo ? (
+                      <img
+                        src={photo}
+                        alt=""
+                        className="h-12 w-12 shrink-0 rounded-lg border border-[var(--admin-line)] object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--admin-subtle)] text-sm font-semibold text-slate-500">
+                        {(t.name || "?").trim().charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-900">
                       {t.name}
                       {t.role ? (
                         <span className="ml-1.5 text-xs font-normal text-slate-500">
@@ -232,6 +246,7 @@ export default function AdminTestimonialsPage() {
                         <span className="admin-pill admin-pill--cancelled">Hidden</span>
                       ) : null}
                     </div>
+                    </div>
                   </div>
                   <div className="flex shrink-0 gap-2">
                     <button
@@ -250,7 +265,8 @@ export default function AdminTestimonialsPage() {
                     </button>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
             <AdminPagination
               page={safePage}

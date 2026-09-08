@@ -3,6 +3,7 @@ import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { buildUpdate, toBit, toIntOr } from "@/lib/adminSql";
 import { sqlExec, sqlOne, toBool } from "@/lib/mysql";
+import { deleteUploadedImage } from "@/lib/uploadedImages";
 
 export async function GET(_request, { params }) {
   try {
@@ -62,11 +63,11 @@ export async function PATCH(request, { params }) {
       );
     }
 
-    const exists = await sqlOne(
-      "SELECT `id` FROM `Testimonial` WHERE `id` = ? LIMIT 1",
+    const existing = await sqlOne(
+      "SELECT `imageUrl` FROM `Testimonial` WHERE `id` = ? LIMIT 1",
       [testimonialId],
     );
-    if (!exists) {
+    if (!existing) {
       return NextResponse.json(
         { success: false, message: "Testimonial not found" },
         { status: 404 },
@@ -78,6 +79,12 @@ export async function PATCH(request, { params }) {
       ...values,
       testimonialId,
     ]);
+
+    const oldImageUrl = existing.imageUrl;
+    const newImageUrl = fields.imageUrl;
+    if (oldImageUrl && newImageUrl !== undefined && oldImageUrl !== newImageUrl) {
+      await deleteUploadedImage(oldImageUrl);
+    }
 
     return NextResponse.json({
       success: true,
@@ -97,11 +104,11 @@ export async function DELETE(request, { params }) {
     const { id } = await params;
     const testimonialId = String(id || "").trim();
 
-    const exists = await sqlOne(
-      "SELECT `id` FROM `Testimonial` WHERE `id` = ? LIMIT 1",
+    const existing = await sqlOne(
+      "SELECT `imageUrl` FROM `Testimonial` WHERE `id` = ? LIMIT 1",
       [testimonialId],
     );
-    if (!exists) {
+    if (!existing) {
       return NextResponse.json(
         { success: false, message: "Testimonial not found" },
         { status: 404 },
@@ -109,6 +116,7 @@ export async function DELETE(request, { params }) {
     }
 
     await sqlExec("DELETE FROM `Testimonial` WHERE `id` = ?", [testimonialId]);
+    await deleteUploadedImage(existing.imageUrl);
 
     return NextResponse.json({
       success: true,

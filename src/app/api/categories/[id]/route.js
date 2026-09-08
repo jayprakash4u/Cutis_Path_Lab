@@ -1,21 +1,9 @@
-import { unlink } from "fs/promises";
-import path from "path";
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
 import { buildUpdate, toBit, toIntOr } from "@/lib/adminSql";
 import { sqlExec, sqlOne, sqlQuery, toBool } from "@/lib/mysql";
-
-async function removeLocalCategoryImage(imageUrl) {
-  if (!imageUrl || typeof imageUrl !== "string") return;
-  if (!imageUrl.startsWith("/images/categories/")) return;
-
-  const filename = path.basename(imageUrl);
-  if (!filename || filename.includes("..")) return;
-
-  const filePath = path.join(process.cwd(), "public", "images", "categories", filename);
-  await unlink(filePath).catch(() => {});
-}
+import { deleteUploadedImage } from "@/lib/uploadedImages";
 
 export async function GET(request, { params }) {
   try {
@@ -103,7 +91,7 @@ export async function PATCH(request, { params }) {
     const oldImageUrl = existing.imageUrl;
     const newImageUrl = fields.imageUrl;
     if (oldImageUrl && newImageUrl && oldImageUrl !== newImageUrl) {
-      await removeLocalCategoryImage(oldImageUrl);
+      await deleteUploadedImage(oldImageUrl);
     }
 
     return NextResponse.json({
@@ -137,7 +125,7 @@ export async function DELETE(request, { params }) {
 
     // CategoryTest rows cascade with the category.
     await sqlExec("DELETE FROM `Category` WHERE `id` = ?", [categoryId]);
-    await removeLocalCategoryImage(existing.imageUrl);
+    await deleteUploadedImage(existing.imageUrl);
 
     return NextResponse.json({
       success: true,

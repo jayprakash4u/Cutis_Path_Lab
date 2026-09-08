@@ -36,7 +36,33 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    // Uploaded files live in MySQL. If the file is not in public/, serve it
+    // from /api/media so live and local both show the same gallery images.
+    const folders = [
+      "about",
+      "banners",
+      "blogs",
+      "categories",
+      "gallery",
+      "home",
+      "packages",
+      "referrals",
+      "services",
+      "team",
+      "testimonials",
+      "tests",
+    ];
+    return folders.map((folder) => ({
+      source: `/images/${folder}/:filename`,
+      destination: `/api/media/${folder}/:filename`,
+    }));
+  },
   images: {
+    localPatterns: [
+      { pathname: "/images/**" },
+      { pathname: "/api/media/**" },
+    ],
     remotePatterns: [
       {
         protocol: "https",

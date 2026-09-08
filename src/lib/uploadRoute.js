@@ -1,9 +1,8 @@
 import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
 import { NextResponse } from "next/server";
 import { apiErrorResponse } from "@/lib/apiError";
 import { requireAdmin } from "@/lib/adminAuth";
+import { persistUploadedImage, UPLOAD_FOLDERS } from "@/lib/uploadedImages";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -18,13 +17,21 @@ const EXT_BY_TYPE = {
 /**
  * Every admin image upload lands here: same size cap, same type allowlist, same
  * random filename. `folder` is caller-controlled — a name from the route, never
- * anything out of the request — and is written under public/images/<folder>.
+ * anything out of the request. Bytes are stored in MySQL so live can serve them
+ * even when the host filesystem is read-only.
  */
 export async function saveUploadedImage(request, folder) {
   const denied = requireAdmin(request);
   if (denied) return denied;
 
   try {
+    if (!UPLOAD_FOLDERS.has(folder)) {
+      return NextResponse.json(
+        { success: false, message: "Unknown upload folder" },
+        { status: 400 },
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get("file");
 
@@ -51,16 +58,19 @@ export async function saveUploadedImage(request, folder) {
 
     const ext = EXT_BY_TYPE[file.type] || ".jpg";
     const filename = `${randomUUID()}${ext}`;
-    const dir = path.join(process.cwd(), "public", "images", folder);
-    await mkdir(dir, { recursive: true });
-
     const bytes = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(dir, filename), bytes);
+
+    await persistUploadedImage({
+      folder,
+      filename,
+      mimeType: file.type,
+      bytes,
+    });
 
     return NextResponse.json({
       success: true,
       message: "Image uploaded",
-      data: { url: `/images/${folder}/${filename}`, filename },
+      data: { url: `/api/media/${folder}/${filename}`, filename },
     });
   } catch (error) {
     return apiErrorResponse(error, "Upload failed", 500);
